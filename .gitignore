@@ -1,0 +1,16 @@
+# Claude Code: configuración local personal
+.claude/settings.local.json
+
+# Skill registry: se regenera en cada máquina, no se versiona
+.atl/
+
+# Secretos
+.env
+.env.*
+!.env.example
+
+# SO / editores
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
