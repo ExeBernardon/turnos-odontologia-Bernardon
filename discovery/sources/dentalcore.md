@@ -1,7 +1,7 @@
 # DentalCore
 
 - **URL**: https://dentalcore.app
-- **Fecha de investigación**: 2026-11-22
+- **Fecha de investigación**: 2026-11-22 (verificación del equipo: 2026-11-23)
 - **Empresa / país**: DentalCore, La Plata, Argentina. Fundador Dr. Alfredo Di Tullio (odontólogo), CTO Ignacio Naveilhan. Declara operación en Argentina, México, Colombia, Chile, Perú, Ecuador, Uruguay y Paraguay (operación real fuera de Argentina: No evidenciado).
 - **Segmento**: consultorios y clínicas; membresía para casas dentales y laboratorios. **Modalidad**: SaaS en navegador y app de escritorio Windows; requiere conexión.
 
@@ -15,7 +15,9 @@ Consultorios de un sillón a clínicas más grandes (hasta 100 usuarios).
 
 ## Features detectadas
 
-Todo es afirmación comercial (sin demos ni documentación pública revisadas; el sitio incluye una comparativa propia con otros 6 sistemas).
+Todo es afirmación comercial salvo lo indicado en "Verificación del equipo" (sin demos ni documentación pública revisadas; el sitio incluye una comparativa propia con otros 6 sistemas).
+
+**Niveles de evidencia** (de mayor a menor): **Verificado por el equipo (2026-11-23)** = dato confirmado por el equipo con la página, un asesor comercial o una demo; es el nivel más alto. Luego: comprobado en fuente oficial `[C]`; afirmación comercial `[A]`; no evidenciado `[NE]`.
 
 - **Agenda**: vistas día, 3 días, semana y mes; multi-doctor; drag and drop; kanban por estado; bloqueos; sala de espera; 25 tareas automáticas. Sillones: No evidenciado.
 - **Turnos digitales**: confirmación o cancelación por link; reserva online autogestionada: No evidenciado (la página de blog la menciona solo como criterio general). Si el paciente cancela, el horario se libera.
@@ -24,7 +26,7 @@ Todo es afirmación comercial (sin demos ni documentación pública revisadas; e
 - **Administración**: caja con apertura, cierre y arqueo; Factura A/B/C ante ARCA con CAE y QR; cobros con QR/link/tarjeta/PayPal vía Mercado Pago; obras sociales con nomenclador y liquidación por período (65 cargadas en Argentina, 14 con códigos de nomenclador, según la página).
 - **Integraciones**: WhatsApp Meta, Mercado Pago, PayPal, Google Calendar (migración), HL7 FHIR R4/R5, ARCA; importación CSV/Excel/ODS; asistente Sani con API key de Anthropic u OpenAI a cargo de la clínica. API pública: No evidenciado.
 - **Operación**: múltiples clínicas por cuenta con datos separados; 4 roles; registro no editable de quién abrió cada ficha; verificación en dos pasos; exportación PDF y HL7 FHIR (90 días de descarga tras la baja, extensibles); soporte en español por app/WhatsApp/videollamada; migración asistida gratis.
-- **Seguridad**: base aislada por clínica, TLS, backups AES-256-GCM (últimas 8 copias, prueba mensual de restauración), sesión de 2 h, scrypt; cita Ley 26.529 y 25.326; no tiene ISO 27001 (lo aclara); receta electrónica ReNaPDiS "en trámite". Es el relevamiento más detallado de seguridad de este conjunto, pero sigue siendo declarativo.
+- **Seguridad**: base aislada por clínica, TLS, backups AES-256-GCM (últimas 8 copias, prueba mensual de restauración), sesión de 2 h, scrypt; cita Ley 26.529 y 25.326; sigue controles de ISO/IEC 27001, sin certificación (redacción verificada por el equipo, 2026-11-23); receta electrónica ReNaPDiS "en trámite". Es el relevamiento más detallado de seguridad de este conjunto, pero sigue siendo declarativo.
 
 ## Pricing
 
@@ -44,8 +46,16 @@ Mayor cobertura de dimensiones (periodontograma, ARCA, Mercado Pago, liquidació
 - Dos números de WhatsApp (uno de Argentina, otro internacional +61) y la comparativa interna con sesgo.
 - Reserva online del paciente no demostrada: relevante como gap para el nuevo sistema.
 
+## Verificación del equipo (2026-11-23)
+
+- **Confirmó**: contrastó la nota con https://dentalcore.app/, https://dentalcore.app/faq y https://dentalcore.app/interoperabilidad. El contenido de la nota coincide; no hay otros cambios.
+- **Corrigió (solo la forma)**: sobre ISO 27001, la redacción correcta es **"sigue controles de ISO/IEC 27001, sin certificación"**. El dato original (no está certificado) era correcto. Estado: **Verificado por el equipo (2026-11-23)**.
+- **No pudo verificar**: no se hizo demo; el resto de las funciones sigue siendo afirmación comercial (ver Features detectadas).
+
 ## Fuentes
 
-- https://dentalcore.app (2026-11-22)
+- https://dentalcore.app (2026-11-22; equipo 2026-11-23)
+- https://dentalcore.app/faq (equipo, 2026-11-23)
+- https://dentalcore.app/interoperabilidad (equipo, 2026-11-23)
 - https://dentalcore.app/blog/mejor-software-dental-argentina (2026-11-22; contenido propio)
 - https://odonthia.com/blog/mejores-software-odontologicos-argentina-2026 (terceros interesada, 2026-11-22)

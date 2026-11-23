@@ -27,20 +27,22 @@ En la v1 no hay secretaria. Hay un solo odontólogo y un solo sillón.
 
 | Competidor | País | Qué resuelve | Pricing visible | Diferenciador |
 |---|---|---|---|---|
-| AgendaPro | Chile (opera en AR) | Agenda multirubro con landing dental | Desde ARS 13.900/mes, 14 días de prueba | Reserva multicanal y WhatsApp con IA, Mercado Pago |
-| DentalCore | Argentina | Gestión integral odontológica | ARS 75.000/mes o USD 50 (inconsistente) | La cobertura declarada más amplia: ARCA, obras sociales, FHIR, seguridad |
-| DentalSoft | Argentina | Gestión odontológica con reserva online | 3 meses gratis; ARS 30.000–60.000/mes por profesional | Obras sociales y señas con Mercado Pago |
-| ClinIA / OdontoClinIA | Argentina | Gestión institucional | Cotización | ARCA, RENAPER y receta electrónica FHIR |
+| DentalSoft ★ | Argentina | Gestión odontológica con reserva online | 3 meses gratis (con limitaciones); Gestión ARS 30.000/mes y PRO ARS 60.000/mes, +ARS 10.000 por profesional agregado (máx. 10) | Verificado con demo: ARCA y facturación, Mercado Pago, liquidación de obras sociales, reserva online en 4 pasos |
+| Dentalink ★ | Chile (con módulo AR) | Gestión odontológica integral | Esencial USD 35, Pro USD 50 y Titanium USD 75 por mes, +USD 10/12/15 por odontólogo; administrativos gratis (verificado con asesor) | Obras sociales (aranceles, copago, conciliación) y receta electrónica Decreto 345/2024; ARCA, Mercado Pago, ISO 27001 e IA no verificados |
+| DentalCore | Argentina | Gestión integral odontológica | ARS 75.000/mes o USD 50 (inconsistente) | La cobertura declarada más amplia (ARCA, obras sociales, FHIR); sigue controles de ISO/IEC 27001, sin certificación |
+| ClinIA / OdontoClinIA | Argentina | Gestión institucional | Cotización (demo solo para empresas) | ARCA, PUCO, RENAPER y receta electrónica FHIR; sin bloqueos de agenda en la landing |
 | Open Dental | Internacional | Software dental integral | USD 89/mes por sede (fuera de EE.UU.) | Web Sched con 4 formas de entrar a la reserva |
 | Doctoralia Pro | Internacional (opera en AR) | Directorio y agenda de profesionales | No publicado en ARS | Búsqueda por obra social; confirmar o cancelar por WhatsApp |
-| Turnito | Argentina | Agenda generalista | Gratis o ARS 9.900–34.800/mes | Reserva sin cuenta, con seña |
+| AgendaPro ★ | No declarado (opera en AR) | Agenda y reservas multirubro | Desde ARS 19.000/mes, 7 días de prueba, sin plan gratis | Reserva multicanal y WhatsApp con IA; **sin** ficha clínica, odontograma, seña, Mercado Pago, caja, ARCA ni obras sociales |
+
+★ = datos verificados por el equipo el 2026-11-23 (página, asesor o demo). Detalle en `discovery/sources/` y en `market-research.md`.
 
 **Notas**:
-- Puntaje ponderado (sobre 5): AgendaPro 3,10; DentalCore 2,90; DentalSoft 2,85; ClinIA 2,80; Open Dental 2,65. Ninguno supera 3,10 porque casi toda la evidencia pública es material comercial, no funcionalidad verificada.
-- Referentes de UX: Open Dental (entradas de reserva), Doctoralia (acciones desde el mensaje) y Turnito (reserva sin cuenta).
+- Puntaje ponderado (sobre 5), después de la verificación del equipo: DentalSoft 4,15; Dentalink 3,85; DentalCore 2,90; ClinIA 2,80; Open Dental 2,65. AgendaPro bajó del 1.º puesto (3,10) al 16.º (1,85) al confirmarse que no tiene clínica ni cobros. Lo no verificado tiene techo 3, así que el ranking favorece a los sistemas verificados.
+- Referentes de UX: Open Dental (entradas de reserva), Doctoralia (acciones desde el mensaje) y DentalSoft (reserva en 4 pasos verificada con demo).
 - **Vacíos del mercado**:
-  - La lista de espera no figura en ningún sistema argentino ni latinoamericano.
-  - La reserva autogestionada casi nunca está demostrada.
+  - La lista de espera no figura en ningún sistema argentino ni latinoamericano (tampoco en Dentalink).
+  - La reserva autogestionada solo está verificada en DentalSoft.
   - La normativa 25.326 y 26.529 casi no se declara.
   - La prevención de solapamientos rara vez se explica.
 
@@ -53,7 +55,7 @@ En la v1 no hay secretaria. Hay un solo odontólogo y un solo sillón.
 - Alta, reprogramación y cancelación de turnos, con prevención de solapamientos garantizada en la base de datos.
 - Estados del turno: pendiente, confirmado, cancelado, asistió y ausente.
 - Página pública de reserva por link, sin cuenta.
-- Email de confirmación de la reserva y recordatorio 24 h antes, ambos con links para confirmar o cancelar.
+- Email de confirmación de la reserva y recordatorio 48 h antes, ambos con links para confirmar o cancelar.
 - Todo el sistema corriendo con Docker Compose.
 
 ## 6. Funcionalidades opcionales (si sobra tiempo)
@@ -76,7 +78,7 @@ Quedan **fuera** de la v1: ficha clínica y odontograma, facturación ARCA, obra
 - **Bloqueos sobre turnos existentes**: si el odontólogo crea un bloqueo en un rango con turnos, el sistema le muestra cuáles son. Si confirma, esos turnos se cancelan (cancelados por el consultorio) y se envía un email a cada paciente invitándolo a reservar de nuevo.
 - **Identidad del paciente**: se identifica por DNI. Si un paciente vuelve a reservar con el mismo DNI, el turno nuevo se asocia al paciente existente, sin duplicarlo. Dos personas que comparten teléfono o email son pacientes distintos si tienen DNI distinto.
 - **Links de confirmar y cancelar**: cada turno tiene un **token aleatorio único**. Lo genera el backend al crear el turno, se guarda junto al turno y va en los links del email. El token permite confirmar o cancelar **solo ese turno**, sin login. Como no es un ID secuencial, no se puede adivinar el turno de otra persona.
-- **Recordatorio**: se envía un email 24 h antes de cada turno pendiente o confirmado.
+- **Recordatorio**: se envía un email 48 h antes de cada turno pendiente o confirmado, así el paciente todavía puede cancelar (el límite de cancelación es 24 h).
 
 ## 8. Integraciones
 
