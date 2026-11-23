@@ -1,1 +1,166 @@
-{ "version": 4, "step": "discovery", "owner": "active-orchestrator" }
+{
+  "version": 4,
+  "step": "kb",
+  "owner": "active-orchestrator",
+  "discovery": {
+    "created_by": "discovery-research",
+    "sources": [],
+    "sources_note": "Sin URLs aportadas por el usuario: investigación web de 21 sistemas (URLs y fechas dentro de cada nota)",
+    "market_research_file": "discovery/market-research.md",
+    "discovery_file": "discovery/discovery.md",
+    "competitors": [
+      {
+        "name": "agendapro",
+        "notes_file": "discovery/sources/agendapro.md"
+      },
+      {
+        "name": "clinia-odontoclinia",
+        "notes_file": "discovery/sources/clinia-odontoclinia.md"
+      },
+      {
+        "name": "clinicorp",
+        "notes_file": "discovery/sources/clinicorp.md"
+      },
+      {
+        "name": "curve-dental",
+        "notes_file": "discovery/sources/curve-dental.md"
+      },
+      {
+        "name": "dentalcore",
+        "notes_file": "discovery/sources/dentalcore.md"
+      },
+      {
+        "name": "dentalink",
+        "notes_file": "discovery/sources/dentalink.md"
+      },
+      {
+        "name": "dentally",
+        "notes_file": "discovery/sources/dentally.md"
+      },
+      {
+        "name": "dentalsoft",
+        "notes_file": "discovery/sources/dentalsoft.md"
+      },
+      {
+        "name": "dentaltec",
+        "notes_file": "discovery/sources/dentaltec.md"
+      },
+      {
+        "name": "denticlick",
+        "notes_file": "discovery/sources/denticlick.md"
+      },
+      {
+        "name": "dentidesk",
+        "notes_file": "discovery/sources/dentidesk.md"
+      },
+      {
+        "name": "doctoralia-pro",
+        "notes_file": "discovery/sources/doctoralia-pro.md"
+      },
+      {
+        "name": "encuadrado",
+        "notes_file": "discovery/sources/encuadrado.md"
+      },
+      {
+        "name": "gesden",
+        "notes_file": "discovery/sources/gesden.md"
+      },
+      {
+        "name": "medilink",
+        "notes_file": "discovery/sources/medilink.md"
+      },
+      {
+        "name": "nexhealth",
+        "notes_file": "discovery/sources/nexhealth.md"
+      },
+      {
+        "name": "odonthia",
+        "notes_file": "discovery/sources/odonthia.md"
+      },
+      {
+        "name": "odonto-ar",
+        "notes_file": "discovery/sources/odonto-ar.md"
+      },
+      {
+        "name": "open-dental",
+        "notes_file": "discovery/sources/open-dental.md"
+      },
+      {
+        "name": "simples-dental",
+        "notes_file": "discovery/sources/simples-dental.md"
+      },
+      {
+        "name": "turnito",
+        "notes_file": "discovery/sources/turnito.md"
+      }
+    ],
+    "problema": "El odontólogo independiente coordina turnos a mano (teléfono/WhatsApp): solapamientos, ausencias, tiempo perdido y sin reserva fuera de horario. El sistema da agenda propia, reserva online 24/7 y recordatorios por email.",
+    "usuarios": [
+      "Odontólogo (único con login; gestiona agenda, prestaciones, horarios, bloqueos)",
+      "Paciente (sin cuenta; reserva por link público, confirma/cancela por links de email)"
+    ],
+    "casos_de_uso": [
+      "Paciente reserva turno desde link público",
+      "Odontólogo ve agenda diaria/semanal",
+      "Odontólogo carga/reprograma/cancela turnos sin solapamientos",
+      "Paciente recibe recordatorio por email y confirma/cancela con un clic",
+      "Odontólogo configura horarios, prestaciones y bloqueos"
+    ],
+    "funcionalidades_necesarias": [
+      "Login odontólogo (password hasheada)",
+      "ABM pacientes (nombre, DNI, email, teléfono)",
+      "Horarios de atención, prestaciones con duración, bloqueos",
+      "Agenda diaria y semanal",
+      "Alta/reprogramación/cancelación de turnos con anti-solapamiento en BD",
+      "Estados: pendiente, confirmado, cancelado, asistió, ausente",
+      "Página pública de reserva sin cuenta",
+      "Email de confirmación y recordatorio 24 h con links por token",
+      "Docker Compose"
+    ],
+    "funcionalidades_opcionales": [
+      "Lista de espera simple",
+      "Link wa.me precargado",
+      "Archivo .ics",
+      "Exportación CSV"
+    ],
+    "reglas_de_negocio": [
+      "Duración del turno = duración de la prestación",
+      "Sin solapamientos: exclusion constraint en PostgreSQL; ante reserva simultánea gana la primera",
+      "Solo horarios dentro del horario de atención, fuera de bloqueos y sin turnos activos",
+      "Reservar ocupa el horario (estado pendiente); confirmar solo informa asistencia",
+      "Turno sin confirmar queda pendiente, marcado en agenda; no se libera solo",
+      "Paciente cancela por link hasta 24 h antes; luego debe contactar al consultorio; el odontólogo cancela siempre",
+      "Bloqueo sobre turnos existentes: aviso, y al confirmar cancela esos turnos (por consultorio) y envía email a los pacientes",
+      "Paciente identificado por DNI; reutiliza el paciente existente",
+      "Token aleatorio único por turno, generado por el backend, para confirmar/cancelar solo ese turno sin login",
+      "Recordatorio por email 24 h antes de turnos pendientes/confirmados"
+    ],
+    "integraciones": [
+      "SMTP: Mailpit en desarrollo (Docker), Gmail SMTP con contraseña de aplicación en la demo; cambio por variables de entorno"
+    ],
+    "restricciones": [
+      "Entrega MVP funcionando 2026-11-25",
+      "Front TypeScript vanilla; back API REST Spring Boot + Maven + Hibernate + PostgreSQL; todo en Docker",
+      "Sin presupuesto (solo servicios gratuitos)",
+      "Proyecto académico, equipo de 6 en ramas paralelas, cada uno con su agente (Active Stack/OpenSpec)"
+    ],
+    "riesgos": [
+      "Plazo de 3 días (principal)",
+      "Trabajo paralelo de 6 agentes sin contrato de API: mitigado con contrato como primer change del roadmap, mergeado a main antes de ramificar",
+      "Concurrencia en reserva (mitigado en BD)",
+      "Front vanilla: más lento e inconsistente",
+      "Entregabilidad de Gmail / spam",
+      "Ley 25.326: datos mínimos, hashing, tokens no adivinables",
+      "Supuesto: pacientes prefieren reservar online",
+      "Supuesto: recordatorio por email reduce ausencias"
+    ],
+    "preguntas_abiertas": [
+      "Criterios de evaluación de la entrega",
+      "Presentación local con Docker o despliegue",
+      "Cuenta Gmail para la demo",
+      "Reparto de los 6 integrantes (lo propone el roadmap)"
+    ],
+    "equipo": 6,
+    "contrato_api": "Primer change del roadmap; bloquea el trabajo paralelo"
+  }
+}
