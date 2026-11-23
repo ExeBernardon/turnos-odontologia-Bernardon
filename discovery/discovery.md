@@ -2,7 +2,7 @@
 
 **Fecha**: 2026-11-22
 **Contexto**: proyecto académico en equipo (6 integrantes), entrega de un MVP funcionando el **2026-11-25**.
-**Fuentes investigadas**: 21 sistemas (8 de Argentina, 7 de Latinoamérica, 6 internacionales). Ver `discovery/sources/` y el informe completo en `discovery/market-research.md`.
+**Fuentes investigadas**: 21 sistemas (8 de Argentina, 7 de Latinoamérica, 6 internacionales). Ver `discovery/sources/` y el informe completo en `discovery/informe-discovery.md`.
 
 ## 1. Problema que resuelve
 
@@ -35,7 +35,7 @@ En la v1 no hay secretaria. Hay un solo odontólogo y un solo sillón.
 | Doctoralia Pro | Internacional (opera en AR) | Directorio y agenda de profesionales | No publicado en ARS | Búsqueda por obra social; confirmar o cancelar por WhatsApp |
 | AgendaPro ★ | No declarado (opera en AR) | Agenda y reservas multirubro | Desde ARS 19.000/mes, 7 días de prueba, sin plan gratis | Reserva multicanal y WhatsApp con IA; **sin** ficha clínica, odontograma, seña, Mercado Pago, caja, ARCA ni obras sociales |
 
-★ = datos verificados por el equipo el 2026-11-23 (página, asesor o demo). Detalle en `discovery/sources/` y en `market-research.md`.
+★ = datos verificados por el equipo el 2026-11-23 (página, asesor o demo). Detalle en `discovery/sources/` y en `informe-discovery.md`.
 
 **Notas**:
 - Puntaje ponderado (sobre 5), después de la verificación del equipo: DentalSoft 4,15; Dentalink 3,85; DentalCore 2,90; ClinIA 2,80; Open Dental 2,65. AgendaPro bajó del 1.º puesto (3,10) al 16.º (1,85) al confirmarse que no tiene clínica ni cobros. Lo no verificado tiene techo 3, así que el ranking favorece a los sistemas verificados.
