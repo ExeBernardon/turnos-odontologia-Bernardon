@@ -1,6 +1,6 @@
 # Funcionalidades
 
-Organizadas por épica y por historia de usuario (US-NNN). Cada una está marcada **MVP** u **Opcional** según `discovery/discovery.md`. Las opcionales no se implementan hasta que el núcleo MVP esté terminado.
+Organizadas por épica y por historia de usuario (US-NNN). Cada una está marcada **MVP** u **Opcional** según `docs/discovery/discovery.md`. Las opcionales no se implementan hasta que el núcleo MVP esté terminado.
 
 ## Épica 1: Acceso del odontólogo
 

@@ -1,6 +1,6 @@
 # Reglas de Negocio
 
-Cada regla tiene un código único `RN-{DOMINIO}-{NN}`. Todas provienen de `discovery/discovery.md` salvo las marcadas **(derivada)**, que son consecuencias necesarias de las acordadas o de decisiones técnicas confirmadas.
+Cada regla tiene un código único `RN-{DOMINIO}-{NN}`. Todas provienen de `docs/discovery/discovery.md` salvo las marcadas **(derivada)**, que son consecuencias necesarias de las acordadas o de decisiones técnicas confirmadas.
 
 ## Dominio: Autenticación (RN-AU)
 

@@ -36,7 +36,7 @@ Hoy el odontólogo coordina los turnos a mano, por teléfono o WhatsApp. Eso pro
 - Secretaria u otros roles con login.
 - App móvil y cuenta de paciente.
 
-## Referentes de UX (contexto de `discovery/market-research.md`)
+## Referentes de UX (contexto de `docs/discovery/informe-discovery.md`)
 
 | Referente | Patrón a tomar |
 |-----------|----------------|

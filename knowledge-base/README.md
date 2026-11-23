@@ -1,6 +1,6 @@
 # Turnos Odontología — Base de Conocimiento
 
-Base de conocimiento generada a partir de `discovery/discovery.md`, `discovery/market-research.md` y las decisiones técnicas confirmadas por el usuario. Es la fuente canónica para implementar.
+Base de conocimiento generada a partir de `docs/discovery/discovery.md`, `docs/discovery/informe-discovery.md` y las decisiones técnicas confirmadas por el usuario. Es la fuente canónica para implementar.
 
 ## Índice de Archivos
 
