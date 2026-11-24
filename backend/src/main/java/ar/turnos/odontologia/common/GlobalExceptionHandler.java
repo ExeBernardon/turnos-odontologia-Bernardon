@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -30,6 +31,7 @@ public class GlobalExceptionHandler {
     static final String MSG_VALIDACION = "Hay campos con errores.";
     static final String MSG_MAL_FORMADA = "La solicitud no se pudo interpretar. Revisá el formato del cuerpo o de los parámetros.";
     static final String MSG_NO_ENCONTRADO = "No encontramos el recurso solicitado.";
+    static final String MSG_HORARIO_OCUPADO = "Ese horario ya fue reservado. Elegí otro.";
     static final String MSG_ERROR_INTERNO = "Ocurrió un error inesperado. Intentá de nuevo en unos minutos.";
 
     private final ApiErrorFactory errores;
@@ -71,12 +73,26 @@ public class GlobalExceptionHandler {
         return responder(e.getStatus(), e.getCodigo(), e.getMessage(), req, null);
     }
 
+    /**
+     * La base rechazo el turno por la restriccion de exclusion (SQLSTATE 23P01): 409 HORARIO_OCUPADO.
+     * Cualquier otra violacion de integridad que ningun dominio tradujo es un error interno (500).
+     */
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    ResponseEntity<ApiError> integridad(DataIntegrityViolationException e, HttpServletRequest req) throws Exception {
+        return inesperado(e, req);
+    }
+
     /** Catch-all: el detalle va solo al log del servidor; la respuesta es generica. */
     @ExceptionHandler(Exception.class)
     ResponseEntity<ApiError> inesperado(Exception e, HttpServletRequest req) throws Exception {
         // La seguridad (401/403) la resuelven los filtros de Spring Security, no este handler.
         if (e instanceof AccessDeniedException || e instanceof AuthenticationException) {
             throw e;
+        }
+        // Tambien cubre la violacion envuelta en otra excepcion (p. ej. TransactionSystemException al commit).
+        if (ViolacionDeSolapamiento.es(e)) {
+            log.warn("Solapamiento rechazado por la base en {} {}", req.getMethod(), req.getRequestURI());
+            return responder(HttpStatus.CONFLICT, "HORARIO_OCUPADO", MSG_HORARIO_OCUPADO, req, null);
         }
         log.error("Error inesperado en {} {}", req.getMethod(), req.getRequestURI(), e);
         return responder(HttpStatus.INTERNAL_SERVER_ERROR, "ERROR_INTERNO", MSG_ERROR_INTERNO, req, null);
