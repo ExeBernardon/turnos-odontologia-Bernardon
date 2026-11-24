@@ -12,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.transaction.TransactionSystemException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
@@ -54,6 +56,26 @@ class GlobalExceptionHandlerTest {
         void transicion() {
             throw new ApiException(HttpStatus.UNPROCESSABLE_ENTITY, "TRANSICION_INVALIDA",
                     "Ese cambio de estado no está permitido para este turno.");
+        }
+
+        @GetMapping("/prueba/solapamiento")
+        void solapamiento() {
+            throw new DataIntegrityViolationException(
+                    "could not execute statement [ERROR: conflicting key value violates exclusion constraint "
+                            + "\"turno_sin_solapamiento\"]",
+                    new java.sql.SQLException("ERROR: conflicting key value violates exclusion constraint", "23P01"));
+        }
+
+        @GetMapping("/prueba/solapamiento-en-commit")
+        void solapamientoEnCommit() {
+            throw new TransactionSystemException("Could not commit JPA transaction",
+                    new RuntimeException(new java.sql.SQLException("exclusion", "23P01")));
+        }
+
+        @GetMapping("/prueba/unicidad")
+        void unicidad() {
+            throw new DataIntegrityViolationException("duplicate key value violates unique constraint \"paciente_dni_uk\"",
+                    new java.sql.SQLException("duplicate key", "23505"));
         }
 
         @GetMapping("/prueba/boom")
@@ -140,5 +162,38 @@ class GlobalExceptionHandlerTest {
                         org.hamcrest.Matchers.containsString("relation turno"))))
                 .andExpect(content().string(org.hamcrest.Matchers.not(
                         org.hamcrest.Matchers.containsString("IllegalStateException"))));
+    }
+
+    @Test
+    void violacionDeSolapamientoDevuelve409HorarioOcupadoSinFiltrarLaBase() throws Exception {
+        mvc.perform(get("/prueba/solapamiento"))
+                .andExpect(status().isConflict())
+                .andExpect(jsonPath("$.status").value(409))
+                .andExpect(jsonPath("$.error").value("Conflict"))
+                .andExpect(jsonPath("$.codigo").value("HORARIO_OCUPADO"))
+                .andExpect(jsonPath("$.mensaje").value("Ese horario ya fue reservado. Elegí otro."))
+                .andExpect(jsonPath("$.path").value("/prueba/solapamiento"))
+                .andExpect(jsonPath("$.timestamp").exists())
+                .andExpect(jsonPath("$.detalles").doesNotExist())
+                .andExpect(content().string(org.hamcrest.Matchers.not(
+                        org.hamcrest.Matchers.containsString("turno_sin_solapamiento"))))
+                .andExpect(content().string(org.hamcrest.Matchers.not(
+                        org.hamcrest.Matchers.containsString("exclusion"))));
+    }
+
+    @Test
+    void solapamientoEnvueltoEnOtraExcepcionTambienDevuelve409() throws Exception {
+        mvc.perform(get("/prueba/solapamiento-en-commit"))
+                .andExpect(status().isConflict())
+                .andExpect(jsonPath("$.codigo").value("HORARIO_OCUPADO"));
+    }
+
+    @Test
+    void otraViolacionDeIntegridadDevuelve500ErrorInterno() throws Exception {
+        mvc.perform(get("/prueba/unicidad"))
+                .andExpect(status().isInternalServerError())
+                .andExpect(jsonPath("$.codigo").value("ERROR_INTERNO"))
+                .andExpect(content().string(org.hamcrest.Matchers.not(
+                        org.hamcrest.Matchers.containsString("paciente_dni_uk"))));
     }
 }
