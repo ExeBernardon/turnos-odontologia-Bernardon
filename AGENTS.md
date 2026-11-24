@@ -103,7 +103,7 @@ Son contrato; romperlas es un defecto.
 
 5. NUNCA cambiar un endpoint, DTO o código de error por fuera de `docs/api/openapi.yaml` → si el contrato cambia, se cambia primero ahí (en un change/PR propio) y se avisa al equipo.
 6. NUNCA devolver entidades JPA desde los controllers → siempre DTOs; capas controller → service → repository.
-7. NUNCA usar códigos HTTP fuera de la tabla de RN-GLO-04 (400, 401, 404, 409, 422) → con el formato de error del contrato.
+7. NUNCA usar códigos HTTP fuera de la tabla de RN-GLO-04 (400, 401, 404, 409, 422) → con el formato de error del contrato. El 500 `ERROR_INTERNO` se permite solo como respuesta genérica a errores inesperados, sin detalles internos ni stack trace.
 8. NUNCA mandar avisos al paciente a otro email que el `email_contacto` del turno, ni loguear tokens completos.
 
 **Front y tests**

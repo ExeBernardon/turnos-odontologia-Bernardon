@@ -17,3 +17,8 @@ Thumbs.db
 
 # Dependencias
 node_modules/
+
+# Build
+target/
+dist/
+*.log

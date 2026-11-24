@@ -20,7 +20,7 @@ Toda respuesta de error es JSON con este cuerpo (schema `Error`, tipo `ApiError`
 | Campo | Tipo | Notas |
 |---|---|---|
 | `timestamp` | instante ISO-8601 con offset | Momento del error. |
-| `status` | número | Uno de 400, 401, 404, 409, 422. |
+| `status` | número | Uno de 400, 401, 404, 409, 422 o 500 (solo `ERROR_INTERNO`). |
 | `error` | string | Nombre del estado HTTP. |
 | `codigo` | `CodigoError` | Catálogo cerrado (abajo). Siempre presente. |
 | `mensaje` | string | Español, apto para mostrar al usuario. El wording puede ajustarse sin cambiar `codigo` ni status. |
@@ -41,8 +41,9 @@ El 401 de rutas privadas lo emite el entry point de Spring Security con este mis
 | 404 | Recurso o token inexistente. |
 | 409 | Conflicto de horario (turno solapado o bloqueo con turnos afectados). |
 | 422 | Violación de una regla de negocio. |
+| 500 | Error inesperado del servidor (`ERROR_INTERNO`): sin detalles internos ni stack trace. |
 
-No se usan 403, 405, 500 ni otros códigos de error en el contrato. Cada tipo de problema tiene un único código HTTP: un DNI duplicado es 422, no 409.
+El 500 es el único estatus fuera de los cinco de negocio: lo emite el backend como respuesta genérica ante una excepción no prevista, no se documenta operación por operación (queda en `components.responses.ErrorInterno` y fuera de la matriz) y nunca se usa para un caso de negocio. No se usan 403, 405 ni otros códigos de error en el contrato. Cada tipo de problema tiene un único código HTTP: un DNI duplicado es 422, no 409.
 
 ## Catálogo de códigos de negocio
 
@@ -68,6 +69,7 @@ Idéntico al enum `CodigoError` del OpenAPI y a la unión de `tipos.ts`. Cada c�
 | 422 | `DNI_DUPLICADO` | Alta o edición de paciente (o alta rápida en la carga manual) con un DNI que ya existe. | Ya existe un paciente con ese DNI. |
 | 422 | `RANGO_HORARIO_INVALIDO` | `inicio >= fin` en un horario de atención o en un bloqueo. | La hora de inicio debe ser anterior a la de fin. |
 | 422 | `HORARIOS_SOLAPADOS` | Rango de atención que se pisa con otro del mismo día. | El rango se superpone con otro horario de atención del mismo día. |
+| 500 | `ERROR_INTERNO` | Excepción inesperada del servidor. El detalle solo se registra en el log del servidor; la respuesta no incluye mensaje de la excepción ni stack trace. | Ocurrió un error inesperado. Intentá de nuevo en unos minutos. |
 
 Notas:
 - `HORARIO_NO_DISPONIBLE` agrupa varias causas (fuera de atención, bloqueo, pasado, grilla, ventana). El front reacciona igual ("elegí otro horario"); la causa va en `mensaje`. El `inicio` debe caer en la grilla de 15 minutos desde el inicio del rango de atención.
@@ -93,7 +95,7 @@ En el resumen público `puedeCancelar` es `false` si el turno está `CONFIRMADO`
 
 ## Ejemplos y su verificación
 
-- Los JSON de `docs/api/ejemplos/` son la fuente de los ejemplos y se referencian desde el OpenAPI con `externalValue`. Nombres: `<recurso>-<operacion>.request.json`, `.<status>.json` y `.<status>-<codigo>.json`; los errores genéricos son compartidos (`error.400-validacion.json`, `error.400-solicitud-mal-formada.json`, `error.401-no-autenticado.json`, `error.404-recurso-no-encontrado.json`).
+- Los JSON de `docs/api/ejemplos/` son la fuente de los ejemplos y se referencian desde el OpenAPI con `externalValue`. Nombres: `<recurso>-<operacion>.request.json`, `.<status>.json` y `.<status>-<codigo>.json`; los errores genéricos son compartidos (`error.400-validacion.json`, `error.400-solicitud-mal-formada.json`, `error.401-no-autenticado.json`, `error.404-recurso-no-encontrado.json`, `error.500-error-interno.json`).
 - **Técnica elegida (spike de C-01)**: `redocly lint` NO valida los ejemplos referenciados con `externalValue` (un ejemplo inválido a propósito pasó el lint sin avisos) y, con `value: {$ref: ...}`, trata el `$ref` como contenido literal (falsos positivos). Por eso se usa `externalValue` y la conformidad de cada ejemplo contra el schema de su media type se verifica con un script de validación JSON Schema 2020-12 (Ajv) que recorre todas las operaciones, valida cada ejemplo referenciado contra su schema y avisa de archivos sin referenciar. Si no se puede correr el script, el respaldo es la revisión manual contra `tipos.ts` en el PR.
 - Todos los datos son ficticios: `odontologo@ejemplo.com`, `paciente@ejemplo.com`, DNI `99999999` / `99999998` / `99999997`, teléfonos `+54 9 11 0000-0000`.
 

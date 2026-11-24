@@ -16,7 +16,7 @@ Contexto: equipo de 6, entrega 2026-11-25, prioridad velocidad de entrega, sin p
 
 ### Requisitos del entorno (checklist del equipo)
 
-- [ ] Todos los integrantes tienen **Java 21** instalado (`java -version`), además de Docker con Compose v2 y Node 20 para el front fuera de Docker.
+- [ ] Todos los integrantes tienen **Java 21** instalado (`java -version`), además de Docker con Compose v2 y Node 22 o superior para el front fuera de Docker.
 - [ ] Cada integrante crea su `.env` a partir de `.env.example`. El `.gitignore` ya ignora `.env` y `.env.*` (con excepción de `.env.example`).
 - Regla para el archivo de reglas del agente (`AGENTS.md` / `CLAUDE.md`, que se genera después de la KB): **`.env` va en `.gitignore` y nunca se commitea la contraseña de aplicación de Gmail ni ningún otro secreto** (la consigna prohíbe secretos en el repo).
 

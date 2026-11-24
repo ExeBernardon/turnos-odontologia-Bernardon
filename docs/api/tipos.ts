@@ -46,7 +46,8 @@ export type CodigoError =
   | 'PRESTACION_CON_TURNOS'
   | 'DNI_DUPLICADO'
   | 'RANGO_HORARIO_INVALIDO'
-  | 'HORARIOS_SOLAPADOS';
+  | 'HORARIOS_SOLAPADOS'
+  | 'ERROR_INTERNO';
 
 // ---------------------------------------------------------------- Errores
 
@@ -58,7 +59,7 @@ export interface DetalleError {
 /** Schema `Error` del OpenAPI. `detalles` solo aparece en 400 VALIDACION. */
 export interface ApiError {
   readonly timestamp: Instante;
-  readonly status: 400 | 401 | 404 | 409 | 422;
+  readonly status: 400 | 401 | 404 | 409 | 422 | 500;
   readonly error: string;
   readonly codigo: CodigoError;
   readonly mensaje: string;

@@ -1,0 +1,72 @@
+# Perfil base = Docker: todo viene del entorno (.env). Las claves app.* se mapean de forma explicita
+# porque APP_RECORDATORIO_INTERVALO_MIN bindearia a app.recordatorio.intervalo.min (no a intervalo-min).
+# Los sensibles quedan vacios por defecto y @NotBlank hace fallar el arranque nombrando la propiedad
+# (un placeholder sin resolver el Binder lo deja literal y no fallaria).
+server:
+  port: 8080
+
+spring:
+  application:
+    name: turnos-odontologia
+  datasource:
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: update
+    defer-datasource-initialization: true
+    properties:
+      hibernate:
+        jdbc:
+          time_zone: UTC
+  sql:
+    init:
+      mode: always
+      schema-locations: classpath:schema-extra.sql
+      separator: "^^^"
+      continue-on-error: false
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+  endpoint:
+    health:
+      show-details: never
+  health:
+    mail:
+      enabled: false
+
+app:
+  zona-horaria: ${APP_ZONA_HORARIA:America/Argentina/Buenos_Aires}
+  frontend-base-url: ${APP_FRONTEND_BASE_URL:http://localhost:8080}
+  agenda:
+    paso-minutos: ${APP_AGENDA_PASO_MINUTOS:15}
+  recordatorio:
+    intervalo-min: ${APP_RECORDATORIO_INTERVALO_MIN:15}
+    horas-antes: ${APP_RECORDATORIO_HORAS_ANTES:48}
+  alerta:
+    pendiente-horas: ${APP_ALERTA_PENDIENTE_HORAS:24}
+  cancelacion:
+    horas-minimas: ${APP_CANCELACION_HORAS_MINIMAS:24}
+  turno:
+    anticipacion-min-horas: ${APP_TURNO_ANTICIPACION_MIN_HORAS:2}
+    ventana-max-dias: ${APP_TURNO_VENTANA_MAX_DIAS:60}
+  consultorio:
+    contacto: ${APP_CONSULTORIO_CONTACTO:Tel. 11 5555-5555}
+  mail:
+    from: ${APP_MAIL_FROM:turnos@consultorio.local}
+  jwt:
+    secret: ${JWT_SECRET:}
+    expiration-minutes: ${JWT_EXPIRATION_MINUTES:480}
+  seed:
+    odontologo:
+      nombre: ${SEED_ODONTOLOGO_NOMBRE:Dr. Ejemplo}
+      email: ${SEED_ODONTOLOGO_EMAIL:odontologo@ejemplo.com}
+      password: ${SEED_ODONTOLOGO_PASSWORD:}

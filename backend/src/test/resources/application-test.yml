@@ -1,0 +1,7 @@
+# Valores ficticios solo para tests. La base la aporta Testcontainers (@ServiceConnection).
+JWT_SECRET: secreto-de-prueba-ficticio-de-al-menos-32-bytes-0123456789
+SEED_ODONTOLOGO_PASSWORD: password-de-prueba-ficticia
+spring:
+  mail:
+    host: localhost
+    port: 1025

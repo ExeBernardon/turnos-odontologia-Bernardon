@@ -13,6 +13,8 @@ Documento extra a los 10 canónicos. Describe cómo correr todo con un solo coma
 
 Dependencias: `backend` depende de `db` (con `healthcheck` de `pg_isready`); `frontend` depende de `backend`. Mailpit es opcional en la demo con Gmail.
 
+> **Desvíos aprobados en C-02**: (1) el healthcheck del backend es `GET /actuator/health` (Spring Boot Actuator, fuera de `/api`) y no `/api/health`, porque el contrato de C-01 fija el inventario exacto de rutas bajo `/api`; el proxy se verifica con `GET /api/auth/me` sin token → 401 `NO_AUTENTICADO`. (2) La imagen de build del front usa Node 24 LTS en lugar de Node 20.
+
 Los puertos son una propuesta; deben ser configurables en `.env` si chocan en la máquina de alguien.
 
 ## Un solo comando
@@ -30,7 +32,7 @@ docker compose up --build
 ## Dockerfiles (lineamientos)
 
 - **backend**: etapa 1 `maven:3-eclipse-temurin-21` (`mvn -q -DskipTests package`, con cache de `~/.m2` si se puede); etapa 2 `eclipse-temurin:21-jre` copiando solo el jar; usuario no root; `EXPOSE 8080`.
-- **frontend**: etapa 1 `node:20-alpine` (`npm ci && npm run build`); etapa 2 `nginx:alpine` copiando `dist/` y `nginx.conf`.
+- **frontend**: etapa 1 `node:24-alpine` (`npm ci && npm run build`; Node 20 salió de soporte, desvío aprobado en C-02); etapa 2 `nginx:alpine` copiando `dist/` y `nginx.conf`.
 - **nginx.conf**: `location /api/ { proxy_pass http://backend:8080; }` y fallback a los `index.html` de cada área (`/admin/` y `/`, y `/turno/*` al público). Cabeceras `X-Forwarded-*`. Mismo origen: sin CORS.
 
 ## Variables de entorno
