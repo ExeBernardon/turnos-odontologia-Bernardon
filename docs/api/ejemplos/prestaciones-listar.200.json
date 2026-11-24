@@ -1,0 +1,20 @@
+[
+  {
+    "id": 1,
+    "nombre": "Consulta",
+    "duracionMinutos": 30,
+    "activa": true
+  },
+  {
+    "id": 2,
+    "nombre": "Limpieza",
+    "duracionMinutos": 45,
+    "activa": true
+  },
+  {
+    "id": 3,
+    "nombre": "Control de ortodoncia",
+    "duracionMinutos": 60,
+    "activa": false
+  }
+]

@@ -1,0 +1,8 @@
+{
+  "timestamp": "2026-11-30T10:15:00-03:00",
+  "status": 422,
+  "error": "Unprocessable Entity",
+  "codigo": "CONFIRMACION_FUERA_DE_PLAZO",
+  "mensaje": "Todavía no se puede confirmar el turno. Podés confirmarlo desde 48 h antes.",
+  "path": "/api/public/turnos/TOKEN-DE-EJEMPLO/confirmar"
+}

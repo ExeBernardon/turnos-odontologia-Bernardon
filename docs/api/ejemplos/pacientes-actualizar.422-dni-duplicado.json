@@ -1,0 +1,8 @@
+{
+  "timestamp": "2026-11-30T10:15:00-03:00",
+  "status": 422,
+  "error": "Unprocessable Entity",
+  "codigo": "DNI_DUPLICADO",
+  "mensaje": "Ya existe un paciente con ese DNI.",
+  "path": "/api/pacientes/3"
+}

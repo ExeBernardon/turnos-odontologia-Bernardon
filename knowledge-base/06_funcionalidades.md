@@ -116,8 +116,9 @@ Organizadas por épica y por historia de usuario (US-NNN). Cada una está marcad
 **Para** liberar el horario si no puedo ir
 
 **Criterios de aceptación**:
-- [ ] Hasta 24 h antes del inicio: el turno pasa a `CANCELADO` con `cancelado_por = PACIENTE` y el horario se libera.
-- [ ] Con menos de 24 h: se rechaza con 422 y se indica que se comunique con el consultorio.
+- [ ] Solo un turno `PENDIENTE` y hasta 24 h antes del inicio: pasa a `CANCELADO` con `cancelado_por = PACIENTE` y el horario se libera.
+- [ ] Con menos de 24 h: se rechaza con 422 `CANCELACION_FUERA_DE_PLAZO` y se indica que se comunique con el consultorio.
+- [ ] Un turno ya `CONFIRMADO` no se puede cancelar por link (confirmar es definitivo para el paciente): 422 `TRANSICION_INVALIDA` con "Tu turno ya está confirmado. Para cancelarlo comunicate con el consultorio."; la pantalla oculta el botón de cancelar. Lo cancela el odontólogo.
 - [ ] Cancelar un turno ya cancelado es idempotente; sobre uno terminal (asistió/ausente) informa que no aplica (422).
 - [ ] Se pide confirmación en pantalla antes de cancelar (evita cancelar por un clic accidental o precarga de links por clientes de mail).
 

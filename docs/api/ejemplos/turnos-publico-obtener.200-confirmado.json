@@ -1,0 +1,13 @@
+{
+  "prestacion": {
+    "nombre": "Consulta",
+    "duracionMinutos": 30
+  },
+  "inicio": "2026-12-03T10:00:00-03:00",
+  "fin": "2026-12-03T10:30:00-03:00",
+  "estado": "CONFIRMADO",
+  "nombrePaciente": "Ana",
+  "puedeConfirmar": false,
+  "puedeCancelar": false,
+  "contactoConsultorio": "Consultorio de ejemplo - Tel. +54 9 11 0000-0000"
+}

@@ -146,8 +146,8 @@ stateDiagram-v2
     PENDIENTE --> CONFIRMADO: reprogramar a menos de 24 h (RN-TUR-08)
     CONFIRMADO --> PENDIENTE: reprogramar a 24 h o más (RN-TUR-08)
     PENDIENTE --> CONFIRMADO: confirmar (paciente por token dentro de las 48 h previas, u odontólogo desde la agenda sin restricción)
-    PENDIENTE --> CANCELADO: cancelar (PACIENTE hasta 24 h antes, ODONTOLOGO siempre)
-    CONFIRMADO --> CANCELADO: cancelar (PACIENTE hasta 24 h antes, ODONTOLOGO siempre)
+    PENDIENTE --> CANCELADO: cancelar (PACIENTE por token hasta 24 h antes, ODONTOLOGO siempre)
+    CONFIRMADO --> CANCELADO: cancelar (solo ODONTOLOGO, siempre; el paciente no puede, RN-CAN-01)
     PENDIENTE --> ASISTIO: odontólogo marca
     PENDIENTE --> AUSENTE: odontólogo marca
     CONFIRMADO --> ASISTIO: odontólogo marca
@@ -160,6 +160,7 @@ stateDiagram-v2
 - Activos (ocupan el horario): `PENDIENTE`, `CONFIRMADO`.
 - El estado inicial depende de la anticipación al crear el turno (reserva pública o carga manual): 24 h o más, `PENDIENTE`; menos de 24 h, `CONFIRMADO` (RN-TUR-11).
 - Reprogramar aplica la misma regla que al crear (RN-TUR-08, RN-TUR-11): con el nuevo inicio a 24 h o más el turno queda (o vuelve a) `PENDIENTE`; a menos de 24 h queda `CONFIRMADO`.
+- Para el paciente, confirmar es definitivo: por token solo puede cancelar un turno `PENDIENTE` (RN-CAN-01); un `CONFIRMADO` lo cancela el odontólogo.
 - Terminales: `CANCELADO` (registra `cancelado_por`), `ASISTIO`, `AUSENTE`. Un turno terminal no vuelve a activo.
 - Reprogramar no es un estado: cambia `inicio`/`fin` del turno activo y recalcula el estado según la anticipación (RN-TUR-08).
 - El odontólogo puede confirmar un turno `PENDIENTE` desde la agenda (US-021), por ejemplo después de hablar con el paciente por teléfono. Puede hacerlo en cualquier momento, sin la restricción de 48 h que sí rige para el paciente (RN-NOT-08). Los `PENDIENTE` a menos de 24 h se resaltan en la agenda para que decida confirmar o cancelar (US-009, US-022).

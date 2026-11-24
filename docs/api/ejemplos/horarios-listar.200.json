@@ -1,0 +1,20 @@
+[
+  {
+    "id": 1,
+    "diaSemana": 1,
+    "horaInicio": "09:00",
+    "horaFin": "13:00"
+  },
+  {
+    "id": 2,
+    "diaSemana": 1,
+    "horaInicio": "15:00",
+    "horaFin": "19:00"
+  },
+  {
+    "id": 3,
+    "diaSemana": 2,
+    "horaInicio": "09:00",
+    "horaFin": "13:00"
+  }
+]

@@ -1,0 +1,71 @@
+[
+  {
+    "id": 102,
+    "inicio": "2026-12-01T16:00:00-03:00",
+    "fin": "2026-12-01T16:45:00-03:00",
+    "estado": "PENDIENTE",
+    "canceladoPor": null,
+    "paciente": {
+      "id": 2,
+      "nombre": "Bruno",
+      "apellido": "Prueba",
+      "dni": "99999998"
+    },
+    "prestacion": {
+      "id": 2,
+      "nombre": "Limpieza",
+      "duracionMinutos": 45
+    },
+    "emailContacto": "bruno@ejemplo.com",
+    "telefonoContacto": "+54 9 11 0000-0001",
+    "consentimientoAt": "2026-11-23T09:00:00-03:00",
+    "pendienteMenos24h": true,
+    "creadoEn": "2026-11-23T09:00:00-03:00"
+  },
+  {
+    "id": 103,
+    "inicio": "2026-12-02T09:00:00-03:00",
+    "fin": "2026-12-02T09:30:00-03:00",
+    "estado": "CONFIRMADO",
+    "canceladoPor": null,
+    "paciente": {
+      "id": 1,
+      "nombre": "Ana",
+      "apellido": "Ejemplo",
+      "dni": "99999999"
+    },
+    "prestacion": {
+      "id": 1,
+      "nombre": "Consulta",
+      "duracionMinutos": 30
+    },
+    "emailContacto": "paciente@ejemplo.com",
+    "telefonoContacto": "+54 9 11 0000-0000",
+    "consentimientoAt": "2026-11-23T09:00:00-03:00",
+    "pendienteMenos24h": false,
+    "creadoEn": "2026-11-23T09:00:00-03:00"
+  },
+  {
+    "id": 104,
+    "inicio": "2026-12-02T11:00:00-03:00",
+    "fin": "2026-12-02T11:30:00-03:00",
+    "estado": "CANCELADO",
+    "canceladoPor": "ODONTOLOGO",
+    "paciente": {
+      "id": 2,
+      "nombre": "Bruno",
+      "apellido": "Prueba",
+      "dni": "99999998"
+    },
+    "prestacion": {
+      "id": 1,
+      "nombre": "Consulta",
+      "duracionMinutos": 30
+    },
+    "emailContacto": "bruno@ejemplo.com",
+    "telefonoContacto": "+54 9 11 0000-0001",
+    "consentimientoAt": "2026-11-23T09:00:00-03:00",
+    "pendienteMenos24h": false,
+    "creadoEn": "2026-11-23T09:00:00-03:00"
+  }
+]

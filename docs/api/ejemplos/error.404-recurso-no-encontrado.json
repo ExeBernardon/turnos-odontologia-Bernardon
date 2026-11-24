@@ -1,0 +1,8 @@
+{
+  "timestamp": "2026-11-30T10:15:00-03:00",
+  "status": 404,
+  "error": "Not Found",
+  "codigo": "RECURSO_NO_ENCONTRADO",
+  "mensaje": "No encontramos el recurso solicitado.",
+  "path": "/api/turnos/999"
+}

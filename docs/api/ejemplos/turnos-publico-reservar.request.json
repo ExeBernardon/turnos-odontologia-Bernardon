@@ -1,0 +1,10 @@
+{
+  "nombre": "Ana",
+  "apellido": "Ejemplo",
+  "dni": "99.999.999",
+  "email": "paciente@ejemplo.com",
+  "telefono": "+54 9 11 0000-0000",
+  "prestacionId": 1,
+  "inicio": "2026-12-10T10:00:00-03:00",
+  "consentimiento": true
+}
