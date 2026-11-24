@@ -1,6 +1,6 @@
 {
   "version": 4,
-  "step": "find-skill",
+  "step": "done",
   "owner": "active-orchestrator",
   "discovery": {
     "created_by": "discovery-research",
@@ -192,5 +192,102 @@
   "roadmap": {
     "created_by": "roadmap-generator",
     "changes_file": "CHANGES.md"
+  },
+  "skills": {
+    "recommended": [
+      {
+        "name": "openapi-spec-generation",
+        "source": "wshobson/agents",
+        "installs": "17.4K",
+        "domain": "OpenAPI/contract-first",
+        "why": "Disenar y mantener el contrato OpenAPI (primer change, bloquea trabajo paralelo)"
+      },
+      {
+        "name": "accessibility",
+        "source": "addyosmani/web-quality-skills",
+        "installs": "73.8K",
+        "domain": "a11y/forms",
+        "why": "WCAG para formularios de reserva publica y agenda en front vanilla"
+      },
+      {
+        "name": "typescript-best-practices",
+        "source": "cursor/plugins",
+        "installs": "12K",
+        "domain": "TypeScript",
+        "why": "Tipado estricto y patrones TS, agnostico de framework (aplica a front vanilla)"
+      },
+      {
+        "name": "docker-compose-patterns",
+        "source": "docker/skills",
+        "installs": "3.2K",
+        "domain": "Docker Compose",
+        "why": "Fuente oficial Docker: healthchecks, depends_on, env vars para postgres+backend+front+mailpit"
+      },
+      {
+        "name": "nginx-configuration",
+        "source": "aj-geddes/useful-ai-prompts",
+        "installs": "1.5K",
+        "domain": "nginx",
+        "why": "Config de nginx para servir SPA Vite y proxy a la API"
+      },
+      {
+        "name": "accessibility-review",
+        "source": "anthropics/knowledge-work-plugins",
+        "installs": "4.6K",
+        "domain": "a11y",
+        "why": "Checklist/auditoria WCAG de pantallas (fuente oficial Anthropic)"
+      },
+      {
+        "name": "322-frameworks-spring-boot-testing-integration-tests",
+        "source": "jabrena/plinth",
+        "installs": "391",
+        "domain": "Testcontainers/Postgres",
+        "why": "Tests de integracion Spring Boot con Testcontainers (baja adopcion, revisar antes)"
+      },
+      {
+        "name": "spring-mail",
+        "source": "claude-dev-suite/claude-dev-suite",
+        "installs": "29",
+        "domain": "Spring Mail",
+        "why": "JavaMailSender/SMTP; adopcion muy baja, solo como referencia"
+      }
+    ],
+    "installed": [
+      "openapi-spec-generation",
+      "accessibility",
+      "typescript-best-practices",
+      "docker-compose-patterns",
+      "nginx-configuration",
+      "accessibility-review"
+    ]
+  },
+  "registry": {
+    "created_by": "skill-registry",
+    "file": ".atl/skill-registry.md"
+  },
+  "agents": {
+    "created_by": "agent-instruction",
+    "files": [
+      "AGENTS.md",
+      "CLAUDE.md"
+    ],
+    "reglas_applied": [
+      "datos-ficticios",
+      "sin-secretos-env",
+      "exclude-gist-garantia",
+      "timestamptz-offsetdatetime",
+      "contrato-openapi-primero",
+      "dtos-no-entidades",
+      "codigos-http-RN-GLO-04",
+      "avisos-solo-email_contacto",
+      "sin-react-ts-strict",
+      "testcontainers-no-h2",
+      "front-usa-tipos-y-ejemplos-contrato",
+      "formularios-accesibles",
+      "rama-por-change-pr-a-main",
+      "conventional-commits-es",
+      "commit-con-usuario-propio",
+      "no-tocar-change-ajeno"
+    ]
   }
 }

@@ -18,7 +18,7 @@
 
 Reglas de equipo (6 integrantes, cada uno con commits propios):
 - **Nadie se ramifica antes de que C-01 y C-02 estén en `main`.** Cualquier cambio posterior al contrato requiere un change explícito (`/opsx:propose` de ajuste de contrato), nunca un cambio silencioso (DD-11).
-- Una rama por change, nombrada `c-NN-nombre`; PR chico a `main`; el autor del change es quien commitea.
+- Una rama por change, nombrada `feat/c-NN-nombre` (prefijo según el tipo: `feat/`, `fix/`, `docs/`; ej. `feat/c-07-turnos-alta`); PR chico a `main`; el autor del change es quien commitea.
 - Estructura **por feature** (KB 08): cada integrante toca sus carpetas. Los archivos compartidos (`pom.xml`, `application.yml`, `docker-compose.yml`, router y cliente API del front, `SecurityConfig`) quedan **pre-armados en C-02** para evitar conflictos; si hace falta tocar uno, avisar en el grupo antes de mergear.
 - Estrategia de tests: TDD estricto en lo que importa (KB 08 §Estrategia de tests mínimos): disponibilidad, solapamiento, regla 24 h / 48 h.
 
