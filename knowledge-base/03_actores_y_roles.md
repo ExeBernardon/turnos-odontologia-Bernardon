@@ -21,7 +21,7 @@ Dos actores. C = crear, R = leer, U = actualizar, D = eliminar/desactivar.
 | Bloqueos | CRUD (con vista previa de turnos afectados) | - |
 | Horarios libres (disponibilidad, calculada al vuelo, no es una entidad) | R | R |
 | Pacientes (nombre, apellido, DNI) | CRUD | C/reutilización indirecta al reservar (por DNI, sin modificar los datos existentes); sin lectura |
-| Turnos (agenda) | CRUD, reprogramar, confirmar, cancelar, cambiar estado | C (reservar); sobre SU turno por token: R, confirmar, cancelar (hasta 24 h antes) |
+| Turnos (agenda) | CRUD, reprogramar, confirmar, cancelar, cambiar estado | C (reservar); sobre SU turno por token: R, confirmar, cancelar (solo `PENDIENTE` y hasta 24 h antes; confirmar es definitivo) |
 | Usuario/odontólogo | Login | - |
 
 Regla de autorización del paciente: el token del turno autoriza únicamente operaciones sobre ese turno (RN-TOK-02). No existe listado ni búsqueda de turnos para anónimos.

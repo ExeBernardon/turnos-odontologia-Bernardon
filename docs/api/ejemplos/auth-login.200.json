@@ -1,0 +1,6 @@
+{
+  "token": "eyJhbGciOiJIUzI1NiJ9.EJEMPLO.firma-de-ejemplo",
+  "tipo": "Bearer",
+  "expiraEn": "2026-12-01T20:00:00-03:00",
+  "nombre": "Odontólogo Ejemplo"
+}

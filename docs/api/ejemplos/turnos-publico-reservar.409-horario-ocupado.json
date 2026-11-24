@@ -1,0 +1,8 @@
+{
+  "timestamp": "2026-11-30T10:15:00-03:00",
+  "status": 409,
+  "error": "Conflict",
+  "codigo": "HORARIO_OCUPADO",
+  "mensaje": "Ese horario ya fue reservado. Elegí otro.",
+  "path": "/api/public/turnos"
+}

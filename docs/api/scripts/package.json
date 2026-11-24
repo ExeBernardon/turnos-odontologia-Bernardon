@@ -1,0 +1,18 @@
+{
+  "name": "contrato-api-validadores",
+  "private": true,
+  "type": "module",
+  "description": "Validadores del contrato de API (docs/api): ejemplos contra schema y coherencia openapi/errores/tipos",
+  "scripts": {
+    "lint": "npx -y @redocly/cli lint ../openapi.yaml",
+    "tipos": "npx -y -p typescript tsc --noEmit --strict ../tipos.ts",
+    "ejemplos": "node validate.mjs",
+    "coherencia": "node cross.mjs",
+    "verificar": "npm run lint && npm run tipos && npm run ejemplos && npm run coherencia"
+  },
+  "dependencies": {
+    "ajv": "^8.20.0",
+    "ajv-formats": "^3.0.1",
+    "yaml": "^2.9.1"
+  }
+}

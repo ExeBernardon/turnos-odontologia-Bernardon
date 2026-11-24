@@ -1,0 +1,8 @@
+{
+  "timestamp": "2026-11-30T10:15:00-03:00",
+  "status": 422,
+  "error": "Unprocessable Entity",
+  "codigo": "CANCELACION_FUERA_DE_PLAZO",
+  "mensaje": "Ya no se puede cancelar desde el link (faltan menos de 24 h). Comunicate con el consultorio.",
+  "path": "/api/public/turnos/TOKEN-DE-EJEMPLO/cancelar"
+}

@@ -50,7 +50,7 @@ sequenceDiagram
     F->>A: GET /api/public/prestaciones
     A-->>F: prestaciones activas
     P->>F: elige prestación y fecha
-    F->>A: GET /api/public/disponibilidad?prestacionId&fecha
+    F->>A: GET /api/public/disponibilidad?prestacionId&desde&hasta (desde = hasta = fecha elegida)
     A->>DB: horarios de atención, bloqueos, turnos activos
     A->>A: calcular slots libres
     A-->>F: lista de inicios libres
@@ -122,12 +122,15 @@ sequenceDiagram
     Note over P,F: Cancelar: /turno/cancelar?token=T
     P->>F: pulsa "Cancelar turno"
     F->>A: POST /api/public/turnos/T/cancelar
-    A->>A: inicio - ahora >= 24 h ?
-    alt faltan 24 h o más
-        A->>DB: estado CANCELADO, cancelado_por PACIENTE
-        A-->>F: 200
-    else faltan menos de 24 h
-        A-->>F: 422 "Comunicate con el consultorio"
+    alt turno CONFIRMADO
+        A-->>F: 422 TRANSICION_INVALIDA "Tu turno ya está confirmado. Para cancelarlo comunicate con el consultorio."
+    else turno PENDIENTE: inicio - ahora >= 24 h ?
+        alt faltan 24 h o más
+            A->>DB: estado CANCELADO, cancelado_por PACIENTE
+            A-->>F: 200
+        else faltan menos de 24 h
+            A-->>F: 422 CANCELACION_FUERA_DE_PLAZO "Comunicate con el consultorio"
+        end
     end
 ```
 
@@ -135,7 +138,8 @@ sequenceDiagram
 - Token inexistente → 404.
 - Confirmar un turno cancelado, pasado o terminal → 422 con mensaje.
 - Confirmar con más de 48 h de anticipación → 422 (RN-NOT-08). El Recordatorio es el único mail con el link de Confirmar; el odontólogo puede confirmar desde la agenda sin esta restricción (RN-TUR-10).
-- Cancelar con menos de 24 h → 422 con teléfono/contacto del consultorio (dato de configuración, ver [10](10_preguntas_abiertas.md)).
+- Cancelar un turno `CONFIRMADO` → 422 `TRANSICION_INVALIDA`: confirmar es definitivo para el paciente y solo el odontólogo puede cancelarlo (RN-CAN-01). Cancelar uno ya `CANCELADO` → 200 idempotente.
+- Cancelar un `PENDIENTE` con menos de 24 h → 422 con teléfono/contacto del consultorio (dato de configuración, ver [10](10_preguntas_abiertas.md)).
 - Repetir la acción ya aplicada → 200 idempotente.
 
 El front muestra siempre una pantalla con botón explícito (el GET solo lee y no cambia nada, el cambio de estado es POST) para que los clientes de correo y antivirus que abren los links solos no cancelen ni confirmen sin que el paciente haga nada (ver [03](03_actores_y_roles.md#por-qué-login-confirmar-y-cancelar-son-post)).
@@ -189,7 +193,7 @@ Cada ciclo ejecuta dos consultas baratas (con el índice `(estado, inicio)`); si
 **Casos de error**:
 - SMTP caído → se reintenta en el próximo ciclo, no se detiene el resto del lote.
 - Dos instancias del backend → no aplica en v1 (una sola instancia, SU-05).
-- El paciente solo puede cancelar hasta 24 h antes: con menos, el link de cancelar rechaza con 422 (RN-CAN-02).
+- El paciente solo puede cancelar un turno `PENDIENTE` y hasta 24 h antes: con menos, el link de cancelar rechaza con 422 (RN-CAN-02); un turno `CONFIRMADO` ya no lo puede cancelar el paciente (RN-CAN-01).
 
 ## Flujo 5: Bloqueo con turnos afectados
 

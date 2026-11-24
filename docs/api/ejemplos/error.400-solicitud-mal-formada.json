@@ -1,0 +1,8 @@
+{
+  "timestamp": "2026-11-30T10:15:00-03:00",
+  "status": 400,
+  "error": "Bad Request",
+  "codigo": "SOLICITUD_MAL_FORMADA",
+  "mensaje": "La solicitud no se pudo interpretar. Revisá el formato del cuerpo o de los parámetros.",
+  "path": "/api/turnos/abc"
+}

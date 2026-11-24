@@ -1,0 +1,11 @@
+{
+  "paciente": {
+    "nombre": "Carla",
+    "apellido": "Muestra",
+    "dni": "99.999.997"
+  },
+  "prestacionId": 1,
+  "inicio": "2026-12-04T16:00:00-03:00",
+  "emailContacto": "carla@ejemplo.com",
+  "telefonoContacto": "+54 9 11 0000-0002"
+}

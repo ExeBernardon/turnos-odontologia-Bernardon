@@ -21,7 +21,9 @@ Regla definida por el usuario (RN-TUR-11, RN-NOT-01, RN-NOT-02, RN-NOT-04, RN-NO
 | ¿Se puede marcar asistió/ausente en cualquier momento? | Solo desde la hora de inicio del turno. | RN-TUR-07, US-013 |
 | ¿Quién figura como `cancelado_por` cuando cancela el odontólogo? | `ODONTOLOGO` (valores `PACIENTE` u `ODONTOLOGO`). | RN-TUR-06 |
 | ¿Qué código HTTP devuelve cada caso? | Códigos unificados: 400, 401, 404, 409, 422. | RN-GLO-04, DD-14 |
+| El enunciado admite grupos de hasta 3 integrantes y somos 6: ¿se acepta? | Sí, la cátedra aprobó el grupo de 6 integrantes. | CHANGES.md (reparto en 6) |
 | ¿Hay un único sillón? | Sí en la v1: un profesional y un sillón. Multisillón y multiprofesional quedan fuera. | RN-REC-01, SU-02 |
+| ¿El paciente puede cancelar un turno ya confirmado? | No, confirmar es definitivo para el paciente; sobre un `CONFIRMADO` el link de cancelar responde 422 `TRANSICION_INVALIDA` y lo cancela el odontólogo. El Recordatorio sigue trayendo Confirmar y Cancelar (el paciente elige una). | RN-CAN-01, US-008, 04 (máquina de estados) |
 
 ## Inconsistencias detectadas
 
@@ -46,7 +48,6 @@ Regla definida por el usuario (RN-TUR-11, RN-NOT-01, RN-NOT-02, RN-NOT-04, RN-NO
 
 | Prioridad | Pregunta | Bloquea | Decisor |
 |-----------|----------|---------|---------|
-| **Alta** | El enunciado admite grupos de hasta 3 integrantes y somos 6. Consultar a la cátedra si se acepta un grupo de 6 y cómo se evalúa. | Conformación del equipo, alcance y evaluación | Cátedra |
 | Alta | ¿Cuáles son los criterios de evaluación de la entrega (tests, documentación, demo en vivo)? | Alcance de tests y docs | Equipo / cátedra |
 | Alta | ¿La presentación es local con Docker o hay que desplegar? (SU-03) | `APP_FRONTEND_BASE_URL`, links de email | Equipo / cátedra |
 | Alta | ¿Qué cuenta de Gmail envía los mails de la demo y quién genera la contraseña de aplicación? | Prueba de email real antes de la demo | Equipo |

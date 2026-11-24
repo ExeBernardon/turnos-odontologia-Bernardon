@@ -11,7 +11,7 @@ Hoy el odontólogo coordina los turnos a mano, por teléfono o WhatsApp. Eso pro
 | Actor | Objetivo principal | Objetivos secundarios |
 |-------|--------------------|-----------------------|
 | Odontólogo | Tener una agenda propia sin solapamientos | Ver agenda diaria y semanal; configurar horarios, prestaciones y bloqueos; cargar, reprogramar, confirmar y cancelar turnos; reducir ausencias con recordatorios; enterarse de los turnos sin confirmar a menos de 24 h |
-| Paciente | Reservar un turno sin llamar, a cualquier hora | Cancelar (hasta 24 h antes) desde el email y confirmar desde el recordatorio (48 h antes); no crear cuenta |
+| Paciente | Reservar un turno sin llamar, a cualquier hora | Cancelar (turno `PENDIENTE`, hasta 24 h antes) desde el email y confirmar desde el recordatorio (48 h antes); no crear cuenta |
 
 ## Alcance v1 (MVP al 2026-11-25)
 

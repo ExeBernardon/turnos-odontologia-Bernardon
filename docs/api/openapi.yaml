@@ -1,0 +1,1890 @@
+openapi: "3.1.0"
+info:
+  title: "API de turnos del consultorio odontológico"
+  version: "1.0.0"
+  description: "Contrato de la API REST del MVP (fuente única de verdad, AGENTS.md regla 5). Instantes ISO-8601 con offset -03:00, fechas YYYY-MM-DD, ids enteros, campos en camelCase. Errores con formato uniforme y `codigo` estable: ver `docs/api/errores.md`. Los ejemplos de `docs/api/ejemplos/` son los mocks del front. El token del turno nunca viaja en una respuesta de la API."
+  license:
+    name: "Uso académico (TP Metodología I)"
+    identifier: LicenseRef-TP
+servers:
+  - url: "/"
+    description: "Mismo origen que el front (proxy nginx / Vite)."
+security:
+  - bearerAuth: []
+tags:
+  - name: Auth
+    description: "Login y usuario autenticado."
+  - name: "Público"
+    description: "Área pública sin cuenta: reserva y gestión por token."
+  - name: Prestaciones
+    description: "Catálogo de prestaciones (odontólogo)."
+  - name: "Horarios de atención"
+    description: "Rangos de atención semanales (odontólogo)."
+  - name: Bloqueos
+    description: "Bloqueos puntuales de agenda con vista previa."
+  - name: Pacientes
+    description: "Pacientes del consultorio."
+  - name: Turnos
+    description: "Agenda y acciones sobre turnos."
+  - name: Disponibilidad
+    description: "Horarios libres para carga manual."
+paths:
+  "/api/auth/login":
+    post:
+      tags: [Auth]
+      operationId: auth_login
+      summary: "Iniciar sesión"
+      description: "Valida email y contraseña del odontólogo y devuelve un JWT. Con credenciales inválidas responde 401 `CREDENCIALES_INVALIDAS` con el mismo mensaje para email inexistente o contraseña incorrecta."
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/LoginRequest"
+            examples:
+              ejemplo:
+                summary: "Request de ejemplo"
+                externalValue: "./ejemplos/auth-login.request.json"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/LoginResponse"
+              examples:
+                ejemplo:
+                  summary: "Respuesta de ejemplo"
+                  externalValue: "./ejemplos/auth-login.200.json"
+        "400":
+          description: "Request inválido: `VALIDACION` (campo faltante o con formato inválido) o `SOLICITUD_MAL_FORMADA` (JSON ilegible o tipo incorrecto)."
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Error"
+              examples:
+                validacion:
+                  summary: "VALIDACION con detalles"
+                  externalValue: "./ejemplos/error.400-validacion.json"
+                solicitud-mal-formada:
+                  summary: SOLICITUD_MAL_FORMADA
+                  externalValue: "./ejemplos/error.400-solicitud-mal-formada.json"
+        "401":
+          description: "Credenciales inválidas."
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Error"
+              examples:
+                credenciales-invalidas:
+                  summary: CREDENCIALES_INVALIDAS
+                  externalValue: "./ejemplos/auth-login.401-credenciales-invalidas.json"
+  "/api/auth/me":
+    get:
+      tags: [Auth]
+      operationId: auth_me
+      summary: "Usuario autenticado"
+      description: "Devuelve los datos del odontólogo dueño del JWT."
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Usuario"
+              examples:
+                ejemplo:
+                  summary: "Respuesta de ejemplo"
+                  externalValue: "./ejemplos/auth-me.200.json"
+        "401":
+          "$ref": "#/components/responses/NoAutenticado"
+  "/api/public/prestaciones":
+    get:
+      tags: ["Público"]
+      operationId: prestaciones_publicas_listar
+      summary: "Listar prestaciones activas"
+      description: "Prestaciones activas para elegir en la página de reserva. No requiere autenticación."
+      security: []
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/PrestacionPublica"
+              examples:
+                ejemplo:
+                  summary: "Respuesta de ejemplo"
+                  externalValue: "./ejemplos/prestaciones-publicas-listar.200.json"
+  "/api/public/disponibilidad":
+    get:
+      tags: ["Público"]
+      operationId: disponibilidad_publica
+      summary: "Horarios libres por día (público)"
+      description: "Horarios libres de una prestación en el rango `desde`..`hasta` (inclusivos, `hasta >= desde`, máximo 31 días). Un solo día se pide con `desde = hasta`. La respuesta trae un elemento por cada fecha del rango (con `horarios: []` si no hay lugar). Aplica la ventana pública: al menos 2 h y hasta 60 días hacia adelante."
+      security: []
+      parameters:
+        - "$ref": "#/components/parameters/PrestacionId"
+        - "$ref": "#/components/parameters/Desde"
+        - "$ref": "#/components/parameters/Hasta"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Disponibilidad"
+              examples:
+                ejemplo:
+                  summary: "Respuesta de ejemplo"
+                  externalValue: "./ejemplos/disponibilidad-publica.200.json"
+        "400":
+          "$ref": "#/components/responses/Validacion"
+        "404":
+          "$ref": "#/components/responses/NoEncontrado"
+        "422":
+          description: "Regla de negocio violada. `PRESTACION_INACTIVA`."
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Error"
+              examples:
+                prestacion-inactiva:
+                  summary: PRESTACION_INACTIVA
+                  externalValue: "./ejemplos/disponibilidad-publica.422-prestacion-inactiva.json"
+  "/api/public/turnos":
+    post:
+      tags: ["Público"]
+      operationId: turnos_publico_reservar
+      summary: "Reservar un turno"
+      description: "Crea el turno sin cuenta. Responde 201 con el resumen público: `PENDIENTE` si faltan 24 h o más, `CONFIRMADO` si faltan menos. `consentimiento` es obligatorio (con `false`: 422). El token del turno viaja solo en el email, nunca en esta respuesta."
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/ReservaPublicaRequest"
+            examples:
+              ejemplo:
+                summary: "Request de ejemplo"
+                externalValue: "./ejemplos/turnos-publico-reservar.request.json"
+      responses:
+        "201":
+          description: Creado
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/TurnoResumenPublico"
+              examples:
+                ejemplo:
+                  summary: "Respuesta de ejemplo"
+                  externalValue: "./ejemplos/turnos-publico-reservar.201.json"
+        "400":
+          description: "Request inválido: `VALIDACION` (campo faltante o con formato inválido) o `SOLICITUD_MAL_FORMADA` (JSON ilegible o tipo incorrecto)."
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Error"
+              examples:
+                validacion:
+                  summary: "VALIDACION con detalles"
+                  externalValue: "./ejemplos/error.400-validacion.json"
+                solicitud-mal-formada:
+                  summary: SOLICITUD_MAL_FORMADA
+                  externalValue: "./ejemplos/error.400-solicitud-mal-formada.json"
+        "404":
+          "$ref": "#/components/responses/NoEncontrado"
+        "409":
+          description: "Conflicto. `HORARIO_OCUPADO`."
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Error"
+              examples:
+                horario-ocupado:
+                  summary: HORARIO_OCUPADO
+                  externalValue: "./ejemplos/turnos-publico-reservar.409-horario-ocupado.json"
+        "422":
+          description: "Regla de negocio violada. `HORARIO_NO_DISPONIBLE`, `CONSENTIMIENTO_REQUERIDO`, `PRESTACION_INACTIVA`."
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Error"
+              examples:
+                horario-no-disponible:
+                  summary: HORARIO_NO_DISPONIBLE
+                  externalValue: "./ejemplos/turnos-publico-reservar.422-horario-no-disponible.json"
+                consentimiento-requerido:
+                  summary: CONSENTIMIENTO_REQUERIDO
+                  externalValue: "./ejemplos/turnos-publico-reservar.422-consentimiento-requerido.json"
+                prestacion-inactiva:
+                  summary: PRESTACION_INACTIVA
+                  externalValue: "./ejemplos/turnos-publico-reservar.422-prestacion-inactiva.json"
+  "/api/public/turnos/{token}":
+    get:
+      tags: ["Público"]
+      operationId: turnos_publico_obtener
+      summary: "Resumen del turno por token"
+      description: "Solo lectura: no cambia el estado del turno (los clientes de mail abren los links solos). No incluye DNI, apellido, email, teléfono, ids ni el token. `puedeConfirmar` y `puedeCancelar` los calcula el backend."
+      security: []
+      parameters:
+        - "$ref": "#/components/parameters/Token"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/TurnoResumenPublico"
+              examples:
+                pendiente:
+                  summary: "Respuesta de ejemplo"
+                  externalValue: "./ejemplos/turnos-publico-obtener.200-pendiente.json"
+                confirmado:
+                  summary: "Respuesta de ejemplo"
+                  externalValue: "./ejemplos/turnos-publico-obtener.200-confirmado.json"
+        "404":
+          description: "Token inexistente. No revela ningún dato."
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Error"
+              examples:
+                token-invalido:
+                  summary: TOKEN_INVALIDO
+                  externalValue: "./ejemplos/turnos-publico-obtener.404-token-invalido.json"
+  "/api/public/turnos/{token}/confirmar":
+    post:
+      tags: ["Público"]
+      operationId: turnos_publico_confirmar
+      summary: "Confirmar el turno por token"
+      description: "Confirma un turno `PENDIENTE` con 48 h o menos de anticipación (y antes del inicio). Orden de evaluación: (1) token inexistente, 404 `TOKEN_INVALIDO`; (2) el turno ya está en el estado destino, 200 sin efectos; (3) transición no permitida, 422 `TRANSICION_INVALIDA`; (4) plazo, 422 `*_FUERA_DE_PLAZO`."
+      security: []
+      parameters:
+        - "$ref": "#/components/parameters/Token"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/TurnoResumenPublico"
+              examples:
+                ejemplo:
+                  summary: "Respuesta de ejemplo"
+                  externalValue: "./ejemplos/turnos-publico-confirmar.200.json"
+        "404":
+          description: "Token inexistente. No revela ningún dato."
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Error"
+              examples:
+                token-invalido:
+                  summary: TOKEN_INVALIDO
+                  externalValue: "./ejemplos/turnos-publico-confirmar.404-token-invalido.json"
+        "422":
+          description: "Regla de negocio violada. `TRANSICION_INVALIDA`, `CONFIRMACION_FUERA_DE_PLAZO`."
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Error"
+              examples:
+                transicion-invalida:
+                  summary: TRANSICION_INVALIDA
+                  externalValue: "./ejemplos/turnos-publico-confirmar.422-transicion-invalida.json"
+                confirmacion-fuera-de-plazo:
+                  summary: CONFIRMACION_FUERA_DE_PLAZO
+                  externalValue: "./ejemplos/turnos-publico-confirmar.422-confirmacion-fuera-de-plazo.json"
+  "/api/public/turnos/{token}/cancelar":
+    post:
+      tags: ["Público"]
+      operationId: turnos_publico_cancelar
+      summary: "Cancelar el turno por token"
+      description: "Para el paciente, confirmar es definitivo: solo se cancela un turno `PENDIENTE` con 24 h o más de anticipación. Sobre un turno `CONFIRMADO` responde 422 `TRANSICION_INVALIDA` (lo cancela el odontólogo); sobre uno ya `CANCELADO` responde 200 idempotente. Orden de evaluación: (1) token inexistente, 404 `TOKEN_INVALIDO`; (2) el turno ya está en el estado destino, 200 sin efectos; (3) transición no permitida, 422 `TRANSICION_INVALIDA`; (4) plazo, 422 `*_FUERA_DE_PLAZO`."
+      security: []
+      parameters:
+        - "$ref": "#/components/parameters/Token"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/TurnoResumenPublico"
+              examples:
+                ejemplo:
+                  summary: "Respuesta de ejemplo"
+                  externalValue: "./ejemplos/turnos-publico-cancelar.200.json"
+        "404":
+          description: "Token inexistente. No revela ningún dato."
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Error"
+              examples:
+                token-invalido:
+                  summary: TOKEN_INVALIDO
+                  externalValue: "./ejemplos/turnos-publico-cancelar.404-token-invalido.json"
+        "422":
+          description: "Regla de negocio violada. `TRANSICION_INVALIDA`, `CANCELACION_FUERA_DE_PLAZO`."
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Error"
+              examples:
+                transicion-invalida:
+                  summary: TRANSICION_INVALIDA
+                  externalValue: "./ejemplos/turnos-publico-cancelar.422-transicion-invalida.json"
+                cancelacion-fuera-de-plazo:
+                  summary: CANCELACION_FUERA_DE_PLAZO
+                  externalValue: "./ejemplos/turnos-publico-cancelar.422-cancelacion-fuera-de-plazo.json"
+  "/api/prestaciones":
+    get:
+      tags: [Prestaciones]
+      operationId: prestaciones_listar
+      summary: "Listar prestaciones"
+      description: "Todas las prestaciones, activas e inactivas."
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/Prestacion"
+              examples:
+                ejemplo:
+                  summary: "Respuesta de ejemplo"
+                  externalValue: "./ejemplos/prestaciones-listar.200.json"
+        "401":
+          "$ref": "#/components/responses/NoAutenticado"
+    post:
+      tags: [Prestaciones]
+      operationId: prestaciones_crear
+      summary: "Crear prestación"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/PrestacionRequest"
+            examples:
+              ejemplo:
+                summary: "Request de ejemplo"
+                externalValue: "./ejemplos/prestaciones-crear.request.json"
+      responses:
+        "201":
+          description: Creado
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Prestacion"
+              examples:
+                ejemplo:
+                  summary: "Respuesta de ejemplo"
+                  externalValue: "./ejemplos/prestaciones-crear.201.json"
+        "400":
+          description: "Request inválido: `VALIDACION` (campo faltante o con formato inválido) o `SOLICITUD_MAL_FORMADA` (JSON ilegible o tipo incorrecto)."
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Error"
+              examples:
+                validacion:
+                  summary: "VALIDACION con detalles"
+                  externalValue: "./ejemplos/error.400-validacion.json"
+                solicitud-mal-formada:
+                  summary: SOLICITUD_MAL_FORMADA
+                  externalValue: "./ejemplos/error.400-solicitud-mal-formada.json"
+        "401":
+          "$ref": "#/components/responses/NoAutenticado"
+  "/api/prestaciones/{id}":
+    put:
+      tags: [Prestaciones]
+      operationId: prestaciones_actualizar
+      summary: "Reemplazar una prestación"
+      description: "PUT reemplaza el recurso completo."
+      parameters:
+        - "$ref": "#/components/parameters/Id"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/PrestacionRequest"
+            examples:
+              ejemplo:
+                summary: "Request de ejemplo"
+                externalValue: "./ejemplos/prestaciones-actualizar.request.json"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Prestacion"
+              examples:
+                ejemplo:
+                  summary: "Respuesta de ejemplo"
+                  externalValue: "./ejemplos/prestaciones-actualizar.200.json"
+        "400":
+          description: "Request inválido: `VALIDACION` (campo faltante o con formato inválido) o `SOLICITUD_MAL_FORMADA` (JSON ilegible o tipo incorrecto)."
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Error"
+              examples:
+                validacion:
+                  summary: "VALIDACION con detalles"
+                  externalValue: "./ejemplos/error.400-validacion.json"
+                solicitud-mal-formada:
+                  summary: SOLICITUD_MAL_FORMADA
+                  externalValue: "./ejemplos/error.400-solicitud-mal-formada.json"
+        "401":
+          "$ref": "#/components/responses/NoAutenticado"
+        "404":
+          "$ref": "#/components/responses/NoEncontrado"
+    delete:
+      tags: [Prestaciones]
+      operationId: prestaciones_eliminar
+      summary: "Eliminar una prestación"
+      description: "Solo si no tiene turnos; si los tiene, 422 `PRESTACION_CON_TURNOS` (usar `activa: false`)."
+      parameters:
+        - "$ref": "#/components/parameters/Id"
+      responses:
+        "204":
+          description: "Eliminado, sin contenido."
+        "400":
+          "$ref": "#/components/responses/SolicitudMalFormada"
+        "401":
+          "$ref": "#/components/responses/NoAutenticado"
+        "404":
+          "$ref": "#/components/responses/NoEncontrado"
+        "422":
+          description: "Regla de negocio violada. `PRESTACION_CON_TURNOS`."
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Error"
+              examples:
+                prestacion-con-turnos:
+                  summary: PRESTACION_CON_TURNOS
+                  externalValue: "./ejemplos/prestaciones-eliminar.422-prestacion-con-turnos.json"
+  "/api/horarios-atencion":
+    get:
+      tags: ["Horarios de atención"]
+      operationId: horarios_listar
+      summary: "Listar horarios de atención"
+      description: "Ordenados por día de la semana y hora de inicio."
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/HorarioAtencion"
+              examples:
+                ejemplo:
+                  summary: "Respuesta de ejemplo"
+                  externalValue: "./ejemplos/horarios-listar.200.json"
+        "401":
+          "$ref": "#/components/responses/NoAutenticado"
+    post:
+      tags: ["Horarios de atención"]
+      operationId: horarios_crear
+      summary: "Crear horario de atención"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/HorarioAtencionRequest"
+            examples:
+              ejemplo:
+                summary: "Request de ejemplo"
+                externalValue: "./ejemplos/horarios-crear.request.json"
+      responses:
+        "201":
+          description: Creado
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/HorarioAtencion"
+              examples:
+                ejemplo:
+                  summary: "Respuesta de ejemplo"
+                  externalValue: "./ejemplos/horarios-crear.201.json"
+        "400":
+          description: "Request inválido: `VALIDACION` (campo faltante o con formato inválido) o `SOLICITUD_MAL_FORMADA` (JSON ilegible o tipo incorrecto)."
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Error"
+              examples:
+                validacion:
+                  summary: "VALIDACION con detalles"
+                  externalValue: "./ejemplos/error.400-validacion.json"
+                solicitud-mal-formada:
+                  summary: SOLICITUD_MAL_FORMADA
+                  externalValue: "./ejemplos/error.400-solicitud-mal-formada.json"
+        "401":
+          "$ref": "#/components/responses/NoAutenticado"
+        "422":
+          description: "Regla de negocio violada. `RANGO_HORARIO_INVALIDO`, `HORARIOS_SOLAPADOS`."
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Error"
+              examples:
+                rango-horario-invalido:
+                  summary: RANGO_HORARIO_INVALIDO
+                  externalValue: "./ejemplos/horarios-crear.422-rango-horario-invalido.json"
+                horarios-solapados:
+                  summary: HORARIOS_SOLAPADOS
+                  externalValue: "./ejemplos/horarios-crear.422-horarios-solapados.json"
+  "/api/horarios-atencion/{id}":
+    put:
+      tags: ["Horarios de atención"]
+      operationId: horarios_actualizar
+      summary: "Reemplazar un horario de atención"
+      parameters:
+        - "$ref": "#/components/parameters/Id"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/HorarioAtencionRequest"
+            examples:
+              ejemplo:
+                summary: "Request de ejemplo"
+                externalValue: "./ejemplos/horarios-actualizar.request.json"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/HorarioAtencion"
+              examples:
+                ejemplo:
+                  summary: "Respuesta de ejemplo"
+                  externalValue: "./ejemplos/horarios-actualizar.200.json"
+        "400":
+          description: "Request inválido: `VALIDACION` (campo faltante o con formato inválido) o `SOLICITUD_MAL_FORMADA` (JSON ilegible o tipo incorrecto)."
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Error"
+              examples:
+                validacion:
+                  summary: "VALIDACION con detalles"
+                  externalValue: "./ejemplos/error.400-validacion.json"
+                solicitud-mal-formada:
+                  summary: SOLICITUD_MAL_FORMADA
+                  externalValue: "./ejemplos/error.400-solicitud-mal-formada.json"
+        "401":
+          "$ref": "#/components/responses/NoAutenticado"
+        "404":
+          "$ref": "#/components/responses/NoEncontrado"
+        "422":
+          description: "Regla de negocio violada. `RANGO_HORARIO_INVALIDO`, `HORARIOS_SOLAPADOS`."
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Error"
+              examples:
+                rango-horario-invalido:
+                  summary: RANGO_HORARIO_INVALIDO
+                  externalValue: "./ejemplos/horarios-actualizar.422-rango-horario-invalido.json"
+                horarios-solapados:
+                  summary: HORARIOS_SOLAPADOS
+                  externalValue: "./ejemplos/horarios-actualizar.422-horarios-solapados.json"
+    delete:
+      tags: ["Horarios de atención"]
+      operationId: horarios_eliminar
+      summary: "Eliminar un horario de atención"
+      parameters:
+        - "$ref": "#/components/parameters/Id"
+      responses:
+        "204":
+          description: "Eliminado, sin contenido."
+        "400":
+          "$ref": "#/components/responses/SolicitudMalFormada"
+        "401":
+          "$ref": "#/components/responses/NoAutenticado"
+        "404":
+          "$ref": "#/components/responses/NoEncontrado"
+  "/api/bloqueos":
+    get:
+      tags: [Bloqueos]
+      operationId: bloqueos_listar
+      summary: "Listar bloqueos de un rango"
+      description: "Bloqueos que se superponen con el rango `desde`..`hasta` (`YYYY-MM-DD`, obligatorios, máximo 31 días)."
+      parameters:
+        - "$ref": "#/components/parameters/Desde"
+        - "$ref": "#/components/parameters/Hasta"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/Bloqueo"
+              examples:
+                ejemplo:
+                  summary: "Respuesta de ejemplo"
+                  externalValue: "./ejemplos/bloqueos-listar.200.json"
+        "400":
+          "$ref": "#/components/responses/Validacion"
+        "401":
+          "$ref": "#/components/responses/NoAutenticado"
+    post:
+      tags: [Bloqueos]
+      operationId: bloqueos_crear
+      summary: "Crear un bloqueo"
+      description: "Con `cancelarTurnosAfectados: false` (por defecto) y turnos activos en el rango responde 409 `BLOQUEO_CON_TURNOS_AFECTADOS` con `turnosAfectados` y no crea el bloqueo. Con `true`, crea el bloqueo y cancela esos turnos (`canceladoPor: ODONTOLOGO`) en una transacción."
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/BloqueoCrearRequest"
+            examples:
+              ejemplo:
+                summary: "Request de ejemplo"
+                externalValue: "./ejemplos/bloqueos-crear.request.json"
+      responses:
+        "201":
+          description: Creado
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/BloqueoCreado"
+              examples:
+                ejemplo:
+                  summary: "Respuesta de ejemplo"
+                  externalValue: "./ejemplos/bloqueos-crear.201.json"
+        "400":
+          description: "Request inválido: `VALIDACION` (campo faltante o con formato inválido) o `SOLICITUD_MAL_FORMADA` (JSON ilegible o tipo incorrecto)."
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Error"
+              examples:
+                validacion:
+                  summary: "VALIDACION con detalles"
+                  externalValue: "./ejemplos/error.400-validacion.json"
+                solicitud-mal-formada:
+                  summary: SOLICITUD_MAL_FORMADA
+                  externalValue: "./ejemplos/error.400-solicitud-mal-formada.json"
+        "401":
+          "$ref": "#/components/responses/NoAutenticado"
+        "409":
+          description: "Conflicto. `BLOQUEO_CON_TURNOS_AFECTADOS`."
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorBloqueoConflicto"
+              examples:
+                bloqueo-con-turnos-afectados:
+                  summary: BLOQUEO_CON_TURNOS_AFECTADOS
+                  externalValue: "./ejemplos/bloqueos-crear.409-bloqueo-con-turnos-afectados.json"
+        "422":
+          description: "Regla de negocio violada. `RANGO_HORARIO_INVALIDO`."
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Error"
+              examples:
+                rango-horario-invalido:
+                  summary: RANGO_HORARIO_INVALIDO
+                  externalValue: "./ejemplos/bloqueos-crear.422-rango-horario-invalido.json"
+  "/api/bloqueos/previsualizar":
+    post:
+      tags: [Bloqueos]
+      operationId: bloqueos_previsualizar
+      summary: "Vista previa de un bloqueo"
+      description: "No modifica nada: devuelve los turnos activos que caen dentro del rango."
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/BloqueoRequest"
+            examples:
+              ejemplo:
+                summary: "Request de ejemplo"
+                externalValue: "./ejemplos/bloqueos-previsualizar.request.json"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/BloqueoPrevisualizacion"
+              examples:
+                ejemplo:
+                  summary: "Respuesta de ejemplo"
+                  externalValue: "./ejemplos/bloqueos-previsualizar.200.json"
+        "400":
+          description: "Request inválido: `VALIDACION` (campo faltante o con formato inválido) o `SOLICITUD_MAL_FORMADA` (JSON ilegible o tipo incorrecto)."
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Error"
+              examples:
+                validacion:
+                  summary: "VALIDACION con detalles"
+                  externalValue: "./ejemplos/error.400-validacion.json"
+                solicitud-mal-formada:
+                  summary: SOLICITUD_MAL_FORMADA
+                  externalValue: "./ejemplos/error.400-solicitud-mal-formada.json"
+        "401":
+          "$ref": "#/components/responses/NoAutenticado"
+        "422":
+          description: "Regla de negocio violada. `RANGO_HORARIO_INVALIDO`."
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Error"
+              examples:
+                rango-horario-invalido:
+                  summary: RANGO_HORARIO_INVALIDO
+                  externalValue: "./ejemplos/bloqueos-previsualizar.422-rango-horario-invalido.json"
+  "/api/bloqueos/{id}":
+    delete:
+      tags: [Bloqueos]
+      operationId: bloqueos_eliminar
+      summary: "Eliminar un bloqueo"
+      description: "No restituye turnos cancelados por el bloqueo."
+      parameters:
+        - "$ref": "#/components/parameters/Id"
+      responses:
+        "204":
+          description: "Eliminado, sin contenido."
+        "400":
+          "$ref": "#/components/responses/SolicitudMalFormada"
+        "401":
+          "$ref": "#/components/responses/NoAutenticado"
+        "404":
+          "$ref": "#/components/responses/NoEncontrado"
+  "/api/pacientes":
+    get:
+      tags: [Pacientes]
+      operationId: pacientes_listar
+      summary: "Buscar pacientes"
+      description: "Sin paginación. `q` (opcional) busca por prefijo de DNI o de apellido."
+      parameters:
+        - name: q
+          in: query
+          required: false
+          description: "Prefijo de DNI o de apellido."
+          schema:
+            type: string
+            maxLength: 100
+          example: Ejem
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/Paciente"
+              examples:
+                ejemplo:
+                  summary: "Respuesta de ejemplo"
+                  externalValue: "./ejemplos/pacientes-listar.200.json"
+        "401":
+          "$ref": "#/components/responses/NoAutenticado"
+    post:
+      tags: [Pacientes]
+      operationId: pacientes_crear
+      summary: "Crear un paciente"
+      description: "El DNI se acepta con o sin puntos y se devuelve solo con dígitos. El paciente no tiene email ni teléfono propios (viven en el turno)."
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/PacienteRequest"
+            examples:
+              ejemplo:
+                summary: "Request de ejemplo"
+                externalValue: "./ejemplos/pacientes-crear.request.json"
+      responses:
+        "201":
+          description: Creado
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Paciente"
+              examples:
+                ejemplo:
+                  summary: "Respuesta de ejemplo"
+                  externalValue: "./ejemplos/pacientes-crear.201.json"
+        "400":
+          description: "Request inválido: `VALIDACION` (campo faltante o con formato inválido) o `SOLICITUD_MAL_FORMADA` (JSON ilegible o tipo incorrecto)."
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Error"
+              examples:
+                validacion:
+                  summary: "VALIDACION con detalles"
+                  externalValue: "./ejemplos/error.400-validacion.json"
+                solicitud-mal-formada:
+                  summary: SOLICITUD_MAL_FORMADA
+                  externalValue: "./ejemplos/error.400-solicitud-mal-formada.json"
+        "401":
+          "$ref": "#/components/responses/NoAutenticado"
+        "422":
+          description: "Regla de negocio violada. `DNI_DUPLICADO`."
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Error"
+              examples:
+                dni-duplicado:
+                  summary: DNI_DUPLICADO
+                  externalValue: "./ejemplos/pacientes-crear.422-dni-duplicado.json"
+  "/api/pacientes/{id}":
+    get:
+      tags: [Pacientes]
+      operationId: pacientes_obtener
+      summary: "Obtener un paciente"
+      parameters:
+        - "$ref": "#/components/parameters/Id"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Paciente"
+              examples:
+                ejemplo:
+                  summary: "Respuesta de ejemplo"
+                  externalValue: "./ejemplos/pacientes-obtener.200.json"
+        "400":
+          "$ref": "#/components/responses/SolicitudMalFormada"
+        "401":
+          "$ref": "#/components/responses/NoAutenticado"
+        "404":
+          "$ref": "#/components/responses/NoEncontrado"
+    put:
+      tags: [Pacientes]
+      operationId: pacientes_actualizar
+      summary: "Reemplazar un paciente"
+      parameters:
+        - "$ref": "#/components/parameters/Id"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/PacienteRequest"
+            examples:
+              ejemplo:
+                summary: "Request de ejemplo"
+                externalValue: "./ejemplos/pacientes-actualizar.request.json"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Paciente"
+              examples:
+                ejemplo:
+                  summary: "Respuesta de ejemplo"
+                  externalValue: "./ejemplos/pacientes-actualizar.200.json"
+        "400":
+          description: "Request inválido: `VALIDACION` (campo faltante o con formato inválido) o `SOLICITUD_MAL_FORMADA` (JSON ilegible o tipo incorrecto)."
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Error"
+              examples:
+                validacion:
+                  summary: "VALIDACION con detalles"
+                  externalValue: "./ejemplos/error.400-validacion.json"
+                solicitud-mal-formada:
+                  summary: SOLICITUD_MAL_FORMADA
+                  externalValue: "./ejemplos/error.400-solicitud-mal-formada.json"
+        "401":
+          "$ref": "#/components/responses/NoAutenticado"
+        "404":
+          "$ref": "#/components/responses/NoEncontrado"
+        "422":
+          description: "Regla de negocio violada. `DNI_DUPLICADO`."
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Error"
+              examples:
+                dni-duplicado:
+                  summary: DNI_DUPLICADO
+                  externalValue: "./ejemplos/pacientes-actualizar.422-dni-duplicado.json"
+  "/api/turnos":
+    get:
+      tags: [Turnos]
+      operationId: turnos_listar
+      summary: "Agenda: listar turnos de un rango"
+      description: "`desde` y `hasta` (`YYYY-MM-DD`, máximo 31 días); `estado` opcional (sin filtro devuelve todos, la agenda atenúa los cancelados)."
+      parameters:
+        - "$ref": "#/components/parameters/Desde"
+        - "$ref": "#/components/parameters/Hasta"
+        - name: estado
+          in: query
+          required: false
+          schema:
+            "$ref": "#/components/schemas/EstadoTurno"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/Turno"
+              examples:
+                ejemplo:
+                  summary: "Respuesta de ejemplo"
+                  externalValue: "./ejemplos/turnos-listar.200.json"
+        "400":
+          "$ref": "#/components/responses/Validacion"
+        "401":
+          "$ref": "#/components/responses/NoAutenticado"
+    post:
+      tags: [Turnos]
+      operationId: turnos_crear
+      summary: "Alta manual de un turno"
+      description: "Exactamente uno de `pacienteId` (paciente existente) o `paciente` (alta rápida). Nace `PENDIENTE` si faltan 24 h o más y `CONFIRMADO` si faltan menos. El odontólogo no está sujeto a la ventana de 2 h / 60 días."
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/TurnoManualRequest"
+            examples:
+              paciente-existente:
+                summary: "Request de ejemplo"
+                externalValue: "./ejemplos/turnos-crear.request-paciente-existente.json"
+              paciente-nuevo:
+                summary: "Request de ejemplo"
+                externalValue: "./ejemplos/turnos-crear.request-paciente-nuevo.json"
+      responses:
+        "201":
+          description: Creado
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Turno"
+              examples:
+                ejemplo:
+                  summary: "Respuesta de ejemplo"
+                  externalValue: "./ejemplos/turnos-crear.201.json"
+        "400":
+          description: "Request inválido: `VALIDACION` (campo faltante o con formato inválido) o `SOLICITUD_MAL_FORMADA` (JSON ilegible o tipo incorrecto)."
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Error"
+              examples:
+                validacion:
+                  summary: "VALIDACION con detalles"
+                  externalValue: "./ejemplos/error.400-validacion.json"
+                solicitud-mal-formada:
+                  summary: SOLICITUD_MAL_FORMADA
+                  externalValue: "./ejemplos/error.400-solicitud-mal-formada.json"
+        "401":
+          "$ref": "#/components/responses/NoAutenticado"
+        "404":
+          "$ref": "#/components/responses/NoEncontrado"
+        "409":
+          description: "Conflicto. `HORARIO_OCUPADO`."
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Error"
+              examples:
+                horario-ocupado:
+                  summary: HORARIO_OCUPADO
+                  externalValue: "./ejemplos/turnos-crear.409-horario-ocupado.json"
+        "422":
+          description: "Regla de negocio violada. `HORARIO_NO_DISPONIBLE`, `PRESTACION_INACTIVA`, `DNI_DUPLICADO`."
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Error"
+              examples:
+                horario-no-disponible:
+                  summary: HORARIO_NO_DISPONIBLE
+                  externalValue: "./ejemplos/turnos-crear.422-horario-no-disponible.json"
+                prestacion-inactiva:
+                  summary: PRESTACION_INACTIVA
+                  externalValue: "./ejemplos/turnos-crear.422-prestacion-inactiva.json"
+                dni-duplicado:
+                  summary: DNI_DUPLICADO
+                  externalValue: "./ejemplos/turnos-crear.422-dni-duplicado.json"
+  "/api/turnos/{id}":
+    get:
+      tags: [Turnos]
+      operationId: turnos_obtener
+      summary: "Detalle de un turno"
+      parameters:
+        - "$ref": "#/components/parameters/Id"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Turno"
+              examples:
+                ejemplo:
+                  summary: "Respuesta de ejemplo"
+                  externalValue: "./ejemplos/turnos-obtener.200.json"
+        "400":
+          "$ref": "#/components/responses/SolicitudMalFormada"
+        "401":
+          "$ref": "#/components/responses/NoAutenticado"
+        "404":
+          "$ref": "#/components/responses/NoEncontrado"
+  "/api/turnos/{id}/reprogramar":
+    patch:
+      tags: [Turnos]
+      operationId: turnos_reprogramar
+      summary: "Reprogramar un turno"
+      description: "Solo turnos activos. El estado se recalcula con la regla del alta: 24 h o más `PENDIENTE`, menos `CONFIRMADO`."
+      parameters:
+        - "$ref": "#/components/parameters/Id"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/ReprogramarRequest"
+            examples:
+              ejemplo:
+                summary: "Request de ejemplo"
+                externalValue: "./ejemplos/turnos-reprogramar.request.json"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Turno"
+              examples:
+                ejemplo:
+                  summary: "Respuesta de ejemplo"
+                  externalValue: "./ejemplos/turnos-reprogramar.200.json"
+        "400":
+          description: "Request inválido: `VALIDACION` (campo faltante o con formato inválido) o `SOLICITUD_MAL_FORMADA` (JSON ilegible o tipo incorrecto)."
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Error"
+              examples:
+                validacion:
+                  summary: "VALIDACION con detalles"
+                  externalValue: "./ejemplos/error.400-validacion.json"
+                solicitud-mal-formada:
+                  summary: SOLICITUD_MAL_FORMADA
+                  externalValue: "./ejemplos/error.400-solicitud-mal-formada.json"
+        "401":
+          "$ref": "#/components/responses/NoAutenticado"
+        "404":
+          "$ref": "#/components/responses/NoEncontrado"
+        "409":
+          description: "Conflicto. `HORARIO_OCUPADO`."
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Error"
+              examples:
+                horario-ocupado:
+                  summary: HORARIO_OCUPADO
+                  externalValue: "./ejemplos/turnos-reprogramar.409-horario-ocupado.json"
+        "422":
+          description: "Regla de negocio violada. `HORARIO_NO_DISPONIBLE`, `TRANSICION_INVALIDA`."
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Error"
+              examples:
+                horario-no-disponible:
+                  summary: HORARIO_NO_DISPONIBLE
+                  externalValue: "./ejemplos/turnos-reprogramar.422-horario-no-disponible.json"
+                transicion-invalida:
+                  summary: TRANSICION_INVALIDA
+                  externalValue: "./ejemplos/turnos-reprogramar.422-transicion-invalida.json"
+  "/api/turnos/{id}/confirmar":
+    post:
+      tags: [Turnos]
+      operationId: turnos_confirmar
+      summary: "Confirmar un turno (odontólogo)"
+      description: "Sin la restricción de 48 h del paciente. Idempotente sobre un turno `CONFIRMADO` (200). Sobre cancelado, pasado o terminal: 422."
+      parameters:
+        - "$ref": "#/components/parameters/Id"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Turno"
+              examples:
+                ejemplo:
+                  summary: "Respuesta de ejemplo"
+                  externalValue: "./ejemplos/turnos-confirmar.200.json"
+        "400":
+          "$ref": "#/components/responses/SolicitudMalFormada"
+        "401":
+          "$ref": "#/components/responses/NoAutenticado"
+        "404":
+          "$ref": "#/components/responses/NoEncontrado"
+        "422":
+          description: "Regla de negocio violada. `TRANSICION_INVALIDA`."
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Error"
+              examples:
+                transicion-invalida:
+                  summary: TRANSICION_INVALIDA
+                  externalValue: "./ejemplos/turnos-confirmar.422-transicion-invalida.json"
+  "/api/turnos/{id}/cancelar":
+    post:
+      tags: [Turnos]
+      operationId: turnos_cancelar
+      summary: "Cancelar un turno (odontólogo)"
+      description: "Cualquier turno activo, en cualquier momento (`canceladoPor: ODONTOLOGO`). Sobre un turno terminal o ya cancelado: 422 `TRANSICION_INVALIDA`."
+      parameters:
+        - "$ref": "#/components/parameters/Id"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Turno"
+              examples:
+                ejemplo:
+                  summary: "Respuesta de ejemplo"
+                  externalValue: "./ejemplos/turnos-cancelar.200.json"
+        "400":
+          "$ref": "#/components/responses/SolicitudMalFormada"
+        "401":
+          "$ref": "#/components/responses/NoAutenticado"
+        "404":
+          "$ref": "#/components/responses/NoEncontrado"
+        "422":
+          description: "Regla de negocio violada. `TRANSICION_INVALIDA`."
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Error"
+              examples:
+                transicion-invalida:
+                  summary: TRANSICION_INVALIDA
+                  externalValue: "./ejemplos/turnos-cancelar.422-transicion-invalida.json"
+  "/api/turnos/{id}/estado":
+    patch:
+      tags: [Turnos]
+      operationId: turnos_estado
+      summary: "Marcar asistencia"
+      description: "`ASISTIO` o `AUSENTE`, solo desde la hora de inicio del turno; antes: 422 `TRANSICION_INVALIDA`."
+      parameters:
+        - "$ref": "#/components/parameters/Id"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/EstadoAsistenciaRequest"
+            examples:
+              ejemplo:
+                summary: "Request de ejemplo"
+                externalValue: "./ejemplos/turnos-estado.request.json"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Turno"
+              examples:
+                ejemplo:
+                  summary: "Respuesta de ejemplo"
+                  externalValue: "./ejemplos/turnos-estado.200.json"
+        "400":
+          description: "Request inválido: `VALIDACION` (campo faltante o con formato inválido) o `SOLICITUD_MAL_FORMADA` (JSON ilegible o tipo incorrecto)."
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Error"
+              examples:
+                validacion:
+                  summary: "VALIDACION con detalles"
+                  externalValue: "./ejemplos/error.400-validacion.json"
+                solicitud-mal-formada:
+                  summary: SOLICITUD_MAL_FORMADA
+                  externalValue: "./ejemplos/error.400-solicitud-mal-formada.json"
+        "401":
+          "$ref": "#/components/responses/NoAutenticado"
+        "404":
+          "$ref": "#/components/responses/NoEncontrado"
+        "422":
+          description: "Regla de negocio violada. `TRANSICION_INVALIDA`."
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Error"
+              examples:
+                transicion-invalida:
+                  summary: TRANSICION_INVALIDA
+                  externalValue: "./ejemplos/turnos-estado.422-transicion-invalida.json"
+  "/api/disponibilidad":
+    get:
+      tags: [Disponibilidad]
+      operationId: disponibilidad_privada
+      summary: "Horarios libres por día (odontólogo)"
+      description: "Mismo schema que el público, sin la ventana de 2 h / 60 días (el odontólogo puede cargar turnos cercanos)."
+      parameters:
+        - "$ref": "#/components/parameters/PrestacionId"
+        - "$ref": "#/components/parameters/Desde"
+        - "$ref": "#/components/parameters/Hasta"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Disponibilidad"
+              examples:
+                ejemplo:
+                  summary: "Respuesta de ejemplo"
+                  externalValue: "./ejemplos/disponibilidad-privada.200.json"
+        "400":
+          "$ref": "#/components/responses/Validacion"
+        "401":
+          "$ref": "#/components/responses/NoAutenticado"
+        "404":
+          "$ref": "#/components/responses/NoEncontrado"
+        "422":
+          description: "Regla de negocio violada. `PRESTACION_INACTIVA`."
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Error"
+              examples:
+                prestacion-inactiva:
+                  summary: PRESTACION_INACTIVA
+                  externalValue: "./ejemplos/disponibilidad-privada.422-prestacion-inactiva.json"
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  parameters:
+    Id:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+        format: int64
+      example: 1
+    Token:
+      name: token
+      in: path
+      required: true
+      description: "Token opaco del turno (viaja solo en los links de los emails)."
+      schema:
+        type: string
+        minLength: 16
+        maxLength: 128
+      example: TOKEN-DE-EJEMPLO
+    Desde:
+      name: desde
+      in: query
+      required: true
+      description: "Primer día del rango (YYYY-MM-DD, inclusivo)."
+      schema:
+        "$ref": "#/components/schemas/FechaDia"
+      example: "2026-12-01"
+    Hasta:
+      name: hasta
+      in: query
+      required: true
+      description: "Último día del rango (YYYY-MM-DD, inclusivo). `hasta >= desde`, máximo 31 días."
+      schema:
+        "$ref": "#/components/schemas/FechaDia"
+      example: "2026-12-07"
+    PrestacionId:
+      name: prestacionId
+      in: query
+      required: true
+      schema:
+        type: integer
+        format: int64
+      example: 1
+  responses:
+    Validacion:
+      description: "`VALIDACION`: parámetro faltante o con formato inválido (fecha, rango > 31 días, `hasta < desde`)."
+      content:
+        application/json:
+          schema:
+            "$ref": "#/components/schemas/Error"
+          examples:
+            validacion:
+              summary: "VALIDACION con detalles"
+              externalValue: "./ejemplos/error.400-validacion.json"
+    SolicitudMalFormada:
+      description: "`SOLICITUD_MAL_FORMADA`: parámetro de ruta no parseable."
+      content:
+        application/json:
+          schema:
+            "$ref": "#/components/schemas/Error"
+          examples:
+            solicitud-mal-formada:
+              summary: SOLICITUD_MAL_FORMADA
+              externalValue: "./ejemplos/error.400-solicitud-mal-formada.json"
+    NoAutenticado:
+      description: "`NO_AUTENTICADO`: falta el JWT o es inválido o venció."
+      content:
+        application/json:
+          schema:
+            "$ref": "#/components/schemas/Error"
+          examples:
+            no-autenticado:
+              summary: NO_AUTENTICADO
+              externalValue: "./ejemplos/error.401-no-autenticado.json"
+    NoEncontrado:
+      description: "`RECURSO_NO_ENCONTRADO`: el recurso referenciado no existe."
+      content:
+        application/json:
+          schema:
+            "$ref": "#/components/schemas/Error"
+          examples:
+            no-encontrado:
+              summary: RECURSO_NO_ENCONTRADO
+              externalValue: "./ejemplos/error.404-recurso-no-encontrado.json"
+  schemas:
+    Instante:
+      type: string
+      format: date-time
+      pattern: "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?(Z|[+-]\\d{2}:\\d{2})$"
+      description: "Instante ISO-8601 con offset obligatorio (zona America/Argentina/Buenos_Aires, -03:00)."
+      examples: ["2026-12-01T10:00:00-03:00"]
+    FechaDia:
+      type: string
+      format: date
+      description: "Día calendario YYYY-MM-DD en zona de Buenos Aires."
+      examples: ["2026-12-01"]
+    HoraDelDia:
+      type: string
+      pattern: "^([01]\\d|2[0-3]):[0-5]\\d$"
+      description: "Hora local HH:mm."
+      examples: ["09:00"]
+    Dni:
+      type: string
+      pattern: "^\\d{7,8}$"
+      description: "DNI devuelto siempre solo con dígitos."
+      examples: ["99999999"]
+    DniEntrada:
+      type: string
+      pattern: "^(\\d{7,8}|\\d{1,2}\\.\\d{3}\\.\\d{3})$"
+      description: "DNI aceptado con o sin puntos (7 u 8 dígitos); se devuelve normalizado como Dni."
+      examples: ["99999999", "99.999.999"]
+    Email:
+      type: string
+      format: email
+      maxLength: 150
+      examples: ["paciente@ejemplo.com"]
+    Telefono:
+      type: string
+      pattern: "^[0-9+()\\-\\s]{6,30}$"
+      examples: ["+54 9 11 0000-0000"]
+    NombrePersona:
+      type: string
+      minLength: 1
+      maxLength: 100
+      examples: [Ana]
+    EstadoTurno:
+      type: string
+      enum: [PENDIENTE, CONFIRMADO, CANCELADO, ASISTIO, AUSENTE]
+    CanceladoPor:
+      type: string
+      enum: [PACIENTE, ODONTOLOGO]
+    CodigoError:
+      type: string
+      description: "Catálogo cerrado de códigos de negocio (ver docs/api/errores.md). Cada código pertenece a un único status HTTP."
+      enum: [VALIDACION, SOLICITUD_MAL_FORMADA, NO_AUTENTICADO, CREDENCIALES_INVALIDAS, RECURSO_NO_ENCONTRADO, TOKEN_INVALIDO, HORARIO_OCUPADO, BLOQUEO_CON_TURNOS_AFECTADOS, HORARIO_NO_DISPONIBLE, CONSENTIMIENTO_REQUERIDO, CANCELACION_FUERA_DE_PLAZO, CONFIRMACION_FUERA_DE_PLAZO, TRANSICION_INVALIDA, PRESTACION_INACTIVA, PRESTACION_CON_TURNOS, DNI_DUPLICADO, RANGO_HORARIO_INVALIDO, HORARIOS_SOLAPADOS]
+    DetalleError:
+      type: object
+      required: [campo, mensaje]
+      additionalProperties: false
+      properties:
+        campo:
+          type: string
+          description: "Nombre del campo del request (camelCase)."
+        mensaje:
+          type: string
+    Error:
+      type: object
+      description: "Formato uniforme de todo error de la API."
+      required: [timestamp, status, error, codigo, mensaje, path]
+      additionalProperties: true
+      properties:
+        timestamp:
+          "$ref": "#/components/schemas/Instante"
+        status:
+          type: integer
+          enum: [400, 401, 404, 409, 422]
+        error:
+          type: string
+          description: "Nombre del estado HTTP (Bad Request, Unauthorized, Not Found, Conflict, Unprocessable Entity)."
+        codigo:
+          "$ref": "#/components/schemas/CodigoError"
+        mensaje:
+          type: string
+          description: "Texto en español apto para mostrar al usuario."
+        path:
+          type: string
+        detalles:
+          type: array
+          items:
+            "$ref": "#/components/schemas/DetalleError"
+          description: "Solo en 400 VALIDACION."
+    ErrorBloqueoConflicto:
+      description: "409 BLOQUEO_CON_TURNOS_AFECTADOS: formato uniforme más los turnos activos del rango. El bloqueo no se crea."
+      allOf:
+        - "$ref": "#/components/schemas/Error"
+        - type: object
+          required: [turnosAfectados]
+          properties:
+            turnosAfectados:
+              type: array
+              items:
+                "$ref": "#/components/schemas/Turno"
+    LoginRequest:
+      type: object
+      required: [email, password]
+      additionalProperties: false
+      properties:
+        email:
+          "$ref": "#/components/schemas/Email"
+        password:
+          type: string
+          minLength: 1
+          maxLength: 200
+          format: password
+    LoginResponse:
+      type: object
+      required: [token, tipo, expiraEn, nombre]
+      additionalProperties: false
+      properties:
+        token:
+          type: string
+          description: "JWT para el header Authorization: Bearer."
+        tipo:
+          type: string
+          enum: [Bearer]
+        expiraEn:
+          "$ref": "#/components/schemas/Instante"
+        nombre:
+          type: string
+    Usuario:
+      type: object
+      required: [id, nombre, email]
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+        nombre:
+          type: string
+        email:
+          "$ref": "#/components/schemas/Email"
+    PrestacionPublica:
+      type: object
+      required: [id, nombre, duracionMinutos]
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+        nombre:
+          type: string
+        duracionMinutos:
+          type: integer
+          minimum: 1
+          maximum: 480
+    Prestacion:
+      type: object
+      required: [id, nombre, duracionMinutos, activa]
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+        nombre:
+          type: string
+        duracionMinutos:
+          type: integer
+          minimum: 1
+          maximum: 480
+        activa:
+          type: boolean
+    PrestacionRequest:
+      type: object
+      description: "PUT reemplaza el recurso completo."
+      required: [nombre, duracionMinutos]
+      additionalProperties: false
+      properties:
+        nombre:
+          type: string
+          minLength: 1
+          maxLength: 100
+        duracionMinutos:
+          type: integer
+          minimum: 1
+          maximum: 480
+        activa:
+          type: boolean
+          default: true
+    PrestacionRef:
+      type: object
+      required: [id, nombre, duracionMinutos]
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+        nombre:
+          type: string
+        duracionMinutos:
+          type: integer
+    PrestacionResumen:
+      type: object
+      required: [nombre, duracionMinutos]
+      additionalProperties: false
+      properties:
+        nombre:
+          type: string
+        duracionMinutos:
+          type: integer
+    HorarioAtencion:
+      type: object
+      required: [id, diaSemana, horaInicio, horaFin]
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+        diaSemana:
+          type: integer
+          minimum: 1
+          maximum: 7
+          description: "ISO-8601: 1 = lunes ... 7 = domingo."
+        horaInicio:
+          "$ref": "#/components/schemas/HoraDelDia"
+        horaFin:
+          "$ref": "#/components/schemas/HoraDelDia"
+    HorarioAtencionRequest:
+      type: object
+      required: [diaSemana, horaInicio, horaFin]
+      additionalProperties: false
+      properties:
+        diaSemana:
+          type: integer
+          minimum: 1
+          maximum: 7
+          description: "ISO-8601: 1 = lunes ... 7 = domingo."
+        horaInicio:
+          "$ref": "#/components/schemas/HoraDelDia"
+        horaFin:
+          "$ref": "#/components/schemas/HoraDelDia"
+    Bloqueo:
+      type: object
+      required: [id, inicio, fin, motivo, creadoEn]
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+        inicio:
+          "$ref": "#/components/schemas/Instante"
+        fin:
+          "$ref": "#/components/schemas/Instante"
+        motivo:
+          oneOf:
+            - type: string
+              maxLength: 200
+            - type: "null"
+        creadoEn:
+          "$ref": "#/components/schemas/Instante"
+    BloqueoRequest:
+      type: object
+      required: [inicio, fin]
+      additionalProperties: false
+      properties:
+        inicio:
+          "$ref": "#/components/schemas/Instante"
+        fin:
+          "$ref": "#/components/schemas/Instante"
+        motivo:
+          type: string
+          maxLength: 200
+    BloqueoCrearRequest:
+      type: object
+      required: [inicio, fin]
+      additionalProperties: false
+      properties:
+        inicio:
+          "$ref": "#/components/schemas/Instante"
+        fin:
+          "$ref": "#/components/schemas/Instante"
+        motivo:
+          type: string
+          maxLength: 200
+        cancelarTurnosAfectados:
+          type: boolean
+          default: false
+    BloqueoPrevisualizacion:
+      type: object
+      required: [turnosAfectados]
+      additionalProperties: false
+      properties:
+        turnosAfectados:
+          type: array
+          items:
+            "$ref": "#/components/schemas/Turno"
+    BloqueoCreado:
+      type: object
+      required: [bloqueo, turnosCancelados]
+      additionalProperties: false
+      properties:
+        bloqueo:
+          "$ref": "#/components/schemas/Bloqueo"
+        turnosCancelados:
+          type: array
+          items:
+            "$ref": "#/components/schemas/Turno"
+    Contacto:
+      type: object
+      required: [email, telefono]
+      additionalProperties: false
+      properties:
+        email:
+          "$ref": "#/components/schemas/Email"
+        telefono:
+          "$ref": "#/components/schemas/Telefono"
+    Paciente:
+      type: object
+      description: "ultimoContacto es null si el paciente no tiene turnos."
+      required: [id, nombre, apellido, dni, ultimoContacto]
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+        nombre:
+          type: string
+        apellido:
+          type: string
+        dni:
+          "$ref": "#/components/schemas/Dni"
+        ultimoContacto:
+          oneOf:
+            - "$ref": "#/components/schemas/Contacto"
+            - type: "null"
+    PacienteRequest:
+      type: object
+      required: [nombre, apellido, dni]
+      additionalProperties: false
+      properties:
+        nombre:
+          "$ref": "#/components/schemas/NombrePersona"
+        apellido:
+          "$ref": "#/components/schemas/NombrePersona"
+        dni:
+          "$ref": "#/components/schemas/DniEntrada"
+    PacienteRef:
+      type: object
+      required: [id, nombre, apellido, dni]
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+        nombre:
+          type: string
+        apellido:
+          type: string
+        dni:
+          "$ref": "#/components/schemas/Dni"
+    Turno:
+      type: object
+      description: "Turno de la agenda (vista del odontólogo). Nunca incluye el token."
+      required: [id, inicio, fin, estado, canceladoPor, paciente, prestacion, emailContacto, telefonoContacto, consentimientoAt, pendienteMenos24h, creadoEn]
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          format: int64
+        inicio:
+          "$ref": "#/components/schemas/Instante"
+        fin:
+          "$ref": "#/components/schemas/Instante"
+        estado:
+          "$ref": "#/components/schemas/EstadoTurno"
+        canceladoPor:
+          oneOf:
+            - "$ref": "#/components/schemas/CanceladoPor"
+            - type: "null"
+        paciente:
+          "$ref": "#/components/schemas/PacienteRef"
+        prestacion:
+          "$ref": "#/components/schemas/PrestacionRef"
+        emailContacto:
+          "$ref": "#/components/schemas/Email"
+        telefonoContacto:
+          "$ref": "#/components/schemas/Telefono"
+        consentimientoAt:
+          oneOf:
+            - "$ref": "#/components/schemas/Instante"
+            - type: "null"
+        pendienteMenos24h:
+          type: boolean
+          description: "true si está PENDIENTE y empieza en menos de 24 h."
+        creadoEn:
+          "$ref": "#/components/schemas/Instante"
+    TurnoManualRequest:
+      type: object
+      description: "Alta manual. Exactamente uno de pacienteId o paciente."
+      required: [prestacionId, inicio, emailContacto, telefonoContacto]
+      additionalProperties: false
+      properties:
+        pacienteId:
+          type: integer
+          format: int64
+        paciente:
+          "$ref": "#/components/schemas/PacienteRequest"
+        prestacionId:
+          type: integer
+          format: int64
+        inicio:
+          "$ref": "#/components/schemas/Instante"
+        emailContacto:
+          "$ref": "#/components/schemas/Email"
+        telefonoContacto:
+          "$ref": "#/components/schemas/Telefono"
+      oneOf:
+        - required: [pacienteId]
+        - required: [paciente]
+    ReprogramarRequest:
+      type: object
+      required: [inicio]
+      additionalProperties: false
+      properties:
+        inicio:
+          "$ref": "#/components/schemas/Instante"
+    EstadoAsistenciaRequest:
+      type: object
+      required: [estado]
+      additionalProperties: false
+      properties:
+        estado:
+          type: string
+          enum: [ASISTIO, AUSENTE]
+    ReservaPublicaRequest:
+      type: object
+      required: [nombre, apellido, dni, email, telefono, prestacionId, inicio, consentimiento]
+      additionalProperties: false
+      properties:
+        nombre:
+          "$ref": "#/components/schemas/NombrePersona"
+        apellido:
+          "$ref": "#/components/schemas/NombrePersona"
+        dni:
+          "$ref": "#/components/schemas/DniEntrada"
+        email:
+          "$ref": "#/components/schemas/Email"
+        telefono:
+          "$ref": "#/components/schemas/Telefono"
+        prestacionId:
+          type: integer
+          format: int64
+        inicio:
+          "$ref": "#/components/schemas/Instante"
+        consentimiento:
+          type: boolean
+          description: "Obligatorio; con false la reserva se rechaza (422 CONSENTIMIENTO_REQUERIDO)."
+    TurnoResumenPublico:
+      type: object
+      description: "Resumen público por token. No incluye DNI, apellido, email, teléfono, ids ni el token."
+      required: [prestacion, inicio, fin, estado, nombrePaciente, puedeConfirmar, puedeCancelar, contactoConsultorio]
+      additionalProperties: false
+      properties:
+        prestacion:
+          "$ref": "#/components/schemas/PrestacionResumen"
+        inicio:
+          "$ref": "#/components/schemas/Instante"
+        fin:
+          "$ref": "#/components/schemas/Instante"
+        estado:
+          "$ref": "#/components/schemas/EstadoTurno"
+        nombrePaciente:
+          type: string
+          description: "Solo nombre de pila."
+        puedeConfirmar:
+          type: boolean
+          description: "true si está PENDIENTE y faltan 48 h o menos (y más de 0)."
+        puedeCancelar:
+          type: boolean
+          description: "true solo si está PENDIENTE y faltan 24 h o más; siempre false si está CONFIRMADO (confirmar es definitivo para el paciente)."
+        contactoConsultorio:
+          type: string
+          description: "Dato de contacto del consultorio (APP_CONSULTORIO_CONTACTO)."
+    DiaDisponible:
+      type: object
+      required: [fecha, horarios]
+      additionalProperties: false
+      properties:
+        fecha:
+          "$ref": "#/components/schemas/FechaDia"
+        horarios:
+          type: array
+          items:
+            "$ref": "#/components/schemas/Instante"
+    Disponibilidad:
+      type: object
+      description: "Un elemento de dias por cada fecha del rango, con horarios vacío si no hay lugar."
+      required: [prestacion, dias]
+      additionalProperties: false
+      properties:
+        prestacion:
+          "$ref": "#/components/schemas/PrestacionRef"
+        dias:
+          type: array
+          items:
+            "$ref": "#/components/schemas/DiaDisponible"

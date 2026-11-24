@@ -205,6 +205,8 @@ La prueba de la carrera (dos hilos reservando a la vez) es la prueba clave del a
 
 ## Borrador de recursos y endpoints REST
 
+> **Contrato vigente (C-01):** el contrato de la API es `docs/api/openapi.yaml` y la lista final de códigos de error está en `docs/api/errores.md`; este borrador quedó superado (p. ej. la disponibilidad usa `desde`/`hasta`). Ante diferencias, prevalece `docs/api/`.
+>
 > **Esto es un borrador, no el contrato.** Sirve de base para el primer change "contrato de API" del roadmap, que fija rutas definitivas, JSON de request/response, códigos de estado y códigos de error. Hasta que ese change esté mergeado a `main`, nadie implementa contra estas rutas como si fueran finales.
 
 Convenciones: prefijo `/api`; JSON; ids numéricos; instantes ISO-8601 con offset; errores con el formato uniforme y los [códigos HTTP unificados](#códigos-http-unificados).

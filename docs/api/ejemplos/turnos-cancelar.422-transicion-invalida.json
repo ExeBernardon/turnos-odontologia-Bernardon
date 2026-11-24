@@ -1,0 +1,8 @@
+{
+  "timestamp": "2026-11-30T10:15:00-03:00",
+  "status": 422,
+  "error": "Unprocessable Entity",
+  "codigo": "TRANSICION_INVALIDA",
+  "mensaje": "El turno ya está cancelado o finalizado y no se puede cancelar.",
+  "path": "/api/turnos/104/cancelar"
+}

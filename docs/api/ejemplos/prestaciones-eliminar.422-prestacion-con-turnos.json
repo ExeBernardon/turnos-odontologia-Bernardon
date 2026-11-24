@@ -1,0 +1,8 @@
+{
+  "timestamp": "2026-11-30T10:15:00-03:00",
+  "status": 422,
+  "error": "Unprocessable Entity",
+  "codigo": "PRESTACION_CON_TURNOS",
+  "mensaje": "La prestación tiene turnos y no se puede eliminar. Desactivala.",
+  "path": "/api/prestaciones/1"
+}

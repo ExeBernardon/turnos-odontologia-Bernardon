@@ -1,0 +1,8 @@
+{
+  "timestamp": "2026-11-30T10:15:00-03:00",
+  "status": 422,
+  "error": "Unprocessable Entity",
+  "codigo": "TRANSICION_INVALIDA",
+  "mensaje": "Solo se puede marcar la asistencia desde la hora de inicio del turno.",
+  "path": "/api/turnos/103/estado"
+}

@@ -1,0 +1,23 @@
+{
+  "id": 104,
+  "inicio": "2026-12-02T11:00:00-03:00",
+  "fin": "2026-12-02T11:30:00-03:00",
+  "estado": "CANCELADO",
+  "canceladoPor": "ODONTOLOGO",
+  "paciente": {
+    "id": 2,
+    "nombre": "Bruno",
+    "apellido": "Prueba",
+    "dni": "99999998"
+  },
+  "prestacion": {
+    "id": 1,
+    "nombre": "Consulta",
+    "duracionMinutos": 30
+  },
+  "emailContacto": "bruno@ejemplo.com",
+  "telefonoContacto": "+54 9 11 0000-0001",
+  "consentimientoAt": "2026-11-23T09:00:00-03:00",
+  "pendienteMenos24h": false,
+  "creadoEn": "2026-11-23T09:00:00-03:00"
+}

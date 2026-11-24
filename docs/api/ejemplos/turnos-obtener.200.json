@@ -1,0 +1,23 @@
+{
+  "id": 101,
+  "inicio": "2026-12-03T10:00:00-03:00",
+  "fin": "2026-12-03T10:30:00-03:00",
+  "estado": "PENDIENTE",
+  "canceladoPor": null,
+  "paciente": {
+    "id": 1,
+    "nombre": "Ana",
+    "apellido": "Ejemplo",
+    "dni": "99999999"
+  },
+  "prestacion": {
+    "id": 1,
+    "nombre": "Consulta",
+    "duracionMinutos": 30
+  },
+  "emailContacto": "paciente@ejemplo.com",
+  "telefonoContacto": "+54 9 11 0000-0000",
+  "consentimientoAt": "2026-11-23T09:00:00-03:00",
+  "pendienteMenos24h": false,
+  "creadoEn": "2026-11-23T09:00:00-03:00"
+}

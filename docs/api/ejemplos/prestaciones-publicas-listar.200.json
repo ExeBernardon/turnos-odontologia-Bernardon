@@ -1,0 +1,12 @@
+[
+  {
+    "id": 1,
+    "nombre": "Consulta",
+    "duracionMinutos": 30
+  },
+  {
+    "id": 2,
+    "nombre": "Limpieza",
+    "duracionMinutos": 45
+  }
+]
