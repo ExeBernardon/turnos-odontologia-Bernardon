@@ -1,0 +1,26 @@
+# Perfil local: backend fuera de Docker contra `docker compose up db mailpit`.
+# Valores identicos a .env.example (solo desarrollo; nada de esto es un secreto real).
+server:
+  port: 8081
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:${DB_PORT:5432}/${POSTGRES_DB:turnos}
+    username: ${POSTGRES_USER:turnos}
+    password: ${POSTGRES_PASSWORD:cambiar-esto}
+  mail:
+    host: localhost
+    port: ${MAILPIT_SMTP_PORT:1025}
+    properties:
+      mail:
+        smtp:
+          auth: false
+          starttls:
+            enable: false
+
+app:
+  jwt:
+    secret: ${JWT_SECRET:cambiar-por-una-cadena-larga-de-32-bytes-o-mas}
+  seed:
+    odontologo:
+      password: ${SEED_ODONTOLOGO_PASSWORD:cambiar-esto}
