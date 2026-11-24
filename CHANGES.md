@@ -239,7 +239,7 @@ Primer change recomendado: **C-01 `contrato-api`** (`/opsx:propose contrato-api`
 ---
 
 ### [C-03] `entidades-base-y-seed`
-- **Estado**: `[ ]` pendiente
+- **Estado**: `[x]` hecho (archivado 2026-11-24, PR #5)
 - **Scope**: Modelo de datos completo, sin lógica de negocio. Mini-gate: mergear rápido (~1-2 h) porque todo el backend lo necesita
   - Entidades JPA: `Odontologo`, `Paciente`, `Prestacion`, `HorarioAtencion`, `Bloqueo`, `Turno` con los tipos y constraints de KB 04 (`timestamptz`, DNI único, token único, `email_contacto`, `telefono_contacto`, `consentimiento_at`, `recordatorio_enviado`, `alerta_pendiente_enviada`, `cancelado_por`)
   - Enum `EstadoTurno` (`@Enumerated(STRING)`) y enum de `cancelado_por`
