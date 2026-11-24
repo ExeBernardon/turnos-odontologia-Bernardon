@@ -1387,6 +1387,16 @@ components:
             no-encontrado:
               summary: RECURSO_NO_ENCONTRADO
               externalValue: "./ejemplos/error.404-recurso-no-encontrado.json"
+    ErrorInterno:
+      description: "`ERROR_INTERNO`: error inesperado del servidor. Respuesta genérica que cualquier operación puede devolver; no se repite en cada operación. Sin detalles internos ni stack trace."
+      content:
+        application/json:
+          schema:
+            "$ref": "#/components/schemas/Error"
+          examples:
+            error-interno:
+              summary: ERROR_INTERNO
+              externalValue: "./ejemplos/error.500-error-interno.json"
   schemas:
     Instante:
       type: string
@@ -1437,7 +1447,7 @@ components:
     CodigoError:
       type: string
       description: "Catálogo cerrado de códigos de negocio (ver docs/api/errores.md). Cada código pertenece a un único status HTTP."
-      enum: [VALIDACION, SOLICITUD_MAL_FORMADA, NO_AUTENTICADO, CREDENCIALES_INVALIDAS, RECURSO_NO_ENCONTRADO, TOKEN_INVALIDO, HORARIO_OCUPADO, BLOQUEO_CON_TURNOS_AFECTADOS, HORARIO_NO_DISPONIBLE, CONSENTIMIENTO_REQUERIDO, CANCELACION_FUERA_DE_PLAZO, CONFIRMACION_FUERA_DE_PLAZO, TRANSICION_INVALIDA, PRESTACION_INACTIVA, PRESTACION_CON_TURNOS, DNI_DUPLICADO, RANGO_HORARIO_INVALIDO, HORARIOS_SOLAPADOS]
+      enum: [VALIDACION, SOLICITUD_MAL_FORMADA, NO_AUTENTICADO, CREDENCIALES_INVALIDAS, RECURSO_NO_ENCONTRADO, TOKEN_INVALIDO, HORARIO_OCUPADO, BLOQUEO_CON_TURNOS_AFECTADOS, HORARIO_NO_DISPONIBLE, CONSENTIMIENTO_REQUERIDO, CANCELACION_FUERA_DE_PLAZO, CONFIRMACION_FUERA_DE_PLAZO, TRANSICION_INVALIDA, PRESTACION_INACTIVA, PRESTACION_CON_TURNOS, DNI_DUPLICADO, RANGO_HORARIO_INVALIDO, HORARIOS_SOLAPADOS, ERROR_INTERNO]
     DetalleError:
       type: object
       required: [campo, mensaje]
@@ -1458,10 +1468,10 @@ components:
           "$ref": "#/components/schemas/Instante"
         status:
           type: integer
-          enum: [400, 401, 404, 409, 422]
+          enum: [400, 401, 404, 409, 422, 500]
         error:
           type: string
-          description: "Nombre del estado HTTP (Bad Request, Unauthorized, Not Found, Conflict, Unprocessable Entity)."
+          description: "Nombre del estado HTTP (Bad Request, Unauthorized, Not Found, Conflict, Unprocessable Entity, Internal Server Error)."
         codigo:
           "$ref": "#/components/schemas/CodigoError"
         mensaje:
