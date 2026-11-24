@@ -215,6 +215,7 @@ Primer change recomendado: **C-01 `contrato-api`** (`/opsx:propose contrato-api`
 
 ### [C-02] `docker-scaffold`
 - **Estado**: `[ ]` pendiente
+- **Nota (desvíos aprobados al aplicar)**: el health check es `/actuator/health` (no `/api/health`, que no existe en el contrato de C-01) y la imagen de build del front usa Node 24 (no `node:20-alpine`). C-02 además agrega al contrato el error 500 `ERROR_INTERNO` (respuesta genérica a errores inesperados).
 - **Scope**: Entorno idéntico para los 6 desde el día uno + esqueletos de proyecto (US-016, parte infraestructura)
   - `docker-compose.yml` con `db` (`postgres:16`, healthcheck `pg_isready`, volumen `pgdata`), `backend`, `frontend` y `mailpit` (`axllent/mailpit`, UI 8025, SMTP 1025); `backend` depende de `db` healthy, `frontend` depende de `backend`; puertos configurables por `.env`
   - `.env.example` versionado con **todas** las variables de KB 08 §Variables de entorno y valores de dev para Mailpit; `.env` en `.gitignore` (con excepción de `.env.example`)
