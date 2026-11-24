@@ -45,11 +45,18 @@ POSTGRES_PASSWORD=cambiar-esto
 
 # Backend
 JWT_SECRET=cambiar-por-una-cadena-larga-de-32-bytes-o-mas
-SEED_ODONTOLOGO_NOMBRE=Dr. Bernardon
-SEED_ODONTOLOGO_EMAIL=odontologo@example.com
+# Datos ficticios, nunca nombre ni email reales. Este email recibe las alertas de turnos pendientes (en dev llegan a Mailpit)
+SEED_ODONTOLOGO_NOMBRE=Dr. Ejemplo
+SEED_ODONTOLOGO_EMAIL=odontologo@ejemplo.com
 SEED_ODONTOLOGO_PASSWORD=cambiar-esto
 APP_FRONTEND_BASE_URL=http://localhost:8080
 APP_ZONA_HORARIA=America/Argentina/Buenos_Aires
+APP_RECORDATORIO_INTERVALO_MIN=15
+APP_RECORDATORIO_HORAS_ANTES=48
+APP_ALERTA_PENDIENTE_HORAS=24
+APP_CANCELACION_HORAS_MINIMAS=24
+APP_TURNO_ANTICIPACION_MIN_HORAS=2
+APP_TURNO_VENTANA_MAX_DIAS=60
 
 # Mail (dev: Mailpit)
 SPRING_MAIL_HOST=mailpit
@@ -79,12 +86,12 @@ Flujo de trabajo recomendado para el desarrollo diario: `docker compose up db ma
 2. Crear una "contraseña de aplicación" y ponerla en `SPRING_MAIL_PASSWORD`.
 3. `SPRING_MAIL_HOST=smtp.gmail.com`, `SPRING_MAIL_PORT=587`, `..._SMTP_AUTH=true`, `..._STARTTLS_ENABLE=true`.
 4. Probar con anticipación: revisar spam y el límite diario de envíos.
-5. Nunca versionar la contraseña ni el `.env`.
+5. Nunca versionar la contraseña ni el `.env` (el `.gitignore` ya ignora `.env` y `.env.*`, con excepción de `.env.example`).
 
 ## Persistencia y seed
 
 - Datos de Postgres en el volumen `pgdata`.
-- Al arrancar el backend: Hibernate crea o actualiza tablas, luego `schema-extra.sql` agrega `btree_gist` y la restricción de exclusión, luego el seeder crea el odontólogo y los datos de ejemplo si faltan (ver [04](04_modelo_de_datos.md)).
+- Al arrancar el backend: Hibernate crea o actualiza tablas, luego `schema-extra.sql` agrega `btree_gist` y la restricción de exclusión (idempotente: corre en cada arranque pero reiniciar no rompe ni duplica nada, ver [08](08_arquitectura_propuesta.md#esquema-de-base-de-datos)), luego el seeder crea el odontólogo y los datos de ejemplo si faltan (ver [04](04_modelo_de_datos.md)).
 
 ## Zona horaria
 
