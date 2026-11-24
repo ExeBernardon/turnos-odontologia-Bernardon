@@ -43,7 +43,6 @@ La fuente de verdad del dominio vive en `knowledge-base/` (índice en [README](k
 | [11_docker_y_entornos.md](knowledge-base/11_docker_y_entornos.md) | Docker Compose, puertos, `.env`, Mailpit vs Gmail |
 
 > ⚠️ Resolver (o confirmar con el equipo) las preguntas de prioridad **Alta** de `10_preguntas_abiertas.md` antes de arrancar el primer change:
-> - Grupo de **6 integrantes** vs. máximo de 3 que admite el enunciado: consultar a la cátedra si se acepta y cómo se evalúa.
 > - Criterios de evaluación de la entrega (tests, documentación, demo en vivo).
 > - Presentación local con Docker o despliegue (define `APP_FRONTEND_BASE_URL` y los links de los emails).
 > - Cuenta de Gmail para la demo y quién genera la contraseña de aplicación.
