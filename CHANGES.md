@@ -191,7 +191,7 @@ Primer change recomendado: **C-01 `contrato-api`** (`/opsx:propose contrato-api`
 > Los tres changes de esta fase son secuenciales y bloquean el trabajo paralelo. Son cortos a propósito: mergear rápido, con revisión de al menos otro integrante.
 
 ### [C-01] `contrato-api`
-- **Estado**: `[ ]` pendiente
+- **Estado**: `[x]` hecho (archivado 2026-11-24, PR #1)
 - **Scope**: Contrato de API versionado en el repo (DD-11); es lo primero que se mergea a `main`
   - `docs/api/openapi.yaml` (OpenAPI 3.1) con **todos** los endpoints del borrador de KB 08 §Borrador de recursos y endpoints REST: auth (`POST /api/auth/login`, `GET /api/auth/me`), públicos (`GET /api/public/prestaciones`, `GET /api/public/disponibilidad`, `POST /api/public/turnos`, `GET /api/public/turnos/{token}`, `POST /api/public/turnos/{token}/confirmar`, `POST /api/public/turnos/{token}/cancelar`), configuración (`/api/prestaciones`, `/api/horarios-atencion`, `/api/bloqueos`, `/api/bloqueos/previsualizar`), pacientes (`/api/pacientes`), turnos (`/api/turnos`, `PATCH .../reprogramar`, `POST .../confirmar`, `POST .../cancelar`, `PATCH .../estado`) y `GET /api/disponibilidad`
   - Schemas de request/response (DTOs) con tipos, formatos y validaciones: instantes ISO-8601 con offset, fechas `YYYY-MM-DD`, DNI normalizado, enum `EstadoTurno` (`PENDIENTE|CONFIRMADO|CANCELADO|ASISTIO|AUSENTE`), `cancelado_por`, `ultimoContacto`, indicador de "pendiente a menos de 24 h" en `GET /api/turnos`
