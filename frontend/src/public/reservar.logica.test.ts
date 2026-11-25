@@ -158,7 +158,9 @@ describe('textoEstado', () => {
   it.each([
     ['PENDIENTE', 'Pendiente de confirmación'],
     ['CONFIRMADO', 'Confirmado'],
-    ['AUSENTE', 'AUSENTE'],
+    ['CANCELADO', 'Cancelado'],
+    ['ASISTIO', 'Asistió'],
+    ['AUSENTE', 'No asistió'],
   ] as const)('%s -> %s', (estado, texto) => {
     expect(textoEstado(estado)).toBe(texto);
   });
