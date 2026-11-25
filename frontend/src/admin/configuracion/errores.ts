@@ -9,6 +9,7 @@ const MENSAJES: Partial<Record<CodigoError, string>> = {
   PRESTACION_CON_TURNOS: 'La prestación tiene turnos y no se puede eliminar. Podés desactivarla en su lugar.',
   RANGO_HORARIO_INVALIDO: 'La hora de inicio debe ser anterior a la hora de fin.',
   HORARIOS_SOLAPADOS: 'El rango se superpone con otro horario de atención del mismo día.',
+  BLOQUEO_CON_TURNOS_AFECTADOS: 'El rango tiene turnos activos. Confirmá la cancelación para crear el bloqueo.',
   ERROR_INTERNO: MENSAJE_GENERICO,
 };
 

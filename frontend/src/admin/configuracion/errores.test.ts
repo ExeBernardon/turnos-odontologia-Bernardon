@@ -15,6 +15,14 @@ function aErrorApi(cuerpo: unknown): ErrorApi {
   return new ErrorApi(c.status, c.mensaje, c.codigo, c.detalles, c);
 }
 
+describe('mensajeDeError: bloqueos', () => {
+  it('BLOQUEO_CON_TURNOS_AFECTADOS pide confirmar la cancelacion', () => {
+    const cuerpo = ejemplo('bloqueos-crear.409-bloqueo-con-turnos-afectados');
+    expect(mensajeDeError(aErrorApi(cuerpo))).toMatch(/turnos/i);
+    expect(mensajeDeError(aErrorApi(cuerpo))).toMatch(/confirm/i);
+  });
+});
+
 describe('mensajeDeError', () => {
   it('PRESTACION_CON_TURNOS sugiere desactivar', () => {
     expect(mensajeDeError(aErrorApi(eliminar422))).toMatch(/turnos/i);
