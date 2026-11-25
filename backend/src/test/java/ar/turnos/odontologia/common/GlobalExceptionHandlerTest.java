@@ -58,6 +58,12 @@ class GlobalExceptionHandlerTest {
                     "Ese cambio de estado no está permitido para este turno.");
         }
 
+        @GetMapping("/prueba/validacion-detalles")
+        void validacionConDetalles() {
+            throw new ApiException(HttpStatus.BAD_REQUEST, "VALIDACION", "Hay campos con errores.",
+                    java.util.List.of(new DetalleError("hasta", "El rango no puede superar los 31 días.")));
+        }
+
         @GetMapping("/prueba/solapamiento")
         void solapamiento() {
             throw new DataIntegrityViolationException(
@@ -139,6 +145,17 @@ class GlobalExceptionHandlerTest {
                 .andExpect(jsonPath("$.codigo").value("TRANSICION_INVALIDA"))
                 .andExpect(jsonPath("$.mensaje").value("Ese cambio de estado no está permitido para este turno."))
                 .andExpect(jsonPath("$.detalles").doesNotExist());
+    }
+
+    @Test
+    void apiExceptionConDetallesLosPropagaSinPerderElFormato() throws Exception {
+        mvc.perform(get("/prueba/validacion-detalles"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.codigo").value("VALIDACION"))
+                .andExpect(jsonPath("$.mensaje").value("Hay campos con errores."))
+                .andExpect(jsonPath("$.detalles.length()").value(1))
+                .andExpect(jsonPath("$.detalles[0].campo").value("hasta"))
+                .andExpect(jsonPath("$.detalles[0].mensaje").value("El rango no puede superar los 31 días."));
     }
 
     @Test

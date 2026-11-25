@@ -58,7 +58,7 @@ class TurnoAvisosServiceTest {
     @BeforeEach
     void setUp() {
         service = new TurnoService(turnos, pacientes, prestaciones, disponibilidad, notificaciones,
-                generador, new TurnoMapper(RELOJ, APP.zonaHoraria(), APP.consultorio().contacto()), RELOJ);
+                generador, new TurnoMapper(RELOJ, APP.zonaHoraria(), APP.consultorio().contacto()), RELOJ, APP);
 
         when(prestaciones.findById(1L)).thenReturn(Optional.of(new Prestacion("Consulta", 30)));
         when(pacientes.findByDni("99999999"))
