@@ -38,7 +38,7 @@
 
 - [x] 6.1 Refactor final con tests verdes, `./mvnw verify` en `backend/` completo (nuevos + baseline, sin regresiones en los IT que no mockean `NotificacionTurnos`) y `openspec validate c-11-notificaciones-email-backend --strict`
 - [ ] 6.2 Prueba manual: `docker compose up --build`, reservar un turno a más de 48 h, a 24–48 h y a menos de 24 h desde el front y verificar en Mailpit (`http://localhost:8025`) Confirmación de reserva (solo Cancelar), Recordatorio (Confirmar y Cancelar) y Aviso (sin botones), que los links abren `/turno/cancelar` y `/turno/confirmar` del front y que el log del backend no muestra emails ni tokens
-- [ ] 6.3 Plantear al equipo en el PR (sin editar el contrato): borrado del no-op y cambios en `NotificacionTurnosIT` (Int 1, C-03), timeouts en `application.yml`/`application-test.yml` (Int 2, C-02), que en la demo con Gmail `APP_MAIL_FROM` debe ser la cuenta autenticada, y para C-12 que el job invoque `recordatorio` / `turnoNoConfirmado` dentro de una transacción (lectura LAZY) y use el `boolean` para los flags
+- [x] 6.3 Plantear al equipo en el PR (sin editar el contrato): borrado del no-op y cambios en `NotificacionTurnosIT` (Int 1, C-03), timeouts en `application.yml`/`application-test.yml` (Int 2, C-02), que en la demo con Gmail `APP_MAIL_FROM` debe ser la cuenta autenticada, y para C-12 que el job invoque `recordatorio` / `turnoNoConfirmado` dentro de una transacción (lectura LAZY) y use el `boolean` para los flags
 
 ## Workflow follow-up
 

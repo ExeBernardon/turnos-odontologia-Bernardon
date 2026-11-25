@@ -397,7 +397,7 @@ Primer change recomendado: **C-01 `contrato-api`** (`/opsx:propose contrato-api`
 ---
 
 ### [C-11] `notificaciones-email-backend`
-- **Estado**: `[ ]` pendiente
+- **Estado**: `[x]` hecho (archivado 2026-11-25, PR #25)
 - **Scope**: Envío real de emails (parte de US-006, US-011, US-012, US-004, base de US-015 y US-022)
   - `EmailService` sobre Spring Mail: remitente `APP_MAIL_FROM`, links construidos con `APP_FRONTEND_BASE_URL` (`/turno/confirmar?token=...`, `/turno/cancelar?token=...`), horas renderizadas en Buenos Aires
   - Plantillas en `resources/templates/` para los 8 mails de KB 05 §Mails del sistema: 1 Confirmación de reserva (solo Cancelar), 1b Aviso (sin botones), 2 Recordatorio (Confirmar y Cancelar), 3 Reprogramación (solo Cancelar), 3b Reprogramación a menos de 24 h (sin botones), 4 Cancelación por el odontólogo, 5 Cancelación por bloqueo (invita a reservar de nuevo), 6 Turno no confirmado (al odontólogo, con teléfono de contacto)
