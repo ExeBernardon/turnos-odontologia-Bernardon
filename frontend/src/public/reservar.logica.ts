@@ -114,15 +114,23 @@ export function armarReserva(entrada: EntradaReserva, prestacionId: number, inic
   };
 }
 
-/** Estado del turno en palabras para el paciente; un estado inesperado se muestra tal cual. */
+/** Estado del turno en palabras para el paciente. */
 export function textoEstado(estado: EstadoTurno): string {
   switch (estado) {
     case 'PENDIENTE':
       return 'Pendiente de confirmación';
     case 'CONFIRMADO':
       return 'Confirmado';
-    default:
-      return estado;
+    case 'CANCELADO':
+      return 'Cancelado';
+    case 'ASISTIO':
+      return 'Asistió';
+    case 'AUSENTE':
+      return 'No asistió';
+    default: {
+      const inesperado: never = estado;
+      return inesperado;
+    }
   }
 }
 

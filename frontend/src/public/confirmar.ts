@@ -1,7 +1,6 @@
-import { placeholder } from '../shared/dom';
 import type { ContextoRuta } from '../shared/router';
+import { iniciarTurnoToken } from './turno-token';
 
-/** C-1x: reemplazar el contenido de esta pantalla (el router y la ruta ya estan registrados). */
-export function render(contenedor: HTMLElement, _ctx: ContextoRuta): void {
-  placeholder(contenedor, 'Confirmar turno');
+export function render(contenedor: HTMLElement, ctx: ContextoRuta): void {
+  void iniciarTurnoToken(contenedor, 'confirmar', ctx);
 }

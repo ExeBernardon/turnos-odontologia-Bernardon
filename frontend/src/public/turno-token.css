@@ -1,0 +1,44 @@
+/* Paginas publicas de confirmar/cancelar por token: mobile-first. Los estilos cfg-* (de formulario.ts) se acotan a .turno-token. */
+.turno-token { max-width: 40rem; margin: 0 auto; }
+.turno-token h2 { font-size: 1.15rem; margin: 0 0 0.5rem; }
+.turno-token h2:focus,
+.turno-token p:focus { outline: 3px solid #1a56db; outline-offset: 2px; }
+
+.turno-token .cfg-avisos { min-height: 1.5rem; }
+.turno-token .cfg-estado { color: #14532d; margin: 0.25rem 0; }
+.turno-token .cfg-alerta { color: #991b1b; font-weight: 600; margin: 0.25rem 0; }
+.turno-token .cfg-alerta-accion { margin: 0.25rem 0 0.75rem; }
+
+.turno-token button {
+  font: inherit;
+  min-height: 2.75rem;
+  min-width: 2.75rem;
+  padding: 0.25rem 1rem;
+  cursor: pointer;
+}
+.turno-token button:disabled { cursor: progress; }
+.turno-token button[hidden] { display: none; }
+
+/* Accion destructiva: color y borde grueso ademas de su texto explicito (nunca solo color). */
+.turno-token-destructivo { background: #fef2f2; color: #7f1d1d; border: 3px solid #b91c1c; font-weight: 700; }
+.turno-token-principal { font-weight: 700; }
+
+.turno-token-detalle { display: grid; grid-template-columns: max-content 1fr; gap: 0.25rem 1rem; margin: 0 0 1rem; }
+.turno-token-detalle dt { font-weight: 600; }
+.turno-token-detalle dd { margin: 0; overflow-wrap: anywhere; }
+
+.turno-token-resultado,
+.turno-token-mensaje { margin: 0 0 1rem; padding: 0.75rem; border: 1px solid #c7ccd4; border-radius: 0.5rem; }
+.turno-token-resultado h2 { margin: 0; }
+.turno-token-mensaje p,
+.turno-token-resultado p { margin: 0.25rem 0; }
+.turno-token-enlace { display: inline-block; padding: 0.6rem 0; min-height: 1.5rem; }
+
+.turno-token-acciones { margin: 0 0 1rem; }
+.turno-token-confirmacion { border: 2px solid #b91c1c; border-radius: 0.5rem; padding: 0.75rem; }
+.turno-token-confirmacion p { margin: 0 0 0.75rem; font-weight: 600; }
+.turno-token-botones { display: flex; flex-direction: column; gap: 0.5rem; }
+
+@media (min-width: 30rem) {
+  .turno-token-botones { flex-direction: row; flex-wrap: wrap; }
+}

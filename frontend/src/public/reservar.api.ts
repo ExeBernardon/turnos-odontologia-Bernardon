@@ -39,7 +39,7 @@ function parsearEstado(dato: Record<string, unknown>): EstadoTurno {
   return conocido;
 }
 
-function parsearResumen(dato: unknown): TurnoResumenPublico {
+export function parsearResumen(dato: unknown): TurnoResumenPublico {
   if (!esObjeto(dato) || !esObjeto(dato['prestacion'])) {
     throw new Error('Respuesta inválida: turno');
   }
