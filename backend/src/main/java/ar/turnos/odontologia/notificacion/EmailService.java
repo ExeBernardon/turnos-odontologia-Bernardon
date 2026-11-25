@@ -47,7 +47,7 @@ public class EmailService {
             MimeMessageHelper helper = new MimeMessageHelper(mensaje, false, StandardCharsets.UTF_8.name());
             helper.setFrom(remitente);
             helper.setTo(destinatario);
-            helper.setSubject(tipo.asunto());
+            helper.setSubject(tipo.asuntoPara(modelo));
             helper.setText(html, true);
             sender.send(mensaje);
 

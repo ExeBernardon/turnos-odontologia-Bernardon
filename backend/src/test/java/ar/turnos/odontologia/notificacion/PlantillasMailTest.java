@@ -28,7 +28,7 @@ class PlantillasMailTest {
 
     private String render(TipoMail tipo, Turno turno) {
         Context ctx = new Context();
-        ctx.setVariables(ModeloMail.de(tipo, turno, links, formato, CONTACTO));
+        ctx.setVariables(ModeloMail.de(tipo, turno, links, formato, CONTACTO, 24));
         return motor.process(tipo.plantilla(), ctx);
     }
 
@@ -55,6 +55,20 @@ class PlantillasMailTest {
     @Test
     void elTurnoNoConfirmadoMuestraElTelefonoDelTurno() {
         assertThat(render(TipoMail.TURNO_NO_CONFIRMADO, MotorPlantillasPrueba.turno("Ana", TOKEN))).contains(TELEFONO);
+    }
+
+    @Test
+    void elTurnoNoConfirmadoMuestraLasHorasDeLaAlertaConfigurada() {
+        Turno turno = MotorPlantillasPrueba.turno("Ana", TOKEN);
+
+        assertThat(renderNoConfirmado(turno, 24)).contains("24 horas");
+        assertThat(renderNoConfirmado(turno, 12)).contains("12 horas").doesNotContain("24 horas");
+    }
+
+    private String renderNoConfirmado(Turno turno, int horasAlerta) {
+        Context ctx = new Context();
+        ctx.setVariables(ModeloMail.de(TipoMail.TURNO_NO_CONFIRMADO, turno, links, formato, CONTACTO, horasAlerta));
+        return motor.process(TipoMail.TURNO_NO_CONFIRMADO.plantilla(), ctx);
     }
 
     @Test

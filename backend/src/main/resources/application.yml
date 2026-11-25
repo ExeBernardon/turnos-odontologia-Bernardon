@@ -4,6 +4,10 @@
 # (un placeholder sin resolver el Binder lo deja literal y no fallaria).
 server:
   port: 8080
+logging:
+  level:
+    # Ley 25.326: el detalle de PostgreSQL en errores de unicidad trae el valor (p. ej. el DNI).
+    org.hibernate.engine.jdbc.spi.SqlExceptionHelper: "OFF"
 
 spring:
   application:

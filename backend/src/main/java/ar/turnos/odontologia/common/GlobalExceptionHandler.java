@@ -92,11 +92,34 @@ public class GlobalExceptionHandler {
         }
         // Tambien cubre la violacion envuelta en otra excepcion (p. ej. TransactionSystemException al commit).
         if (ViolacionDeSolapamiento.es(e)) {
-            log.warn("Solapamiento rechazado por la base en {} {}", req.getMethod(), req.getRequestURI());
+            log.warn("Solapamiento rechazado por la base en {} {}", req.getMethod(), rutaParaLog(req));
             return responder(HttpStatus.CONFLICT, "HORARIO_OCUPADO", MSG_HORARIO_OCUPADO, req, null);
         }
-        log.error("Error inesperado en {} {}", req.getMethod(), req.getRequestURI(), e);
+        String estadoSql = estadoSql(e);
+        if (estadoSql != null) {
+            // Sin stack ni mensaje: el detalle de PostgreSQL puede traer valores (p. ej. Key (dni)=(...)).
+            log.error("Error de base de datos en {} {}: {} sqlState={}", req.getMethod(), rutaParaLog(req),
+                    e.getClass().getSimpleName(), estadoSql);
+            return responder(HttpStatus.INTERNAL_SERVER_ERROR, "ERROR_INTERNO", MSG_ERROR_INTERNO, req, null);
+        }
+        log.error("Error inesperado en {} {}", req.getMethod(), rutaParaLog(req), e);
         return responder(HttpStatus.INTERNAL_SERVER_ERROR, "ERROR_INTERNO", MSG_ERROR_INTERNO, req, null);
+    }
+
+    /** Las rutas con token ({@code /api/public/turnos/{token}...}) nunca van al log con el token completo. */
+    private static String rutaParaLog(HttpServletRequest req) {
+        return req.getRequestURI().replaceFirst("^(/api/public/turnos/)[^/]+", "$1{token}");
+    }
+
+    /** SQLSTATE de la primera {@link java.sql.SQLException} de la cadena de causas, o {@code null}. */
+    private static String estadoSql(Throwable e) {
+        Throwable actual = e;
+        for (int i = 0; actual != null && i < 20; i++, actual = actual.getCause()) {
+            if (actual instanceof java.sql.SQLException sql) {
+                return String.valueOf(sql.getSQLState());
+            }
+        }
+        return null;
     }
 
     private ResponseEntity<ApiError> responder(HttpStatus status, String codigo, String mensaje,

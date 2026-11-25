@@ -317,7 +317,7 @@ export function iniciar(contenedor: HTMLElement, opciones: OpcionesReserva = {})
       ...fila('Contacto del consultorio', resumen.contactoConsultorio),
     );
     const notas: Node[] = [
-      el('p', {}, `Revisá tu email (${emailIngresado}): te enviamos los datos del turno y los links para gestionarlo.`),
+      el('p', {}, `Revisá tu email (${emailIngresado}): te enviamos los datos del turno${resumen.estado === 'CONFIRMADO' ? '' : ' y los links para gestionarlo'}.`),
     ];
     if (resumen.estado === 'CONFIRMADO') {
       notas.push(el('p', {}, 'Si necesitás cambiarlo, comunicate con el consultorio.'));
