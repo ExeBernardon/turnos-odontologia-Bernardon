@@ -1,0 +1,77 @@
+/* Pantalla publica de reserva: mobile-first. Los estilos cfg-* (de formulario.ts) se acotan a .reserva. */
+.reserva { max-width: 40rem; margin: 0 auto; }
+.reserva h2 { font-size: 1.15rem; margin: 0 0 0.5rem; }
+.reserva-seccion { margin: 0 0 1.5rem; }
+.reserva-seccion[hidden],
+.reserva-grupo[hidden] { display: none; }
+.reserva-resumen h2:focus { outline: 3px solid #1a56db; outline-offset: 2px; }
+
+.reserva .cfg-avisos { min-height: 1.5rem; }
+.reserva .cfg-estado { color: #14532d; margin: 0.25rem 0; }
+.reserva .cfg-alerta { color: #991b1b; font-weight: 600; margin: 0.25rem 0; }
+.reserva .cfg-error { color: #991b1b; margin: 0.25rem 0 0; font-size: 0.9rem; }
+.reserva .cfg-error:empty { display: none; }
+.reserva .cfg-acciones { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; }
+
+.reserva .cfg-campo { display: grid; gap: 0.25rem; margin-bottom: 0.75rem; }
+.reserva .cfg-campo input:not([type='checkbox']) {
+  font: inherit;
+  padding: 0.5rem;
+  min-height: 2.75rem;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 100%;
+}
+.reserva .cfg-campo [aria-invalid='true'] { border: 2px solid #b91c1c; }
+.reserva button {
+  font: inherit;
+  min-height: 2.75rem;
+  min-width: 2.75rem;
+  padding: 0.25rem 1rem;
+  cursor: pointer;
+}
+.reserva button:disabled { cursor: progress; }
+
+.reserva-nota { margin: 0.25rem 0 0.75rem; color: #4b5563; }
+.reserva-nota:empty { display: none; }
+
+.reserva-grupo { border: 1px solid #c7ccd4; border-radius: 0.5rem; padding: 0.75rem; margin: 0 0 0.75rem; min-width: 0; }
+.reserva-grupo legend { font-weight: 600; padding: 0 0.25rem; }
+.reserva-grupo:focus { outline: 3px solid #1a56db; outline-offset: 2px; }
+.reserva-nota:focus { outline: 3px solid #1a56db; outline-offset: 2px; }
+
+.reserva-horarios { display: grid; grid-template-columns: repeat(auto-fill, minmax(5.5rem, 1fr)); gap: 0.5rem; }
+.reserva-horarios legend { grid-column: 1 / -1; }
+#res-prestaciones { display: grid; gap: 0.5rem; }
+
+/* Opciones de radio como tarjetas tactiles (>= 44 px); el elegido se marca por borde y peso, no solo por color. */
+.reserva-opcion {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 2.75rem;
+  box-sizing: border-box;
+  padding: 0.25rem 0.75rem;
+  border: 1px solid #c7ccd4;
+  border-radius: 0.5rem;
+  cursor: pointer;
+}
+.reserva-opcion input { width: 1.25rem; height: 1.25rem; flex: none; }
+.reserva-opcion:has(input:checked) { border: 3px solid #1a56db; font-weight: 700; background: #eff6ff; }
+.reserva-opcion:focus-within { outline: 3px solid #1a56db; outline-offset: 2px; }
+.reserva-hora { justify-content: center; }
+
+.reserva-fecha { display: grid; gap: 0.5rem; align-items: end; }
+.reserva-datos { display: grid; gap: 0 1rem; }
+.reserva-casilla { display: flex; align-items: flex-start; gap: 0.5rem; }
+.reserva-casilla input { width: 1.5rem; height: 1.5rem; flex: none; margin-top: 0.1rem; }
+.reserva-casilla label { padding: 0.25rem 0; }
+
+.reserva-detalle { display: grid; grid-template-columns: max-content 1fr; gap: 0.25rem 1rem; }
+.reserva-detalle dt { font-weight: 600; }
+.reserva-detalle dd { margin: 0; overflow-wrap: anywhere; }
+
+@media (min-width: 40rem) {
+  .reserva-datos { grid-template-columns: 1fr 1fr; }
+  .reserva-fecha { grid-template-columns: minmax(10rem, 16rem) auto; }
+}
