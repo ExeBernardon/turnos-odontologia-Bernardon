@@ -301,7 +301,7 @@ Primer change recomendado: **C-01 `contrato-api`** (`/opsx:propose contrato-api`
 ---
 
 ### [C-06] `disponibilidad-calculo`
-- **Estado**: `[ ]` pendiente
+- **Estado**: `[x]` hecho (archivado 2026-11-25, PR #16)
 - **Scope**: Cálculo de horarios libres, núcleo del sistema (US-005)
   - `DisponibilidadService` como **función pura** sobre listas de intervalos con `Clock` inyectado: horarios de atención − bloqueos − turnos activos − pasado − ventana; discretización con paso `app.agenda.paso-minutos` (15) alineada al inicio del rango de atención; el turno completo debe entrar en el rango
   - Ventana pública de 2 h a 60 días (configurable); consulta del odontólogo solo con "no en el pasado" (RN-DIS-06)
