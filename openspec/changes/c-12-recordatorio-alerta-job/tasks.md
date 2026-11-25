@@ -41,7 +41,7 @@
 ## 6. Cierre
 
 - [x] 6.1 Refactor final con tests verdes, `./mvnw verify` en `backend/` completo (nuevos + baseline, sin regresiones en los IT de otros dominios) y `openspec validate c-12-recordatorio-alerta-job --strict`
-- [ ] 6.2 Prueba manual: `docker compose up --build`; crear un turno `PENDIENTE` a 30 h con el SMTP apagado (sin Recordatorio), levantar Mailpit y verificar en `http://localhost:8025` que el ciclo siguiente lo envía con Confirmar y Cancelar; con `APP_ALERTA_PENDIENTE_HORAS` subido en el `.env` local, verificar el "Turno no confirmado" en `odontologo@ejemplo.com`; el log del backend no muestra emails ni tokens
+- [x] 6.2 Prueba manual: `docker compose up --build`; crear un turno `PENDIENTE` a 30 h con el SMTP apagado (sin Recordatorio), levantar Mailpit y verificar en `http://localhost:8025` que el ciclo siguiente lo envía con Confirmar y Cancelar; con `APP_ALERTA_PENDIENTE_HORAS` subido en el `.env` local, verificar el "Turno no confirmado" en `odontologo@ejemplo.com`; el log del backend no muestra emails ni tokens
 
 ## Workflow follow-up
 
