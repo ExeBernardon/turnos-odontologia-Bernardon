@@ -11,17 +11,20 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.FilterType;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.web.bind.annotation.RestController;
 
 import ar.turnos.odontologia.common.ApiErrorFactory;
 import ar.turnos.odontologia.common.GlobalExceptionHandler;
 import ar.turnos.odontologia.security.ApiAuthenticationEntryPoint;
 
 /** Reglas de acceso del contrato: sin token solo login y /api/public/** pasan; el resto es 401 uniforme. */
-@WebMvcTest
+@WebMvcTest(excludeFilters = @ComponentScan.Filter(type = FilterType.ANNOTATION, classes = RestController.class))
 @ActiveProfiles("test")
 @Import({ SecurityConfig.class, ApiAuthenticationEntryPoint.class, ApiErrorFactory.class,
         GlobalExceptionHandler.class, ClockConfig.class, AppPropertiesConfig.class })
