@@ -570,7 +570,7 @@ Primer change recomendado: **C-01 `contrato-api`** (`/opsx:propose contrato-api`
 ## FASE 3 — Integración y cierre del MVP
 
 ### [C-21] `integracion-e2e-demo`
-- **Estado**: `[ ]` pendiente
+- **Estado**: `[x]` hecho (archivado 2026-11-25, PR #35)
 - **Scope**: Dejar el MVP demostrable el 2026-11-25
   - `docker compose down -v && docker compose up --build` desde cero en la máquina de al menos dos integrantes distintos; seed presente (odontólogo ficticio, prestaciones, horarios)
   - Recorrido manual de los 6 flujos de KB 07: login, reserva pública (incluida la carrera), confirmar/cancelar por token con las reglas de 48 h y 24 h, recordatorio y alerta (con `APP_RECORDATORIO_INTERVALO_MIN` bajo para probar), bloqueo con turnos afectados, agenda; los mails se verifican en Mailpit
