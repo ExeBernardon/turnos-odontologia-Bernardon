@@ -22,6 +22,7 @@
     <jjwt.version>0.12.6</jjwt.version>
     <!-- Docker Engine 29 exige API >= 1.44; Testcontainers 1.21.3 (BOM de Boot 3.5.7) habla 1.32 y falla con HTTP 400 -->
     <testcontainers.version>1.21.4</testcontainers.version>
+    <greenmail.version>2.1.8</greenmail.version>
   </properties>
 
   <dependencies>
@@ -106,6 +107,13 @@
     <dependency>
       <groupId>org.testcontainers</groupId>
       <artifactId>postgresql</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <!-- SMTP en memoria para verificar destinatario, remitente y contenido de los mails -->
+    <dependency>
+      <groupId>com.icegreen</groupId>
+      <artifactId>greenmail-junit5</artifactId>
+      <version>${greenmail.version}</version>
       <scope>test</scope>
     </dependency>
   </dependencies>

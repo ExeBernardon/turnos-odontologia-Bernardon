@@ -5,7 +5,7 @@ import ar.turnos.odontologia.turno.Turno;
 /**
  * Punto unico por el que los dominios piden avisar sobre un turno: un metodo por cada fila de la tabla
  * "Mails del sistema" de KB 05. Los invocan C-07 (reserva), C-08 (reprogramar/cancelar), C-10 (bloqueos)
- * y el job de C-11.
+ * y el job de C-12.
  *
  * <p>Contrato comun a todos los metodos:
  * <ul>
