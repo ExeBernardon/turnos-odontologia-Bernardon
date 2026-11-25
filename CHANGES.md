@@ -485,7 +485,7 @@ Primer change recomendado: **C-01 `contrato-api`** (`/opsx:propose contrato-api`
 ---
 
 ### [C-16] `pacientes-front`
-- **Estado**: `[ ]` pendiente
+- **Estado**: `[x]` hecho (archivado 2026-11-25, PR #22)
 - **Scope**: Pantalla `/admin/pacientes` (US-014)
   - `src/admin/pacientes.ts`: listado con búsqueda por DNI o apellido, alta y edición (nombre, apellido, DNI), error `DNI_DUPLICADO` mostrado en el campo
   - Detalle con `ultimoContacto` en solo lectura
