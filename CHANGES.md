@@ -519,7 +519,7 @@ Primer change recomendado: **C-01 `contrato-api`** (`/opsx:propose contrato-api`
 ---
 
 ### [C-18] `turno-token-front`
-- **Estado**: `[ ]` pendiente
+- **Estado**: `[x]` hecho (archivado 2026-11-25, PR #33)
 - **Scope**: Páginas de confirmar y cancelar por link del email (US-007, US-008, parte front)
   - `src/public/confirmar.ts` (`/turno/confirmar?token=...`) y `src/public/cancelar.ts` (`/turno/cancelar?token=...`): primero `GET /api/public/turnos/{token}` (solo lectura) para mostrar el resumen; **recién al apretar el botón** se hace el `POST` (nunca cambia el estado al abrir el link)
   - Cancelar pide confirmación en pantalla antes del `POST`
