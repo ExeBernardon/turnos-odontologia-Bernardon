@@ -535,7 +535,7 @@ Primer change recomendado: **C-01 `contrato-api`** (`/opsx:propose contrato-api`
 ---
 
 ### [C-19] `agenda-vistas-front`
-- **Estado**: `[ ]` pendiente
+- **Estado**: `[x]` completado (2026-11-25)
 - **Scope**: Pantalla `/admin/agenda`, vistas de lectura (US-009)
   - `src/admin/agenda.ts` + `src/admin/agenda/`: vista diaria y semanal con paciente, prestación, hora de inicio/fin, estado y teléfono de contacto del turno; navegación entre días y semanas
   - `PENDIENTE` marcados como "sin confirmar"; los `PENDIENTE` a menos de 24 h resaltados (con teléfono visible); cancelados atenuados u ocultables
