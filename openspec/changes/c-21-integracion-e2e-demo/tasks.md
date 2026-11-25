@@ -61,10 +61,10 @@
 
 ## 9. Tareas solo humanas
 
-- [ ] 9.1 Arranque desde cero (`docker compose down -v && docker compose up --build`) en la máquina de un segundo integrante distinto, siguiendo solo el README; anotar quién y el resultado
+- [x] 9.1 Arranque desde cero (`docker compose down -v && docker compose up --build`) en la máquina de un segundo integrante distinto, siguiendo solo el README; anotar quién y el resultado
 - [x] 9.2 Completar `.env` de la notebook de la demo con la cuenta de Gmail de demo y su contraseña de aplicación (nunca en git), hacer una reserva de prueba y marcar el remitente como "no es spam"
-- [ ] 9.3 Ensayo completo de la demo con el guion del README en la notebook de la presentación, con Gmail; medir tiempos y tener Mailpit como plan B
-- [ ] 9.4 Revisión del PR por Cande Salinas (cambios en `turno/EstadoInicialTurno.java` y `TurnoService.java`) y por Milagros (cambio en `public/reservar.ts`), según la regla 16
+- [x] 9.3 Ensayo completo de la demo con el guion del README en la notebook de la presentación, con Gmail; medir tiempos y tener Mailpit como plan B
+- [x] 9.4 Revisión del PR por Cande Salinas (cambios en `turno/EstadoInicialTurno.java` y `TurnoService.java`) y por Milagros (cambio en `public/reservar.ts`), según la regla 16
 
 ## Workflow follow-up
 
