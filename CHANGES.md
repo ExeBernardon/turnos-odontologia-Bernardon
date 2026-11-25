@@ -342,7 +342,7 @@ Primer change recomendado: **C-01 `contrato-api`** (`/opsx:propose contrato-api`
 ---
 
 ### [C-08] `turnos-acciones-backend`
-- **Estado**: `[ ]` pendiente
+- **Estado**: `[x]` hecho (archivado 2026-11-25, PR #18)
 - **Scope**: Ciclo de vida del turno y agenda (US-007, US-008, US-009 backend, US-011, US-012, US-013, US-021)
   - `GET /api/turnos?desde&hasta&estado` — agenda por rango con `telefonoContacto` y el indicador de "pendiente a menos de 24 h"; `GET /api/turnos/{id}`
   - `POST /api/public/turnos/{token}/confirmar` — solo `PENDIENTE`, solo con 48 h o menos de anticipación (422 si más, RN-NOT-08), idempotente si ya está confirmado, 422 si cancelado/pasado/terminal, 404 si el token no existe
