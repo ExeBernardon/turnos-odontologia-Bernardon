@@ -46,7 +46,7 @@ La pantalla SHALL permitir avanzar y retroceder un día en la vista diaria y una
 
 ### Requirement: Identificación de turnos pendientes
 
-Los turnos `PENDIENTE` SHALL etiquetarse como "sin confirmar". Los que tengan `pendienteMenos24h: true` SHALL resaltarse de forma distinguishable, con el teléfono de contacto visible y puntos de enganche en el DOM para las acciones Confirmar y Cancelar, las cuales NO SHALL ejecutarse en este change.
+Los turnos `PENDIENTE` SHALL etiquetarse como "sin confirmar". Los que tengan `pendienteMenos24h: true` SHALL resaltarse de forma distinguishable, con el teléfono de contacto visible y puntos de enganche en el DOM para las acciones Confirmar y Cancelar, las cuales SHALL ejecutar las acciones definidas en la capability `agenda-acciones-front`.
 
 #### Scenario: Turno pendiente lejano
 
@@ -56,7 +56,7 @@ Los turnos `PENDIENTE` SHALL etiquetarse como "sin confirmar". Los que tengan `p
 #### Scenario: Turno pendiente cercano
 
 - **WHEN** un turno está `PENDIENTE` y `pendienteMenos24h` es `true`
-- **THEN** aparece resaltado, con su teléfono visible y los puntos de enganche para Confirmar y Cancelar, sin que estas acciones produzcan efectos
+- **THEN** aparece resaltado, con su teléfono visible y los puntos de enganche para Confirmar y Cancelar habilitados, que ejecutan la confirmación y la cancelación con confirmación en pantalla
 
 #### Scenario: Turno confirmado
 
