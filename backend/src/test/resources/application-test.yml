@@ -12,3 +12,7 @@ spring:
           connectiontimeout: 1000
           timeout: 1000
           writetimeout: 1000
+app:
+  recordatorio:
+    # Los tests invocan AvisosProgramadosService.ejecutarCiclo(ahora) directamente: el job no corre solo.
+    job-habilitado: false
