@@ -321,7 +321,7 @@ Primer change recomendado: **C-01 `contrato-api`** (`/opsx:propose contrato-api`
 ---
 
 ### [C-07] `turnos-alta-reserva-backend`
-- **Estado**: `[ ]` pendiente
+- **Estado**: `[x]` hecho (archivado 2026-11-25, PR #17)
 - **Scope**: Crear turnos: reserva pública y carga manual (US-006, parte backend de US-010)
   - `POST /api/public/turnos` — valida formato (400 con `detalles`), consentimiento obligatorio (422 `CONSENTIMIENTO_REQUERIDO`, guarda `consentimiento_at`), prestación activa, horario con `validarHorario` (C-06); resuelve paciente por DNI normalizado (crea o reutiliza **sin modificarlo**); email y teléfono van al turno; token opaco de 32 bytes `SecureRandom` Base64 URL-safe
   - `POST /api/turnos` (JWT) — carga manual con paciente existente o alta rápida, `emailContacto` y `telefonoContacto`; sin mínimo de 2 h, solo no en el pasado; `consentimiento_at` null
