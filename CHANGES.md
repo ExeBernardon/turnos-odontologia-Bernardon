@@ -283,7 +283,7 @@ Primer change recomendado: **C-01 `contrato-api`** (`/opsx:propose contrato-api`
 ---
 
 ### [C-05] `prestaciones-horarios-backend`
-- **Estado**: `[ ]` pendiente
+- **Estado**: `[x]` hecho (archivado 2026-11-24, PR #7)
 - **Scope**: Configuración del consultorio, parte backend (US-002, US-003)
   - `GET/POST /api/prestaciones`, `PUT /api/prestaciones/{id}`, `DELETE /api/prestaciones/{id}` (422 si tiene turnos: se desactiva); `GET /api/public/prestaciones` (solo activas)
   - `GET/POST /api/horarios-atencion`, `PUT/DELETE /api/horarios-atencion/{id}`; 422 si `inicio >= fin` o si el rango se solapa con otro del mismo día
