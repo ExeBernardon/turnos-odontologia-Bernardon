@@ -32,8 +32,8 @@
 
 - [x] 6.1 `cd frontend && npm run lint && npm run typecheck && npm test && npm run build` en verde; sin `any`, sin `console.log`, sin dependencias nuevas en `package.json`; `types.sync.test.ts` sigue verde (no se tocó `types.ts`)
 - [x] 6.2 `openspec validate c-16-pacientes-front --strict` sin errores
-- [ ] 6.3 Prueba manual con `docker compose up` (o `npm run dev` con backend): login, `/admin/pacientes` carga la lista, buscar por DNI con puntos y por apellido, alta, alta con DNI repetido (error en el campo), edición, detalle con y sin último contacto
-- [ ] 6.4 Chequeo manual de accesibilidad solo con teclado: Tab/Shift+Tab recorre buscador, resultados, detalle y formulario con foco visible; Enter busca y envía; los errores se leen junto a su campo; a 375px de ancho no hay scroll horizontal
+- [x] 6.3 Prueba manual con `docker compose up` (o `npm run dev` con backend): login, `/admin/pacientes` carga la lista, buscar por DNI con puntos y por apellido, alta, alta con DNI repetido (error en el campo), edición, detalle con y sin último contacto
+- [x] 6.4 Chequeo manual de accesibilidad solo con teclado: Tab/Shift+Tab recorre buscador, resultados, detalle y formulario con foco visible; Enter busca y envía; los errores se leen junto a su campo; a 375px de ancho no hay scroll horizontal
 
 ## Workflow follow-up
 
