@@ -27,7 +27,7 @@ function leerObjeto(o: Record<string, unknown>, campo: string): Record<string, u
   return valor;
 }
 
-function parsearTurno(dato: unknown): Turno | null {
+export function parsearTurno(dato: unknown): Turno | null {
   try {
     if (!esObjeto(dato)) {
       return null;

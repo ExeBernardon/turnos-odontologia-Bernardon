@@ -1,0 +1,322 @@
+/* Acciones de la agenda (C-20): mobile-first, acotado a .agenda-acciones y .aa-*. Tokens de design-system/tokens.css (revision 1). */
+
+.aa-barra {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.aa-boton {
+  min-height: var(--control-min-height);
+  min-width: var(--control-min-height);
+  padding: var(--space-1) var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-bg);
+  color: var(--color-text);
+  font: inherit;
+  cursor: pointer;
+}
+
+.aa-boton:hover:not(:disabled) {
+  border-color: var(--color-text-muted);
+}
+
+.aa-boton:disabled {
+  cursor: not-allowed;
+  color: var(--color-text-muted);
+  background: var(--color-surface-soft);
+}
+
+.aa-boton--primario {
+  border-color: var(--color-primary);
+  background: var(--color-primary);
+  color: var(--color-primary-contrast);
+}
+
+.aa-boton--primario:hover:not(:disabled) {
+  border-color: var(--color-primary-hover);
+  background: var(--color-primary-hover);
+}
+
+.aa-boton--primario:disabled {
+  border-color: var(--color-border);
+  background: var(--color-surface-soft);
+}
+
+/* Cancelar y Ausente: texto + borde grueso, no solo color. */
+.aa-boton--peligro {
+  border: 2px solid var(--color-danger-border);
+  color: var(--color-danger-text);
+  font-weight: 600;
+}
+
+.aa-boton--peligro:disabled {
+  border-color: var(--color-border);
+  color: var(--color-text-muted);
+}
+
+.aa-boton:focus-visible,
+.aa-panel :focus-visible,
+.aa-dialogo :focus-visible,
+.aa-aviso:focus-visible,
+.agenda-acciones :focus-visible {
+  outline: var(--focus-width) solid var(--focus-color);
+  outline-offset: var(--focus-offset);
+}
+
+.agenda-acciones.aa-acciones {
+  align-items: center;
+}
+
+.agenda-acciones .aa-boton {
+  color: var(--color-text);
+}
+
+.agenda-acciones .aa-boton--primario {
+  color: var(--color-primary-contrast);
+}
+
+.agenda-acciones .aa-boton--peligro {
+  color: var(--color-danger-text);
+}
+
+.agenda-acciones .aa-mas {
+  flex: 1 1 100%;
+}
+
+.agenda-acciones .aa-mas > summary {
+  min-height: var(--control-min-height);
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.agenda-acciones .aa-mas[open] {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.agenda-acciones .aa-mas[open] > summary {
+  flex: 1 1 100%;
+}
+
+.aa-ayuda {
+  flex: 1 1 100%;
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+  overflow-wrap: anywhere;
+}
+
+/* Regiones de resultado */
+.aa-aviso {
+  margin: 0;
+  color: var(--color-success-text);
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.aa-alerta {
+  margin: 0;
+  color: var(--color-danger-text);
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.aa-aviso:empty,
+.aa-alerta:empty,
+.aa-panel-contenedor:empty {
+  display: none;
+}
+
+/* Paneles de alta y reprogramacion: apilados, sin scroll horizontal */
+.aa-panel {
+  display: grid;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-bg);
+  box-shadow: var(--shadow-card);
+  min-width: 0;
+}
+
+.aa-panel h2 {
+  margin: 0;
+  font-size: var(--font-size-lg);
+}
+
+.aa-resumen {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.aa-form {
+  display: grid;
+  gap: var(--space-3);
+  min-width: 0;
+}
+
+.aa-grupo {
+  min-width: 0;
+  margin: 0;
+  padding: var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+}
+
+.aa-grupo legend {
+  padding: 0 var(--space-1);
+  font-weight: 600;
+}
+
+.aa-opcion,
+.aa-horario {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: var(--control-min-height);
+}
+
+.aa-opcion input,
+.aa-horario input {
+  width: 1.25rem;
+  height: 1.25rem;
+  flex: none;
+}
+
+.aa-horarios__grupo {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1) var(--space-4);
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.aa-fila {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.aa-panel .cfg-campo {
+  display: grid;
+  gap: var(--space-1);
+}
+
+.aa-panel input:not([type='radio']),
+.aa-panel select {
+  min-height: var(--control-min-height);
+  max-width: 100%;
+  box-sizing: border-box;
+  padding: var(--space-1) var(--space-2);
+  font: inherit;
+}
+
+.aa-panel [aria-invalid='true'] {
+  border: 2px solid var(--color-danger-border);
+}
+
+.aa-panel .cfg-error,
+.aa-panel .cfg-alerta {
+  margin: 0;
+  color: var(--color-danger-text);
+  overflow-wrap: anywhere;
+}
+
+.aa-panel .cfg-estado {
+  margin: 0;
+  color: var(--color-success-text);
+}
+
+.aa-panel .cfg-error:empty,
+.aa-panel .cfg-alerta:empty,
+.aa-panel .cfg-estado:empty,
+.aa-panel .cfg-alerta-accion:empty {
+  display: none;
+}
+
+.aa-estado {
+  margin: 0;
+  color: var(--color-text-muted);
+}
+
+.aa-estado:empty,
+.aa-alerta-accion:empty {
+  display: none;
+}
+
+.aa-acciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.aa-paciente {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+/* Dialogo de confirmacion: ancho completo en el celular */
+.aa-dialogo-fondo {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.aa-dialogo {
+  box-sizing: border-box;
+  width: 100%;
+  max-height: 100%;
+  overflow-y: auto;
+  padding: var(--space-4);
+  border-radius: var(--radius-md) var(--radius-md) 0 0;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-family);
+}
+
+.aa-dialogo__titulo {
+  margin: 0 0 var(--space-2);
+  font-size: var(--font-size-lg);
+}
+
+.aa-dialogo__texto {
+  margin: 0 0 var(--space-4);
+  overflow-wrap: anywhere;
+}
+
+.aa-dialogo__botones {
+  display: flex;
+  flex-direction: column-reverse;
+  gap: var(--space-2);
+}
+
+@media (min-width: 40rem) {
+  .aa-dialogo-fondo {
+    align-items: center;
+  }
+
+  .aa-dialogo {
+    width: min(32rem, 100%);
+    border-radius: var(--radius-md);
+  }
+
+  .aa-dialogo__botones {
+    flex-direction: row;
+    justify-content: flex-end;
+  }
+
+  .aa-panel {
+    max-width: 40rem;
+  }
+}

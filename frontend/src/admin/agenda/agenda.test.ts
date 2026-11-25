@@ -2,10 +2,14 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { ErrorConexion } from '../../api/cliente';
 import type { Bloqueo, HorarioAtencion, Turno } from '../../api/types';
 import { ejemplo } from '../configuracion/ejemplos.testutil';
+import { respuesta, stubServidor } from '../configuracion/servidor.testutil';
 import { cargarDatosAgenda, type DatosAgenda } from './agenda.api';
 import { render } from './agenda';
 
-vi.mock('./agenda.api', () => ({ cargarDatosAgenda: vi.fn() }));
+vi.mock('./agenda.api', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('./agenda.api')>()),
+  cargarDatosAgenda: vi.fn(),
+}));
 
 const cargar = vi.mocked(cargarDatosAgenda);
 const turnos = ejemplo('turnos-listar.200') as Turno[];
@@ -40,6 +44,7 @@ describe('pantalla de agenda', () => {
 
   afterEach(() => {
     vi.useRealTimers();
+    vi.unstubAllGlobals();
     document.body.innerHTML = '';
   });
 
@@ -66,12 +71,15 @@ describe('pantalla de agenda', () => {
 
     const confirmar = urgente?.querySelector<HTMLButtonElement>('[data-enganche="confirmar"]');
     const cancelar = urgente?.querySelector<HTMLButtonElement>('[data-enganche="cancelar"]');
-    expect(confirmar?.disabled).toBe(true);
-    expect(cancelar?.disabled).toBe(true);
-    const llamadas = cargar.mock.calls.length;
+    expect(confirmar?.disabled).toBe(false);
+    expect(cancelar?.disabled).toBe(false);
+    const { llamadas } = stubServidor({
+      'POST /api/turnos/102/confirmar': () => respuesta(200, ejemplo('turnos-confirmar.200')),
+    });
+    const cargas = cargar.mock.calls.length;
     confirmar?.click();
-    cancelar?.click();
-    expect(cargar.mock.calls.length).toBe(llamadas);
+    await vi.waitFor(() => expect(cargar.mock.calls.length).toBe(cargas + 1));
+    expect(llamadas.map((l) => l.metodo + ' ' + l.url)).toEqual(['POST /api/turnos/102/confirmar']);
 
     boton(contenedor, 'Mostrar cancelados').click();
     await vi.waitFor(() => expect(contenedor.querySelector('[data-turno-id="104"]')).not.toBeNull());
@@ -126,8 +134,8 @@ describe('pantalla de agenda', () => {
 
     cargar.mockRejectedValue(new ErrorConexion());
     const otro = montar();
-    await vi.waitFor(() => expect(otro.querySelector('[role="alert"]')).not.toBeNull());
-    expect(otro.querySelector('[role="alert"]')?.textContent).toContain('conectarnos');
+    await vi.waitFor(() => expect(otro.querySelector('.agenda-error')).not.toBeNull());
+    expect(otro.querySelector('.agenda-error')?.textContent).toContain('conectarnos');
     const reintentar = boton(otro, 'Reintentar');
     const llamadas = cargar.mock.calls.length;
     reintentar.click();
