@@ -114,6 +114,25 @@ class DataSeederIT {
         assertThat(horarios.count()).isEqualTo(10);
     }
 
+    private DataSeeder seederConEmailSinNormalizar() {
+        AppProperties otro = new AppProperties(app.zonaHoraria(), app.frontendBaseUrl(), app.agenda(),
+                app.recordatorio(), app.alerta(), app.cancelacion(), app.turno(), app.consultorio(), app.mail(),
+                app.jwt(), new AppProperties.Seed(new AppProperties.Seed.Odontologo(
+                        app.seed().odontologo().nombre(), "  Odontologo@Ejemplo.com  ",
+                        app.seed().odontologo().password())));
+        return new DataSeeder(odontologos, prestaciones, horarios, otro, passwordEncoder);
+    }
+
+    @Test
+    void guardaNormalizadoElEmailDelSeedConEspaciosYMayusculas() {
+        vaciarTodo();
+
+        seederConEmailSinNormalizar().run();
+
+        assertThat(odontologos.findAll()).singleElement()
+                .satisfies(o -> assertThat(o.getEmail()).isEqualTo("odontologo@ejemplo.com"));
+    }
+
     private DataSeeder seederConOtroOdontologo() {
         AppProperties otro = new AppProperties(app.zonaHoraria(), app.frontendBaseUrl(), app.agenda(),
                 app.recordatorio(), app.alerta(), app.cancelacion(), app.turno(), app.consultorio(), app.mail(),
