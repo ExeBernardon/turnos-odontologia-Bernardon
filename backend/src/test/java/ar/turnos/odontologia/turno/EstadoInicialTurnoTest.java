@@ -50,4 +50,51 @@ class EstadoInicialTurnoTest {
         assertThat(EstadoInicialTurno.entre24y48Horas(a24, RELOJ)).isTrue();
         assertThat(EstadoInicialTurno.entre24y48Horas(a24.minusNanos(1), RELOJ)).isFalse();
     }
+
+    // ---- Umbrales configurables (C-21): confirmacion 12 h, recordatorio 72 h ----
+
+    private static final EstadoInicialTurno.Umbrales UMBRALES = new EstadoInicialTurno.Umbrales(
+            Duration.ofHours(12), Duration.ofHours(72));
+
+    @Test
+    void conUmbralDe12HorasUnTurnoA20HorasNacePendienteSinFlags() {
+        EstadoInicialTurno estado = EstadoInicialTurno.calcular(RELOJ.instant().plus(Duration.ofHours(20)), RELOJ,
+                UMBRALES);
+
+        assertThat(estado.estado()).isEqualTo(EstadoTurno.PENDIENTE);
+        assertThat(estado.recordatorioEnviado()).isFalse();
+        assertThat(estado.alertaPendienteEnviada()).isFalse();
+    }
+
+    @Test
+    void conUmbralDe12HorasElBordeExactoEsPendienteYUnNanoAntesEsConfirmado() {
+        Instant a12 = RELOJ.instant().plus(Duration.ofHours(12));
+
+        assertThat(EstadoInicialTurno.calcular(a12, RELOJ, UMBRALES).estado()).isEqualTo(EstadoTurno.PENDIENTE);
+        EstadoInicialTurno antes = EstadoInicialTurno.calcular(a12.minus(Duration.ofMinutes(1)), RELOJ, UMBRALES);
+        assertThat(antes.estado()).isEqualTo(EstadoTurno.CONFIRMADO);
+        assertThat(antes.recordatorioEnviado()).isTrue();
+        assertThat(antes.alertaPendienteEnviada()).isTrue();
+    }
+
+    @Test
+    void conUmbralDe72HorasUnTurnoA60HorasEstaEnLaFranjaDeRecordatorioYNoLaSupera() {
+        Instant a60 = RELOJ.instant().plus(Duration.ofHours(60));
+
+        assertThat(EstadoInicialTurno.enFranjaDeRecordatorio(a60, RELOJ, UMBRALES)).isTrue();
+        assertThat(EstadoInicialTurno.superaRecordatorio(a60, RELOJ, UMBRALES)).isFalse();
+    }
+
+    @Test
+    void conUmbralDe72HorasLosBordesPertenecenALaFranjaDeRecordatorio() {
+        Instant a72 = RELOJ.instant().plus(Duration.ofHours(72));
+        Instant a12 = RELOJ.instant().plus(Duration.ofHours(12));
+
+        assertThat(EstadoInicialTurno.superaRecordatorio(a72, RELOJ, UMBRALES)).isFalse();
+        assertThat(EstadoInicialTurno.superaRecordatorio(a72.plusNanos(1), RELOJ, UMBRALES)).isTrue();
+        assertThat(EstadoInicialTurno.enFranjaDeRecordatorio(a72, RELOJ, UMBRALES)).isTrue();
+        assertThat(EstadoInicialTurno.enFranjaDeRecordatorio(a72.plusNanos(1), RELOJ, UMBRALES)).isFalse();
+        assertThat(EstadoInicialTurno.enFranjaDeRecordatorio(a12, RELOJ, UMBRALES)).isTrue();
+        assertThat(EstadoInicialTurno.enFranjaDeRecordatorio(a12.minusNanos(1), RELOJ, UMBRALES)).isFalse();
+    }
 }

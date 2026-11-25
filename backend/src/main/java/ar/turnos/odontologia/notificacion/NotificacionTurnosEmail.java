@@ -28,6 +28,7 @@ public class NotificacionTurnosEmail implements NotificacionTurnos {
     private final LinksTurno links;
     private final FormatoTurno formato;
     private final String contacto;
+    private final int horasAlerta;
 
     public NotificacionTurnosEmail(EmailService emails, OdontologoRepository odontologos, AppProperties props) {
         this.emails = emails;
@@ -35,6 +36,7 @@ public class NotificacionTurnosEmail implements NotificacionTurnos {
         this.links = new LinksTurno(props.frontendBaseUrl());
         this.formato = new FormatoTurno(props.zonaHoraria());
         this.contacto = props.consultorio().contacto();
+        this.horasAlerta = props.alerta().pendienteHoras();
     }
 
     @Override
@@ -88,6 +90,6 @@ public class NotificacionTurnosEmail implements NotificacionTurnos {
     }
 
     private boolean enviar(TipoMail tipo, Turno turno, String destinatario) {
-        return emails.enviar(tipo, turno.getId(), destinatario, ModeloMail.de(tipo, turno, links, formato, contacto));
+        return emails.enviar(tipo, turno.getId(), destinatario, ModeloMail.de(tipo, turno, links, formato, contacto, horasAlerta));
     }
 }

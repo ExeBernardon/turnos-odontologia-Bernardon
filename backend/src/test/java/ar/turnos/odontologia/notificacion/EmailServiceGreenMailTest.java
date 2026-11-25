@@ -46,7 +46,7 @@ class EmailServiceGreenMailTest {
     }
 
     private Map<String, Object> modelo(TipoMail tipo, Turno turno) {
-        return ModeloMail.de(tipo, turno, links, formato, AppPropertiesFixture.CONTACTO);
+        return ModeloMail.de(tipo, turno, links, formato, AppPropertiesFixture.CONTACTO, 24);
     }
 
     private static int puertoCerrado() throws IOException {
@@ -84,7 +84,7 @@ class EmailServiceGreenMailTest {
         assertThat(salio).isTrue();
         MimeMessage mensaje = greenMail.getReceivedMessages()[0];
         assertThat(mensaje.getAllRecipients()[0].toString()).isEqualTo("odontologo@ejemplo.com");
-        assertThat(mensaje.getSubject()).isEqualTo(TipoMail.TURNO_NO_CONFIRMADO.asunto());
+        assertThat(mensaje.getSubject()).isEqualTo("Turno sin confirmar a menos de 24 h");
     }
 
     @Test

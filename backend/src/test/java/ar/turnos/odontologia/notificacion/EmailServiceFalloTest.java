@@ -42,7 +42,7 @@ class EmailServiceFalloTest {
     }
 
     private Map<String, Object> modelo(TipoMail tipo) {
-        return ModeloMail.de(tipo, turno, links, formato, AppPropertiesFixture.CONTACTO);
+        return ModeloMail.de(tipo, turno, links, formato, AppPropertiesFixture.CONTACTO, 24);
     }
 
     @Test

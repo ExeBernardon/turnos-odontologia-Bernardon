@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.Arrays;
 import java.util.EnumSet;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -23,6 +24,27 @@ class TipoMailTest {
 
         assertThat(asuntos).hasSize(8).allSatisfy(a -> assertThat(a).isNotBlank());
         assertThat(plantillas).hasSize(8).allSatisfy(p -> assertThat(p).startsWith("email/"));
+    }
+
+    @Test
+    void elAvisoDeTurnoConfirmadoLlevaTildeEnElAsunto() {
+        assertThat(TipoMail.AVISO_TURNO_CONFIRMADO.asunto()).isEqualTo("Tu turno quedó reservado");
+    }
+
+    @Test
+    void elAsuntoDelTurnoNoConfirmadoMuestraLasHorasDeLaAlerta() {
+        assertThat(TipoMail.TURNO_NO_CONFIRMADO.asuntoPara(Map.of("horasAlerta", 24)))
+                .isEqualTo("Turno sin confirmar a menos de 24 h");
+        assertThat(TipoMail.TURNO_NO_CONFIRMADO.asuntoPara(Map.of("horasAlerta", 12)))
+                .isEqualTo("Turno sin confirmar a menos de 12 h");
+    }
+
+    @Test
+    void losAsuntosFijosNoCambianConElModelo() {
+        assertThat(TipoMail.RECORDATORIO.asuntoPara(Map.of("horasAlerta", 12)))
+                .isEqualTo("Recordatorio de tu turno: confirmalo o cancelalo");
+        assertThat(TipoMail.CONFIRMACION_RESERVA.asuntoPara(Map.of()))
+                .isEqualTo(TipoMail.CONFIRMACION_RESERVA.asunto());
     }
 
     @Test

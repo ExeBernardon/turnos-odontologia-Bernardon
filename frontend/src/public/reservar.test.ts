@@ -541,6 +541,7 @@ describe('reservar: resumen', () => {
       'Pendiente de confirmación',
       'Consultorio de ejemplo - Tel. +54 9 11 0000-0000',
       'Revisá tu email (paciente@ejemplo.com)',
+      'los links para gestionarlo',
     ]) {
       expect(texto).toContain(esperado);
     }
@@ -562,6 +563,8 @@ describe('reservar: resumen', () => {
     expect(texto).toContain('Confirmado');
     expect(texto).not.toContain('Pendiente de confirmación');
     expect(texto).toContain('Si necesitás cambiarlo, comunicate con el consultorio.');
+    expect(texto).toContain('Revisá tu email (paciente@ejemplo.com): te enviamos los datos del turno.');
+    expect(texto).not.toContain('links');
   });
 
   it('Reservar otro turno vuelve al paso de prestacion con el formulario vacio y la casilla desmarcada', async () => {

@@ -64,6 +64,19 @@ class GlobalExceptionHandlerTest {
                     java.util.List.of(new DetalleError("hasta", "El rango no puede superar los 31 días.")));
         }
 
+        @PostMapping("/api/public/turnos/{token}/cancelar")
+        void fallaEnRutaConToken(@PathVariable String token) {
+            throw new IllegalStateException("fallo inesperado");
+        }
+
+        @GetMapping("/prueba/unicidad-con-dni")
+        void unicidadConDni() {
+            throw new DataIntegrityViolationException("could not execute statement [ERROR: duplicate key value "
+                    + "violates unique constraint \"paciente_dni_uk\"\n  Detail: Key (dni)=(99999977) already exists.]",
+                    new java.sql.SQLException("ERROR: duplicate key value\n  Detail: Key (dni)=(99999977) already exists.",
+                            "23505"));
+        }
+
         @GetMapping("/prueba/solapamiento")
         void solapamiento() {
             throw new DataIntegrityViolationException(
@@ -179,6 +192,49 @@ class GlobalExceptionHandlerTest {
                         org.hamcrest.Matchers.containsString("relation turno"))))
                 .andExpect(content().string(org.hamcrest.Matchers.not(
                         org.hamcrest.Matchers.containsString("IllegalStateException"))));
+    }
+
+    @Test
+    void elLogDeUnErrorInesperadoNoIncluyeElTokenDeLaRuta() throws Exception {
+        String token = "tokFicticioDeLaRutaPublica-123_abcdef";
+        ch.qos.logback.classic.Logger logger = (ch.qos.logback.classic.Logger) org.slf4j.LoggerFactory
+                .getLogger(GlobalExceptionHandler.class);
+        ch.qos.logback.core.read.ListAppender<ch.qos.logback.classic.spi.ILoggingEvent> appender =
+                new ch.qos.logback.core.read.ListAppender<>();
+        appender.start();
+        logger.addAppender(appender);
+        try {
+            mvc.perform(post("/api/public/turnos/" + token + "/cancelar"))
+                    .andExpect(status().isInternalServerError());
+        } finally {
+            logger.detachAppender(appender);
+        }
+
+        org.assertj.core.api.Assertions.assertThat(appender.list).isNotEmpty()
+                .allSatisfy(evento -> org.assertj.core.api.Assertions
+                        .assertThat(evento.getFormattedMessage()).doesNotContain(token)
+                        .contains("/api/public/turnos/{token}/cancelar"));
+    }
+
+    @Test
+    void elLogDeUnaFallaDeBaseNoIncluyeLosValoresDelDetalleDeLaBase() throws Exception {
+        ch.qos.logback.classic.Logger logger = (ch.qos.logback.classic.Logger) org.slf4j.LoggerFactory
+                .getLogger(GlobalExceptionHandler.class);
+        ch.qos.logback.core.read.ListAppender<ch.qos.logback.classic.spi.ILoggingEvent> appender =
+                new ch.qos.logback.core.read.ListAppender<>();
+        appender.start();
+        logger.addAppender(appender);
+        try {
+            mvc.perform(get("/prueba/unicidad-con-dni")).andExpect(status().isInternalServerError());
+        } finally {
+            logger.detachAppender(appender);
+        }
+
+        org.assertj.core.api.Assertions.assertThat(appender.list).isNotEmpty().allSatisfy(evento -> {
+            String completo = evento.getFormattedMessage() + (evento.getThrowableProxy() == null ? ""
+                    : ch.qos.logback.classic.spi.ThrowableProxyUtil.asString(evento.getThrowableProxy()));
+            org.assertj.core.api.Assertions.assertThat(completo).doesNotContain("99999977").contains("23505");
+        });
     }
 
     @Test

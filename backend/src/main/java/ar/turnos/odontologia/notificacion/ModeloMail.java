@@ -16,7 +16,7 @@ final class ModeloMail {
     }
 
     static Map<String, Object> de(TipoMail tipo, Turno turno, LinksTurno links, FormatoTurno formato,
-            String contacto) {
+            String contacto, int horasAlerta) {
         Map<String, Object> modelo = new HashMap<>();
         modelo.put("paciente", turno.getPaciente().getNombre() + " " + turno.getPaciente().getApellido());
         modelo.put("prestacion", turno.getPrestacion().getNombre());
@@ -28,6 +28,9 @@ final class ModeloMail {
         }
         if (tipo.llevaCancelar()) {
             modelo.put("linkCancelar", links.cancelar(turno.getToken()));
+        }
+        if (tipo == TipoMail.TURNO_NO_CONFIRMADO) {
+            modelo.put("horasAlerta", horasAlerta);
         }
         if (tipo == TipoMail.CANCELACION_BLOQUEO) {
             modelo.put("linkReservar", links.reservar());

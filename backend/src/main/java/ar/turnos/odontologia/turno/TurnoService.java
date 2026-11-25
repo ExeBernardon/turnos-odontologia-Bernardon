@@ -53,6 +53,7 @@ public class TurnoService {
     private final TurnoMapper mapper;
     private final Clock clock;
     private final ZoneId zona;
+    private final EstadoInicialTurno.Umbrales umbrales;
 
     public TurnoService(TurnoRepository turnos, PacienteRepository pacientes,
             PrestacionRepository prestaciones, DisponibilidadService disponibilidad,
@@ -67,6 +68,7 @@ public class TurnoService {
         this.mapper = mapper;
         this.clock = clock;
         this.zona = app.zonaHoraria();
+        this.umbrales = EstadoInicialTurno.Umbrales.desde(app);
     }
 
     public TurnoPublicoResponse reservar(ReservaPublicaRequest request) {
@@ -177,7 +179,7 @@ public class TurnoService {
 
         turno.setInicio(inicio);
         turno.setFin(inicio.plus(Duration.ofMinutes(turno.getPrestacion().getDuracionMinutos())));
-        EstadoInicialTurno inicial = EstadoInicialTurno.calcular(inicio, clock);
+        EstadoInicialTurno inicial = EstadoInicialTurno.calcular(inicio, clock, umbrales);
         turno.setEstado(inicial.estado());
         turno.setRecordatorioEnviado(inicial.recordatorioEnviado());
         turno.setAlertaPendienteEnviada(inicial.alertaPendienteEnviada());
@@ -294,7 +296,7 @@ public class TurnoService {
 
     private Turno construir(Paciente paciente, Prestacion prestacion, Instant inicio,
             String email, String telefono, Instant consentimientoAt) {
-        EstadoInicialTurno inicial = EstadoInicialTurno.calcular(inicio, clock);
+        EstadoInicialTurno inicial = EstadoInicialTurno.calcular(inicio, clock, umbrales);
         Turno turno = new Turno(paciente, prestacion, inicio,
                 inicio.plus(Duration.ofMinutes(prestacion.getDuracionMinutos())),
                 inicial.estado(), generadorToken.generar(), email, telefono);
@@ -306,11 +308,11 @@ public class TurnoService {
 
     /** Los avisos no revierten la reserva: el contrato de NotificacionTurnos nunca lanza por fallo SMTP. */
     private void avisar(Turno turno) {
-        if (EstadoInicialTurno.supera48Horas(turno.getInicio(), clock)) {
+        if (EstadoInicialTurno.superaRecordatorio(turno.getInicio(), clock, umbrales)) {
             notificaciones.confirmacionReserva(turno);
             return;
         }
-        if (EstadoInicialTurno.entre24y48Horas(turno.getInicio(), clock)) {
+        if (EstadoInicialTurno.enFranjaDeRecordatorio(turno.getInicio(), clock, umbrales)) {
             turno.setRecordatorioEnviado(notificaciones.recordatorio(turno));
             return;
         }

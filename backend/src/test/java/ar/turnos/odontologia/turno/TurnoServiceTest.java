@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
@@ -197,6 +198,90 @@ class TurnoServiceTest {
         ArgumentCaptor<Paciente> captor = ArgumentCaptor.forClass(Paciente.class);
         verify(pacientes).save(captor.capture());
         assertThat(captor.getValue().getDni()).isEqualTo("99999999");
+    }
+
+    // ---- Umbrales de la configuracion (C-21) ----
+
+    private TurnoService servicioConUmbrales(int alertaHoras, int recordatorioHoras) {
+        AppProperties base = AppPropertiesFixture.crear();
+        AppProperties app = new AppProperties(base.zonaHoraria(), base.frontendBaseUrl(), base.agenda(),
+                new AppProperties.Recordatorio(base.recordatorio().intervaloMin(), recordatorioHoras),
+                new AppProperties.Alerta(alertaHoras), base.cancelacion(), base.turno(), base.consultorio(),
+                base.mail(), base.jwt(), base.seed());
+        TurnoMapper mapper = new TurnoMapper(RELOJ, app.zonaHoraria(), app.consultorio().contacto());
+        return new TurnoService(turnos, pacientes, prestaciones, disponibilidad, notificaciones, generador, mapper,
+                RELOJ, app);
+    }
+
+    private void preparaAltaPublica() {
+        when(prestaciones.findById(1L)).thenReturn(Optional.of(new Prestacion("Consulta", 30)));
+        when(pacientes.findByDni("99999999")).thenReturn(Optional.of(new Paciente("Ana", "Ejemplo", "99999999")));
+        when(generador.generar()).thenReturn(TOKEN);
+        when(turnos.saveAndFlush(any(Turno.class))).thenAnswer(inv -> inv.getArgument(0));
+    }
+
+    private ReservaPublicaRequest reservaEn(Duration anticipacion) {
+        return new ReservaPublicaRequest("Ana", "Ejemplo", "99.999.999", "ana@ejemplo.com", "+54 9 11 0000-0000",
+                1L, RELOJ.instant().plus(anticipacion).atOffset(ZoneOffset.ofHours(-3)), true);
+    }
+
+    @Test
+    void conAlertaDe12HorasUnaReservaA20HorasNacePendienteYPideElRecordatorio() {
+        preparaAltaPublica();
+
+        TurnoPublicoResponse respuesta = servicioConUmbrales(12, 48).reservar(reservaEn(Duration.ofHours(20)));
+
+        assertThat(respuesta.estado()).isEqualTo(EstadoTurno.PENDIENTE);
+        verify(notificaciones).recordatorio(any(Turno.class));
+        verify(notificaciones, never()).avisoTurnoConfirmado(any(Turno.class));
+    }
+
+    @Test
+    void conAlertaDe12HorasUnaReservaA11HorasNaceConfirmadaYAvisaSinLinks() {
+        preparaAltaPublica();
+
+        TurnoPublicoResponse respuesta = servicioConUmbrales(12, 48).reservar(reservaEn(Duration.ofHours(11)));
+
+        assertThat(respuesta.estado()).isEqualTo(EstadoTurno.CONFIRMADO);
+        verify(notificaciones).avisoTurnoConfirmado(any(Turno.class));
+        verify(notificaciones, never()).recordatorio(any(Turno.class));
+    }
+
+    @Test
+    void conRecordatorioDe72HorasUnaReservaA60HorasPideElRecordatorioYNoLaConfirmacionDeReserva() {
+        preparaAltaPublica();
+
+        servicioConUmbrales(24, 72).reservar(reservaEn(Duration.ofHours(60)));
+
+        verify(notificaciones).recordatorio(any(Turno.class));
+        verify(notificaciones, never()).confirmacionReserva(any(Turno.class));
+    }
+
+    @Test
+    void conRecordatorioDe72HorasUnaReservaA80HorasPideLaConfirmacionDeReserva() {
+        preparaAltaPublica();
+
+        servicioConUmbrales(24, 72).reservar(reservaEn(Duration.ofHours(80)));
+
+        verify(notificaciones).confirmacionReserva(any(Turno.class));
+        verify(notificaciones, never()).recordatorio(any(Turno.class));
+    }
+
+    @Test
+    void laReprogramacionTambienUsaElUmbralDeLaConfiguracion() {
+        Prestacion prestacion = new Prestacion("Consulta", 30);
+        Turno turno = new Turno(new Paciente("Ana", "Ejemplo", "99999999"), prestacion, INICIO,
+                INICIO.plus(Duration.ofMinutes(30)), EstadoTurno.CONFIRMADO, TOKEN, "ana@ejemplo.com",
+                "+54 9 11 0000-0000");
+        when(turnos.findById(5L)).thenReturn(Optional.of(turno));
+        when(turnos.saveAndFlush(any(Turno.class))).thenAnswer(inv -> inv.getArgument(0));
+
+        servicioConUmbrales(12, 48).reprogramar(5L, RELOJ.instant().plus(Duration.ofHours(20)));
+
+        assertThat(turno.getEstado()).isEqualTo(EstadoTurno.PENDIENTE);
+        assertThat(turno.isRecordatorioEnviado()).isFalse();
+        verify(notificaciones).reprogramacion(turno);
+        verify(notificaciones, never()).reprogramacionMenos24h(any(Turno.class));
     }
 
     private ReservaPublicaRequest reserva(String nombre, boolean consentimiento) {

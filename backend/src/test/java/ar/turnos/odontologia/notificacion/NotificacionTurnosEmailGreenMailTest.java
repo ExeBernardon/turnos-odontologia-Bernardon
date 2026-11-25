@@ -64,10 +64,10 @@ class NotificacionTurnosEmailGreenMailTest {
         assertThat(recibidos).hasSize(8);
         assertThat(Arrays.stream(recibidos).map(NotificacionTurnosEmailGreenMailTest::asunto)
                 .collect(Collectors.toSet()))
-                .containsExactlyInAnyOrder(Arrays.stream(TipoMail.values()).map(TipoMail::asunto).toArray(String[]::new));
+                .containsExactlyInAnyOrder(Arrays.stream(TipoMail.values()).map(t -> t.asuntoPara(java.util.Map.of("horasAlerta", 24))).toArray(String[]::new));
 
         Map<Boolean, List<String>> destinos = Arrays.stream(recibidos)
-                .collect(Collectors.partitioningBy(m -> asunto(m).equals(TipoMail.TURNO_NO_CONFIRMADO.asunto()),
+                .collect(Collectors.partitioningBy(m -> asunto(m).equals(TipoMail.TURNO_NO_CONFIRMADO.asuntoPara(java.util.Map.of("horasAlerta", 24))),
                         Collectors.mapping(NotificacionTurnosEmailGreenMailTest::destinatario, Collectors.toList())));
         assertThat(destinos.get(true)).containsExactly("odontologo@ejemplo.com");
         assertThat(destinos.get(false)).hasSize(7).containsOnly(MotorPlantillasPrueba.EMAIL_PACIENTE);

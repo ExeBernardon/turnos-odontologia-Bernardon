@@ -30,6 +30,20 @@ class ViolacionDeSolapamientoTest {
     }
 
     @Test
+    void deadlockEntreInsercionesConcurrentesDelMismoHorarioEsSolapamiento() {
+        Throwable e = new org.springframework.dao.CannotAcquireLockException("deadlock detected", sql("40P01"));
+
+        assertThat(ViolacionDeSolapamiento.es(e)).isTrue();
+    }
+
+    @Test
+    void otroFalloDeBloqueoNoEsSolapamiento() {
+        Throwable e = new org.springframework.dao.CannotAcquireLockException("lock timeout", sql("55P03"));
+
+        assertThat(ViolacionDeSolapamiento.es(e)).isFalse();
+    }
+
+    @Test
     void violacionDeUnicidadNoEsSolapamiento() {
         Throwable e = new DataIntegrityViolationException("duplicado", sql("23505"));
 
