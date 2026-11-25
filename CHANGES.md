@@ -264,7 +264,7 @@ Primer change recomendado: **C-01 `contrato-api`** (`/opsx:propose contrato-api`
 > Cada change vive en su carpeta por feature. Los changes de seguridad de rutas privadas se prueban con `@WithMockUser` hasta que C-04 esté mergeado.
 
 ### [C-04] `auth-jwt-backend`
-- **Estado**: `[ ]` pendiente
+- **Estado**: `[x]` hecho (archivado 2026-11-25, PR #9)
 - **Scope**: Login del odontólogo con JWT (US-001)
   - `POST /api/auth/login` — email + contraseña, BCrypt, devuelve JWT HS256 + expiración + nombre; 401 genérico `CREDENCIALES_INVALIDAS` sin revelar si falló email o contraseña
   - `GET /api/auth/me` — datos del odontólogo autenticado
@@ -379,7 +379,7 @@ Primer change recomendado: **C-01 `contrato-api`** (`/opsx:propose contrato-api`
 ---
 
 ### [C-10] `bloqueos-backend`
-- **Estado**: `[ ]` pendiente
+- **Estado**: `[x]` hecho (archivado 2026-11-25, PR #10)
 - **Scope**: Bloqueos con aviso de turnos afectados (US-004, parte backend)
   - `GET /api/bloqueos?desde&hasta`, `DELETE /api/bloqueos/{id}`
   - `POST /api/bloqueos/previsualizar` — lista los turnos activos dentro del rango sin modificar nada
