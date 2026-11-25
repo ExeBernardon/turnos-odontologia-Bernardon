@@ -3,6 +3,7 @@ import { ErrorApi } from '../../api/cliente';
 import type { HorarioAtencion } from '../../api/types';
 import { el, montar } from '../../shared/dom';
 import type { ContextoRuta } from '../../shared/router';
+import { crearAccionesAgenda } from '../agenda-acciones/acciones';
 import { hoyBA, sumarDias } from '../configuracion/fechas';
 import { mensajeDeError } from '../configuracion/errores';
 import { cargarDatosAgenda, type DatosAgenda } from './agenda.api';
@@ -45,7 +46,9 @@ function rangoActual(estado: Estado): { readonly desde: string; readonly hasta: 
   return estado.vista === 'dia' ? rangoDiario(estado.fecha) : rangoSemanal(estado.fecha);
 }
 
-function crearTarjeta(turno: import('../../api/types').Turno, compacta: boolean): HTMLElement {
+type AccionesDeTurno = (turno: import('../../api/types').Turno, compacta: boolean) => HTMLElement | null;
+
+function crearTarjeta(turno: import('../../api/types').Turno, compacta: boolean, deTurno: AccionesDeTurno): HTMLElement {
   const urgente = esUrgente(turno);
   const cancelado = turno.estado === 'CANCELADO';
   const clases = ['agenda-turno'];
@@ -75,11 +78,8 @@ function crearTarjeta(turno: import('../../api/types').Turno, compacta: boolean)
   const detalle = el('p', { class: 'agenda-detalle' }, `${turno.prestacion.nombre} · teléfono ${turno.telefonoContacto}`);
   datos.append(fila, detalle);
 
-  if (urgente) {
-    const acciones = el('div', { class: 'agenda-acciones' });
-    const confirmar = el('button', { type: 'button', 'data-enganche': 'confirmar', disabled: '' }, 'Confirmar (C-20)');
-    const cancelar = el('button', { type: 'button', 'data-enganche': 'cancelar', disabled: '' }, 'Cancelar (C-20)');
-    acciones.append(confirmar, cancelar);
+  const acciones = deTurno(turno, compacta);
+  if (acciones !== null) {
     datos.append(acciones);
   }
 
@@ -93,6 +93,7 @@ function pintarDia(
   horarios: readonly HorarioAtencion[],
   bloqueos: readonly import('../../api/types').Bloqueo[],
   compacta: boolean,
+  deTurno: AccionesDeTurno,
 ): HTMLElement {
   const id = `agenda-dia-${fecha}`;
   const seccion = el('section', { class: 'agenda-dia', 'aria-labelledby': id });
@@ -121,7 +122,7 @@ function pintarDia(
     entradas.push({
       minuto: minutosDeInstante(turno.inicio) ?? 0,
       orden: 1,
-      nodo: crearTarjeta(turno, compacta),
+      nodo: crearTarjeta(turno, compacta, deTurno),
     });
   }
   entradas.sort((a, b) => a.minuto - b.minuto || a.orden - b.orden);
@@ -157,11 +158,22 @@ export function render(contenedor: HTMLElement, ctx: ContextoRuta): void {
   const botonSemana = el('button', { type: 'button', class: 'agenda-control' }, 'Semana');
   const vista = el('div', { class: 'agenda-vista', role: 'group', 'aria-label': 'Tipo de vista' }, botonDia, botonSemana);
   const cancelados = el('button', { type: 'button', class: 'agenda-control' }, 'Mostrar cancelados');
-  const barra = el('div', { class: 'agenda-barra' }, periodo, vista, cancelados);
+  const acciones = crearAccionesAgenda({ recargar: cargar });
+  const barra = el('div', { class: 'agenda-barra' }, periodo, vista, cancelados, acciones.barra);
 
   const aviso = el('p', { class: 'agenda-aviso', role: 'status' });
   const contenido = el('div', { class: 'agenda-contenido' });
-  const raiz = el('section', { class: 'agenda', 'aria-labelledby': 'agenda-titulo' }, titulo, barra, aviso, contenido);
+  const raiz = el(
+    'section',
+    { class: 'agenda', 'aria-labelledby': 'agenda-titulo' },
+    titulo,
+    barra,
+    aviso,
+    acciones.aviso,
+    acciones.alerta,
+    acciones.panel,
+    contenido,
+  );
   montar(contenedor, raiz);
 
   function botonReintentar(): HTMLElement {
@@ -208,7 +220,7 @@ export function render(contenedor: HTMLElement, ctx: ContextoRuta): void {
 
     if (estado.vista === 'dia') {
       const porDia = agruparTurnos(visibles, [estado.fecha]);
-      piezas.push(pintarDia(estado.fecha, porDia.get(estado.fecha) ?? [], horarios, bloqueos, false));
+      piezas.push(pintarDia(estado.fecha, porDia.get(estado.fecha) ?? [], horarios, bloqueos, false, acciones.deTurno));
     } else {
       const rango = rangoSemanal(estado.fecha);
       const fechas: string[] = [];
@@ -218,7 +230,7 @@ export function render(contenedor: HTMLElement, ctx: ContextoRuta): void {
       const porDia = agruparTurnos(visibles, fechas);
       const grilla = el('div', { class: 'agenda-semana' });
       for (const fecha of fechas) {
-        grilla.append(pintarDia(fecha, porDia.get(fecha) ?? [], horarios, bloqueos, true));
+        grilla.append(pintarDia(fecha, porDia.get(fecha) ?? [], horarios, bloqueos, true, acciones.deTurno));
       }
       piezas.push(grilla);
     }
