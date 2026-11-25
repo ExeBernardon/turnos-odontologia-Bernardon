@@ -80,7 +80,7 @@ Antes de insertar, el sistema SHALL resolver la prestación y validar el inicio 
 
 ### Requirement: Estado inicial y fin del turno
 
-El sistema SHALL calcular el estado inicial con el instante actual: `PENDIENTE` si faltan 24 h o más, `CONFIRMADO` si faltan menos. El umbral de 24 h SHALL tomarse de `APP_ALERTA_PENDIENTE_HORAS` (24 por defecto), el mismo que usa la alerta al odontólogo, sin cambiar código. El `fin` SHALL persistirse igual a `inicio` más la duración de la prestación. Los flags `recordatorioEnviado` y `alertaPendienteEnviada` SHALL quedar en `false` para `PENDIENTE` y en `true` para `CONFIRMADO` creado por debajo del umbral, según el aviso ya emitido.
+El sistema SHALL calcular el estado inicial con el instante actual: `PENDIENTE` si la anticipación alcanza el umbral de `APP_ALERTA_PENDIENTE_HORAS` (24 h por defecto), `CONFIRMADO` si es menor. El `fin` SHALL ser `inicio` más la duración de la prestación. Los flags `recordatorioEnviado` y `alertaPendienteEnviada` SHALL quedar en `false` para `PENDIENTE` y en `true` para `CONFIRMADO`.
 
 #### Scenario: Reserva con 24 h o más de anticipación
 
@@ -198,7 +198,7 @@ La creación SHALL ejecutar la inserción dentro de la transacción del service 
 
 ### Requirement: Avisos de creación según anticipación
 
-Después de persistir el turno, el sistema SHALL pedir un aviso por la anticipación: más de 48 h → confirmación de reserva con solo Cancelar; de 24 h a 48 h, ambos inclusive → recordatorio con Confirmar y Cancelar; menos de 24 h → aviso de turno confirmado sin botones. Los umbrales de 48 h y 24 h SHALL tomarse de `APP_RECORDATORIO_HORAS_ANTES` y `APP_ALERTA_PENDIENTE_HORAS`. El destinatario SHALL ser siempre `emailContacto` del turno. Un fallo de envío SHALL NOT revertir la reserva ni borrar el turno, y los flags SHALL reflejar solo los avisos que salieron.
+Después de persistir el turno, el sistema SHALL pedir un aviso según la anticipación, con los umbrales de `APP_RECORDATORIO_HORAS_ANTES` (48 h) y `APP_ALERTA_PENDIENTE_HORAS` (24 h): más de 48 h, confirmación de reserva con solo Cancelar; de 24 h a 48 h inclusive, recordatorio con Confirmar y Cancelar; menos de 24 h, aviso sin botones. El destinatario SHALL ser `emailContacto`. Un fallo de envío SHALL NOT revertir la reserva, y los flags SHALL reflejar solo los avisos que salieron.
 
 #### Scenario: Reserva con más de 48 h
 
