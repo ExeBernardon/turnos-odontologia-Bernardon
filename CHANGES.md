@@ -500,7 +500,7 @@ Primer change recomendado: **C-01 `contrato-api`** (`/opsx:propose contrato-api`
 ---
 
 ### [C-17] `reserva-publica-front`
-- **Estado**: `[ ]` pendiente
+- **Estado**: `[x]` hecho (archivado 2026-11-25, PR #29)
 - **Scope**: Página pública de reserva `/reservar` (US-005, US-006, parte front)
   - `src/public/reservar.ts`: elegir prestación (`GET /api/public/prestaciones`) → elegir fecha y horario libre (`GET /api/public/disponibilidad`; lista vacía = "sin horarios ese día") → formulario con nombre, apellido, DNI, email, teléfono y casilla obligatoria de tratamiento de datos con texto de finalidad → `POST /api/public/turnos`
   - Validación de formato en el front (DNI, email, teléfono) con los `detalles` por campo del 400
