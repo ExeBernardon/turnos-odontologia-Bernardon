@@ -1,0 +1,27 @@
+/* Buscador de pacientes: mobile-first, sin scroll horizontal, botones >= 44px. */
+.bp { min-width: 0; }
+.bp-form { display: grid; gap: 0.25rem; margin-bottom: 0.5rem; }
+.bp-fila { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.bp-campo { flex: 1 1 12rem; min-width: 0; box-sizing: border-box; }
+.bp-campo,
+.bp button { font: inherit; min-height: 2.75rem; padding: 0.25rem 0.75rem; }
+.bp button { cursor: pointer; }
+
+.bp-estado { margin: 0.25rem 0; color: #14532d; }
+.bp-alerta { margin: 0.25rem 0; color: #991b1b; font-weight: 600; }
+.bp-estado:empty,
+.bp-alerta:empty,
+.bp-accion:empty { display: none; }
+
+.bp-lista { list-style: none; margin: 0.5rem 0 1rem; padding: 0; display: grid; gap: 0.5rem; }
+.bp-item {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem 1rem;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #c7ccd4;
+  border-radius: 0.5rem;
+}
+.bp-datos { display: grid; min-width: 0; overflow-wrap: anywhere; }
