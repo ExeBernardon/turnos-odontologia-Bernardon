@@ -552,7 +552,7 @@ Primer change recomendado: **C-01 `contrato-api`** (`/opsx:propose contrato-api`
 ---
 
 ### [C-20] `agenda-acciones-front`
-- **Estado**: `[ ]` pendiente
+- **Estado**: `[x]` hecho (archivado 2026-11-25, PR #31)
 - **Scope**: Acciones del odontólogo sobre la agenda (US-010, US-011, US-012, US-013, US-021, parte front)
   - Cargar turno manual: buscar paciente (componente de C-16) o alta rápida, elegir prestación y horario libre (`GET /api/disponibilidad`), email y teléfono de contacto precargados desde `ultimoContacto` y editables; 409 y 422 con mensajes claros
   - Reprogramar: elegir nuevo horario libre y mostrar el estado resultante (pendiente o confirmado según anticipación)
