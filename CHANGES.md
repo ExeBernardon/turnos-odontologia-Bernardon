@@ -438,7 +438,7 @@ Primer change recomendado: **C-01 `contrato-api`** (`/opsx:propose contrato-api`
 > Todo TypeScript vanilla con Vite. Cada pantalla en su archivo/carpeta para no pisarse. Reusar el router, el cliente API y los componentes DOM de `src/shared/` y `src/api/` armados en C-02.
 
 ### [C-13] `login-front-y-guard`
-- **Estado**: `[ ]` pendiente
+- **Estado**: `[x]` hecho (archivado 2026-11-25, PR #15)
 - **Scope**: Acceso del odontólogo, parte front (US-001)
   - `src/admin/login.ts`: formulario email + contraseña contra `POST /api/auth/login`, manejo del 401 genérico
   - Estado de auth en `src/shared/` (token en `localStorage`, expiración), cliente API agrega `Authorization: Bearer`, guard del router: sin token válido redirige a `/admin/login`; ante 401 limpia el token y redirige
