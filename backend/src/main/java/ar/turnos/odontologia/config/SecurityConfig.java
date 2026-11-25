@@ -9,10 +9,12 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import ar.turnos.odontologia.auth.JwtService;
 import ar.turnos.odontologia.security.ApiAuthenticationEntryPoint;
+import ar.turnos.odontologia.security.JwtAuthFilter;
 
 /**
  * Reglas de acceso del contrato (docs/api/openapi.yaml): login y /api/public/** sin token, el resto
@@ -22,7 +24,8 @@ import ar.turnos.odontologia.security.ApiAuthenticationEntryPoint;
 public class SecurityConfig {
 
     @Bean
-    SecurityFilterChain securityFilterChain(HttpSecurity http, ApiAuthenticationEntryPoint entryPoint) throws Exception {
+    SecurityFilterChain securityFilterChain(HttpSecurity http, ApiAuthenticationEntryPoint entryPoint,
+            JwtService jwt, UserDetailsService userDetailsService) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .formLogin(AbstractHttpConfigurer::disable)
@@ -35,19 +38,14 @@ public class SecurityConfig {
                         .requestMatchers("/api/public/**").permitAll()
                         .requestMatchers("/actuator/health", "/error").permitAll()
                         .requestMatchers("/api/**").authenticated()
-                        .anyRequest().denyAll());
-        // C-04: http.addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+                        .anyRequest().denyAll())
+                .addFilterBefore(new JwtAuthFilter(jwt, userDetailsService),
+                        UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 
     @Bean
     PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
-    }
-
-    /** Sin usuarios: evita el usuario en memoria con password logueado de Boot. C-04 lo reemplaza. */
-    @Bean
-    UserDetailsService userDetailsService() {
-        return new InMemoryUserDetailsManager();
     }
 }

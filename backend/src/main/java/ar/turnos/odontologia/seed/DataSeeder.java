@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import ar.turnos.odontologia.auth.Odontologo;
 import ar.turnos.odontologia.auth.OdontologoRepository;
+import ar.turnos.odontologia.common.EmailNormalizador;
 import ar.turnos.odontologia.config.AppProperties;
 import ar.turnos.odontologia.horario.HorarioAtencion;
 import ar.turnos.odontologia.horario.HorarioAtencionRepository;
@@ -62,7 +63,8 @@ public class DataSeeder implements CommandLineRunner {
             return 0;
         }
         AppProperties.Seed.Odontologo datos = app.seed().odontologo();
-        odontologos.save(new Odontologo(datos.nombre(), datos.email(), passwordEncoder.encode(datos.password())));
+        odontologos.save(new Odontologo(datos.nombre(), EmailNormalizador.normalizar(datos.email()),
+                passwordEncoder.encode(datos.password())));
         return 1;
     }
 
