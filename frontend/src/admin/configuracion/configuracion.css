@@ -1,0 +1,45 @@
+.cfg-avisos { min-height: 1.5rem; }
+.cfg-estado { color: #14532d; margin: 0.25rem 0; }
+.cfg-alerta { color: #991b1b; font-weight: 600; margin: 0.25rem 0; }
+.cfg-error { color: #991b1b; margin: 0.25rem 0 0; font-size: 0.9rem; min-height: 0; }
+.cfg-error:empty { display: none; }
+
+.cfg-items { list-style: none; margin: 0 0 1rem; padding: 0; display: grid; gap: 0.5rem; }
+.cfg-item {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem 1rem;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #c7ccd4;
+  border-radius: 0.5rem;
+}
+.cfg-item-info { min-width: 0; overflow-wrap: anywhere; }
+.cfg-acciones { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; }
+
+.cfg-badge { padding: 0.1rem 0.5rem; border-radius: 999px; background: #dcfce7; color: #14532d; font-size: 0.85rem; }
+.cfg-badge-inactiva { background: #e5e7eb; color: #374151; }
+
+.cfg-form fieldset { border: 1px solid #c7ccd4; border-radius: 0.5rem; padding: 0.75rem; min-width: 0; }
+.cfg-form legend { font-weight: 600; padding: 0 0.25rem; }
+.cfg-campo { display: grid; gap: 0.25rem; margin-bottom: 0.75rem; }
+.cfg-campo input,
+.cfg-campo select { font: inherit; padding: 0.5rem; min-height: 2.75rem; box-sizing: border-box; max-width: 100%; }
+.cfg-campo [aria-invalid='true'] { border: 2px solid #b91c1c; }
+
+.cfg-form button,
+.cfg-items button,
+.cfg-avisos button {
+  font: inherit;
+  min-height: 2.75rem;
+  padding: 0.25rem 0.9rem;
+  cursor: pointer;
+}
+.cfg-peligro { color: #991b1b; }
+
+.cfg-dias { list-style: none; margin: 0 0 1rem; padding: 0; display: grid; gap: 0.5rem; }
+.cfg-dia { border: 1px solid #c7ccd4; border-radius: 0.5rem; padding: 0.5rem 0.75rem; }
+.cfg-dia h3 { margin: 0 0 0.25rem; font-size: 1.05rem; }
+.cfg-rangos { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.5rem; }
+.cfg-vacio { margin: 0; color: #4b5563; }
