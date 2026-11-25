@@ -470,7 +470,7 @@ Primer change recomendado: **C-01 `contrato-api`** (`/opsx:propose contrato-api`
 ---
 
 ### [C-15] `configuracion-bloqueos-front`
-- **Estado**: `[ ]` pendiente
+- **Estado**: `[x]` hecho (archivado 2026-11-25, PR #13)
 - **Scope**: Sección de bloqueos de `/admin/configuracion` (US-004, parte front)
   - `src/admin/configuracion/bloqueos.ts`: listado, alta con inicio, fin y motivo opcional, baja
   - Flujo de dos pasos: previsualizar los turnos afectados (`POST /api/bloqueos/previsualizar`) → mostrar la lista con aviso → confirmar con `cancelarTurnosAfectados=true`; sin afectados crea directo
