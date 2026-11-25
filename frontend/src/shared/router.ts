@@ -18,6 +18,7 @@ export interface ConfigRouter {
   readonly raiz: string;
   readonly rutas: TablaRutas;
   readonly contenedor: HTMLElement;
+  readonly redirigir?: (ruta: string) => string | null;
 }
 
 export interface Router {
@@ -28,7 +29,7 @@ export interface Router {
 }
 
 export function crearRouter(config: ConfigRouter): Router {
-  const { base, raiz, rutas, contenedor } = config;
+  const { base, raiz, rutas, contenedor, redirigir } = config;
 
   const relativa = (pathname: string): string => {
     const sinBase = base !== '' && pathname.startsWith(base) ? pathname.slice(base.length) : pathname;
@@ -40,6 +41,12 @@ export function crearRouter(config: ConfigRouter): Router {
     const ruta = relativa(window.location.pathname);
     if (ruta === '/') {
       window.history.replaceState({}, '', base + raiz);
+      resolver();
+      return;
+    }
+    const destino = redirigir?.(ruta) ?? null;
+    if (destino !== null && destino !== ruta) {
+      window.history.replaceState({}, '', base + destino);
       resolver();
       return;
     }

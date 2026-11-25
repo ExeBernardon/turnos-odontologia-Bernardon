@@ -29,6 +29,14 @@ export class ErrorConexion extends Error {
 
 export const MENSAJE_GENERICO = 'No se pudo completar la operación. Intentá de nuevo en unos minutos.';
 
+type ManejadorExpiracion = () => void;
+
+let manejadorExpiracion: ManejadorExpiracion | null = null;
+
+export function registrarManejadorExpiracion(manejador: ManejadorExpiracion | null): void {
+  manejadorExpiracion = manejador;
+}
+
 const CODIGOS: ReadonlySet<string> = new Set<CodigoError>([
   'VALIDACION',
   'SOLICITUD_MAL_FORMADA',
@@ -109,10 +117,13 @@ export async function pedir<T>(metodo: string, ruta: string, opciones: OpcionesP
 
   const dato = await leerJson(respuesta);
   if (!respuesta.ok) {
-    if (esApiError(dato)) {
-      throw new ErrorApi(respuesta.status, dato.mensaje, dato.codigo, dato.detalles, dato);
+    const error = esApiError(dato)
+      ? new ErrorApi(respuesta.status, dato.mensaje, dato.codigo, dato.detalles, dato)
+      : new ErrorApi(respuesta.status, MENSAJE_GENERICO, null);
+    if (respuesta.status === 401 && error.codigo === 'NO_AUTENTICADO') {
+      manejadorExpiracion?.();
     }
-    throw new ErrorApi(respuesta.status, MENSAJE_GENERICO, null);
+    throw error;
   }
   return opciones.parsear(dato);
 }

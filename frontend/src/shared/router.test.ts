@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { crearRouter, type ContextoRuta, type Router, type TablaRutas } from './router';
+import { borrarSesion, guardarSesion, sesionValida } from './sesion';
 
 function pantalla(texto: string) {
   return (contenedor: HTMLElement): void => {
@@ -11,15 +12,23 @@ describe('router', () => {
   let contenedor: HTMLElement;
   let router: Router | null = null;
 
-  const montar = (base: string, raiz: string, rutas: TablaRutas): Router => {
-    router = crearRouter({ base, raiz, rutas, contenedor });
+  const montar = (
+    base: string,
+    raiz: string,
+    rutas: TablaRutas,
+    redirigir?: (ruta: string) => string | null,
+  ): Router => {
+    router = crearRouter({ base, raiz, rutas, contenedor, redirigir });
     router.iniciar();
     return router;
   };
 
+  const guardarAdmin = (ruta: string): string | null => (ruta === '/login' || sesionValida() ? null : '/login');
+
   beforeEach(() => {
     document.body.innerHTML = '<div id="app"></div>';
     contenedor = document.getElementById('app') as HTMLElement;
+    borrarSesion();
   });
 
   afterEach(() => {
@@ -104,5 +113,57 @@ describe('router', () => {
     const evento = new MouseEvent('click', { bubbles: true, cancelable: true });
     a.dispatchEvent(evento);
     expect(evento.defaultPrevented).toBe(false);
+  });
+
+  it('una ruta privada sin sesion redirige al login con replaceState', () => {
+    window.history.replaceState({}, '', '/admin/agenda');
+    montar('/admin', '/agenda', { '/agenda': pantalla('Agenda'), '/login': pantalla('Login') }, guardarAdmin);
+    expect(window.location.pathname).toBe('/admin/login');
+    expect(contenedor.textContent).toBe('Login');
+  });
+
+  it('una sesion vencida tambien redirige al login', () => {
+    guardarSesion({
+      token: 'token-vencido',
+      tipo: 'Bearer',
+      expiraEn: '2020-01-01T00:00:00-03:00',
+      nombre: 'Odontólogo Ejemplo',
+    });
+    window.history.replaceState({}, '', '/admin/configuracion');
+    montar(
+      '/admin',
+      '/agenda',
+      { '/configuracion': pantalla('Configuración'), '/login': pantalla('Login') },
+      guardarAdmin,
+    );
+    expect(window.location.pathname).toBe('/admin/login');
+    expect(contenedor.textContent).toBe('Login');
+  });
+
+  it('/login es publico y se renderiza sin sesion', () => {
+    window.history.replaceState({}, '', '/admin/login');
+    montar('/admin', '/agenda', { '/login': pantalla('Login'), '/agenda': pantalla('Agenda') }, guardarAdmin);
+    expect(window.location.pathname).toBe('/admin/login');
+    expect(contenedor.textContent).toBe('Login');
+  });
+
+  it('con sesion valida se renderiza la ruta privada', () => {
+    guardarSesion({
+      token: 'token-valido',
+      tipo: 'Bearer',
+      expiraEn: '2099-12-01T20:00:00-03:00',
+      nombre: 'Odontólogo Ejemplo',
+    });
+    window.history.replaceState({}, '', '/admin/agenda');
+    montar('/admin', '/agenda', { '/agenda': pantalla('Agenda'), '/login': pantalla('Login') }, guardarAdmin);
+    expect(window.location.pathname).toBe('/admin/agenda');
+    expect(contenedor.textContent).toBe('Agenda');
+  });
+
+  it('el guard no genera bucle si la ruta de destino es la actual', () => {
+    window.history.replaceState({}, '', '/admin/login');
+    montar('/admin', '/login', { '/login': pantalla('Login') }, () => '/login');
+    expect(window.location.pathname).toBe('/admin/login');
+    expect(contenedor.textContent).toBe('Login');
   });
 });

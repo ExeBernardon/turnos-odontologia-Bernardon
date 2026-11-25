@@ -1,0 +1,58 @@
+[
+  {
+    "nombre": "login-mobile",
+    "ancho": 390,
+    "alto": 844,
+    "estado": {
+      "path": "/admin/login",
+      "titulo": "Ingresar",
+      "nav": false,
+      "login": true
+    },
+    "erroresConsola": [],
+    "excepciones": [],
+    "fallosRed": []
+  },
+  {
+    "nombre": "login-desktop",
+    "ancho": 1440,
+    "alto": 900,
+    "estado": {
+      "path": "/admin/login",
+      "titulo": "Ingresar",
+      "nav": false,
+      "login": true
+    },
+    "erroresConsola": [],
+    "excepciones": [],
+    "fallosRed": []
+  },
+  {
+    "nombre": "layout-admin-mobile",
+    "ancho": 390,
+    "alto": 844,
+    "estado": {
+      "path": "/admin/agenda",
+      "titulo": "Agenda",
+      "nav": true,
+      "login": false
+    },
+    "erroresConsola": [],
+    "excepciones": [],
+    "fallosRed": []
+  },
+  {
+    "nombre": "layout-admin-desktop",
+    "ancho": 1440,
+    "alto": 900,
+    "estado": {
+      "path": "/admin/agenda",
+      "titulo": "Agenda",
+      "nav": true,
+      "login": false
+    },
+    "erroresConsola": [],
+    "excepciones": [],
+    "fallosRed": []
+  }
+]
