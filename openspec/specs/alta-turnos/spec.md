@@ -80,7 +80,7 @@ Antes de insertar, el sistema SHALL resolver la prestación y validar el inicio 
 
 ### Requirement: Estado inicial y fin del turno
 
-El sistema SHALL calcular el estado inicial con el instante actual: `PENDIENTE` si faltan 24 h o más, `CONFIRMADO` si faltan menos. El `fin` SHALL persistirse igual a `inicio` más la duración de la prestación. Los flags `recordatorioEnviado` y `alertaPendienteEnviada` SHALL quedar en `false` para `PENDIENTE` y en `true` para `CONFIRMADO` creado por debajo del umbral, según el aviso ya emitido.
+El sistema SHALL calcular el estado inicial con el instante actual: `PENDIENTE` si la anticipación alcanza el umbral de `APP_ALERTA_PENDIENTE_HORAS` (24 h por defecto), `CONFIRMADO` si es menor. El `fin` SHALL ser `inicio` más la duración de la prestación. Los flags `recordatorioEnviado` y `alertaPendienteEnviada` SHALL quedar en `false` para `PENDIENTE` y en `true` para `CONFIRMADO`.
 
 #### Scenario: Reserva con 24 h o más de anticipación
 
@@ -96,6 +96,11 @@ El sistema SHALL calcular el estado inicial con el instante actual: `PENDIENTE` 
 
 - **WHEN** se crea un turno de una prestación de 45 min que empieza a las 10:00
 - **THEN** el turno se persiste con `inicio` 10:00 y `fin` 10:45
+
+#### Scenario: Umbral de confirmación configurado
+
+- **WHEN** `APP_ALERTA_PENDIENTE_HORAS` vale 12 y se crea un turno que empieza a las 20 h de ahora
+- **THEN** el turno queda `PENDIENTE` con ambos flags en `false`
 
 ### Requirement: Respuesta de la carga manual
 
@@ -193,7 +198,7 @@ La creación SHALL ejecutar la inserción dentro de la transacción del service 
 
 ### Requirement: Avisos de creación según anticipación
 
-Después de persistir el turno, el sistema SHALL pedir un aviso por la anticipación: más de 48 h → confirmación de reserva con solo Cancelar; de 24 h a 48 h, ambos inclusive → recordatorio con Confirmar y Cancelar; menos de 24 h → aviso de turno confirmado sin botones. El destinatario SHALL ser siempre `emailContacto` del turno. Un fallo de envío SHALL NOT revertir la reserva ni borrar el turno, y los flags SHALL reflejar solo los avisos que salieron.
+Después de persistir el turno, el sistema SHALL pedir un aviso según la anticipación, con los umbrales de `APP_RECORDATORIO_HORAS_ANTES` (48 h) y `APP_ALERTA_PENDIENTE_HORAS` (24 h): más de 48 h, confirmación de reserva con solo Cancelar; de 24 h a 48 h inclusive, recordatorio con Confirmar y Cancelar; menos de 24 h, aviso sin botones. El destinatario SHALL ser `emailContacto`. Un fallo de envío SHALL NOT revertir la reserva, y los flags SHALL reflejar solo los avisos que salieron.
 
 #### Scenario: Reserva con más de 48 h
 
@@ -219,3 +224,8 @@ Después de persistir el turno, el sistema SHALL pedir un aviso por la anticipac
 
 - **WHEN** el mecanismo de avisos falla al crear un turno
 - **THEN** la reserva permanece persistida, la respuesta sigue siendo 201 y el fallo no se propaga al paciente como error de la API
+
+#### Scenario: Ventana del recordatorio configurada
+
+- **WHEN** `APP_RECORDATORIO_HORAS_ANTES` vale 72 y se crea un turno que empieza a las 60 h de ahora
+- **THEN** se pide el recordatorio en el momento y no la confirmación de reserva
