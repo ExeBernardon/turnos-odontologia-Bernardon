@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { ErrorApi, ErrorConexion, pedir } from './cliente';
+import { ErrorApi, ErrorConexion, pedir, registrarManejadorExpiracion } from './cliente';
 import { borrarToken, guardarToken } from '../shared/sesion';
 
 function respuestaJson(status: number, cuerpo: unknown): Response {
@@ -19,10 +19,12 @@ describe('cliente HTTP', () => {
   beforeEach(() => {
     fetchMock.mockReset();
     vi.stubGlobal('fetch', fetchMock);
+    registrarManejadorExpiracion(null);
     borrarToken();
   });
 
   afterEach(() => {
+    registrarManejadorExpiracion(null);
     vi.unstubAllGlobals();
   });
 
@@ -123,5 +125,83 @@ describe('cliente HTTP', () => {
 
     expect(falla).toBeInstanceOf(ErrorConexion);
     expect(falla).not.toBeInstanceOf(ErrorApi);
+  });
+
+  it('401 NO_AUTENTICADO notifica la expiracion y entrega el mismo ErrorApi', async () => {
+    const manejador = vi.fn();
+    registrarManejadorExpiracion(manejador);
+    fetchMock.mockResolvedValue(
+      respuestaJson(401, {
+        timestamp: '2026-11-30T10:15:00-03:00',
+        status: 401,
+        error: 'Unauthorized',
+        codigo: 'NO_AUTENTICADO',
+        mensaje: 'Tu sesión expiró o no es válida. Volvé a iniciar sesión.',
+        path: '/api/turnos',
+      }),
+    );
+
+    const falla = await pedir('GET', '/api/turnos', { parsear: parsearNombre }).catch((e: unknown) => e);
+
+    expect(falla).toBeInstanceOf(ErrorApi);
+    expect((falla as ErrorApi).codigo).toBe('NO_AUTENTICADO');
+    expect(manejador).toHaveBeenCalledTimes(1);
+  });
+
+  it('401 CREDENCIALES_INVALIDAS del login no notifica la expiracion', async () => {
+    const manejador = vi.fn();
+    registrarManejadorExpiracion(manejador);
+    fetchMock.mockResolvedValue(
+      respuestaJson(401, {
+        timestamp: '2026-11-30T10:15:00-03:00',
+        status: 401,
+        error: 'Unauthorized',
+        codigo: 'CREDENCIALES_INVALIDAS',
+        mensaje: 'Email o contraseña incorrectos.',
+        path: '/api/auth/login',
+      }),
+    );
+
+    const falla = await pedir('POST', '/api/auth/login', { parsear: parsearNombre }).catch((e: unknown) => e);
+
+    expect((falla as ErrorApi).codigo).toBe('CREDENCIALES_INVALIDAS');
+    expect(manejador).not.toHaveBeenCalled();
+  });
+
+  it('un error que no es 401 NO_AUTENTICADO no notifica', async () => {
+    const manejador = vi.fn();
+    registrarManejadorExpiracion(manejador);
+    fetchMock.mockResolvedValue(
+      respuestaJson(409, {
+        timestamp: '2026-11-30T10:15:00-03:00',
+        status: 409,
+        error: 'Conflict',
+        codigo: 'HORARIO_OCUPADO',
+        mensaje: 'Ese horario ya fue reservado. Elegí otro.',
+        path: '/api/turnos',
+      }),
+    );
+
+    await pedir('POST', '/api/turnos', { parsear: parsearNombre }).catch(() => undefined);
+
+    expect(manejador).not.toHaveBeenCalled();
+  });
+
+  it('sin handler registrado, un 401 NO_AUTENTICADO solo lanza el ErrorApi', async () => {
+    fetchMock.mockResolvedValue(
+      respuestaJson(401, {
+        timestamp: '2026-11-30T10:15:00-03:00',
+        status: 401,
+        error: 'Unauthorized',
+        codigo: 'NO_AUTENTICADO',
+        mensaje: 'Tu sesión expiró o no es válida. Volvé a iniciar sesión.',
+        path: '/api/turnos',
+      }),
+    );
+
+    const falla = await pedir('GET', '/api/turnos', { parsear: parsearNombre }).catch((e: unknown) => e);
+
+    expect(falla).toBeInstanceOf(ErrorApi);
+    expect((falla as ErrorApi).codigo).toBe('NO_AUTENTICADO');
   });
 });

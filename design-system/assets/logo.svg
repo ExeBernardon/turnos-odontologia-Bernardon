@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="220" height="64" viewBox="0 0 220 64" role="img" aria-labelledby="titulo">
+  <title id="titulo">Logo provisional (TBD)</title>
+  <rect x="1" y="1" width="218" height="62" rx="8" fill="#f9fafb" stroke="#c7ccd4" stroke-width="2" stroke-dasharray="6 4"/>
+  <text x="110" y="28" text-anchor="middle" font-family="system-ui, sans-serif" font-size="14" font-weight="700" fill="#4b5563">LOGO PROVISIONAL</text>
+  <text x="110" y="47" text-anchor="middle" font-family="system-ui, sans-serif" font-size="13" fill="#991b1b">(TBD) — reemplazar</text>
+</svg>

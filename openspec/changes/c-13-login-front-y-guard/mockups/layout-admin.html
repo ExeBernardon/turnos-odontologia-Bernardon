@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mockup C-13 — Layout del área admin</title>
+    <link rel="stylesheet" href="../../../../design-system/tokens.css" />
+    <style>
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        padding: var(--space-4);
+        font-family: var(--font-family);
+        font-size: var(--font-size-base);
+        line-height: var(--line-height);
+        color: var(--color-text);
+        background: var(--color-bg);
+      }
+      .pagina { max-width: var(--content-max-width); margin: 0 auto; }
+      .titulo { margin: 0 0 var(--space-2); font-size: var(--font-size-lg); }
+      .nota { margin: 0 0 var(--space-6); color: var(--color-text-muted); font-size: var(--font-size-sm); }
+      .ejemplos { display: grid; grid-template-columns: repeat(auto-fit, minmax(26rem, 1fr)); gap: var(--space-6); align-items: start; }
+      .shell { border: 1px solid var(--color-border); border-radius: var(--radius-md); box-shadow: var(--shadow-card); overflow: hidden; }
+      .shell h2 { margin: 0; padding: var(--space-2) var(--space-3); font-size: var(--font-size-sm); font-weight: 600; color: var(--color-text-muted); background: var(--color-surface-soft); border-bottom: 1px solid var(--color-border); }
+      .cabecera {
+        display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;
+        gap: var(--space-3); padding: var(--space-3); border-bottom: 1px solid var(--color-border);
+      }
+      .marca { display: flex; align-items: center; gap: var(--space-2); font-weight: 700; }
+      .marca img { width: 88px; height: auto; }
+      .acciones { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2); }
+      nav { display: flex; flex-wrap: wrap; gap: var(--space-1); }
+      nav a {
+        display: inline-block; padding: var(--space-2) var(--space-3); border-radius: var(--radius-sm);
+        color: var(--color-primary); text-decoration: none; min-height: var(--control-min-height);
+        display: inline-flex; align-items: center;
+      }
+      nav a[aria-current='page'] { background: var(--color-primary); color: var(--color-primary-contrast); }
+      .salir {
+        font: inherit; min-height: var(--control-min-height); padding: var(--space-1) var(--space-3);
+        border: 1px solid var(--color-border); border-radius: var(--radius-sm);
+        background: var(--color-bg); color: var(--color-text); cursor: pointer;
+        display: inline-flex; align-items: center; text-decoration: none;
+      }
+      a:focus-visible, button:focus-visible { outline: var(--focus-width) solid var(--focus-color); outline-offset: var(--focus-offset); }
+      .contenido { padding: var(--space-4); }
+      .contenido h1 { margin: 0 0 var(--space-3); font-size: var(--font-size-lg); }
+      .contenido p { margin: 0 0 var(--space-3); color: var(--color-text-muted); }
+      .tarjeta { border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: var(--space-3); }
+      .fila { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--space-2); }
+      .badge { padding: 0.1rem var(--space-2); border-radius: var(--radius-pill); font-size: var(--font-size-sm); background: var(--color-success-bg); color: var(--color-success-text); }
+      .pie { margin-top: var(--space-6); font-size: var(--font-size-sm); color: var(--color-text-muted); }
+    </style>
+  </head>
+  <body>
+    <div class="pagina">
+      <h1 class="titulo" data-brand-name>Turnos odontológicos</h1>
+      <p class="nota">Mockup C-13 · revisión 1 · layout del área privada. El shell se muestra solo con sesión válida; el login no lo incluye. Los enlaces navegan sin recargar y "Cerrar sesión" borra la sesión y vuelve a <code>/admin/login</code>.</p>
+
+      <main class="ejemplos">
+        <section class="shell" aria-labelledby="shell-agenda">
+          <h2 id="shell-agenda">Estado: Agenda activa</h2>
+          <header class="cabecera">
+            <div class="marca"><img src="../../../../design-system/assets/logo.svg" alt="Logo provisional (TBD)" /><span data-brand-name>Turnos odontológicos</span></div>
+            <div class="acciones">
+              <nav aria-label="Navegación principal">
+                <a href="/admin/agenda" data-link aria-current="page">Agenda</a>
+                <a href="/admin/configuracion" data-link>Configuración</a>
+                <a href="/admin/pacientes" data-link>Pacientes</a>
+              </nav>
+              <a class="salir" href="/admin/login" data-link>Cerrar sesión</a>
+            </div>
+          </header>
+          <div class="contenido">
+            <h1>Agenda</h1>
+            <p>Contenido de la pantalla: el shell no agrega otro encabezado.</p>
+            <div class="tarjeta">
+              <div class="fila"><strong>Turno de ejemplo</strong><span class="badge">Confirmado</span></div>
+              <p>Dato ficticio · 10:00</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="shell" aria-labelledby="shell-config">
+          <h2 id="shell-config">Estado: Configuración activa</h2>
+          <header class="cabecera">
+            <div class="marca"><img src="../../../../design-system/assets/logo.svg" alt="Logo provisional (TBD)" /><span data-brand-name>Turnos odontológicos</span></div>
+            <div class="acciones">
+              <nav aria-label="Navegación principal">
+                <a href="/admin/agenda" data-link>Agenda</a>
+                <a href="/admin/configuracion" data-link aria-current="page">Configuración</a>
+                <a href="/admin/pacientes" data-link>Pacientes</a>
+              </nav>
+              <a class="salir" href="/admin/login" data-link>Cerrar sesión</a>
+            </div>
+          </header>
+          <div class="contenido">
+            <h1>Configuración</h1>
+            <p>Secciones existentes de C-14 y C-15: prestaciones, horarios y bloqueos.</p>
+            <div class="tarjeta">
+              <div class="fila"><strong>Prestaciones</strong><span class="badge">3 activas</span></div>
+              <p>Datos ficticios de ejemplo.</p>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <p class="pie">Nombre y logo definitivos: (TBD). Valores visuales tomados de la revisión 1 aprobada de <code>design-system/tokens.css</code>.</p>
+    </div>
+    <script src="../../../../design-system/brand.js"></script>
+  </body>
+</html>

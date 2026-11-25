@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mockup C-13 — Login del odontólogo</title>
+    <link rel="stylesheet" href="../../../../design-system/tokens.css" />
+    <style>
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        padding: var(--space-4);
+        font-family: var(--font-family);
+        font-size: var(--font-size-base);
+        line-height: var(--line-height);
+        color: var(--color-text);
+        background: var(--color-bg);
+      }
+      .pagina { max-width: var(--content-max-width); margin: 0 auto; }
+      .cabecera { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3); margin-bottom: var(--space-6); }
+      .cabecera img { width: 118px; height: auto; }
+      .cabecera h1 { margin: 0; font-size: var(--font-size-lg); }
+      .etiqueta { color: var(--color-text-muted); font-size: var(--font-size-sm); }
+      .estados { display: grid; grid-template-columns: repeat(auto-fit, minmax(19rem, 1fr)); gap: var(--space-4); align-items: start; }
+      .estado { border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: var(--space-4); box-shadow: var(--shadow-card); }
+      .estado h2 { margin: 0 0 var(--space-2); font-size: 1.05rem; }
+      .estado > p { margin: 0 0 var(--space-4); color: var(--color-text-muted); font-size: var(--font-size-sm); }
+      .formulario { display: grid; gap: var(--space-3); }
+      .campo { display: grid; gap: var(--space-1); }
+      label { font-weight: 600; }
+      input {
+        font: inherit;
+        width: 100%;
+        min-height: var(--control-min-height);
+        padding: var(--space-2);
+        border: 1px solid var(--color-border);
+        border-radius: var(--radius-sm);
+        color: inherit;
+        background: var(--color-bg);
+      }
+      input[aria-invalid='true'] { border: 2px solid var(--color-danger-border); }
+      .ayuda { font-size: var(--font-size-sm); color: var(--color-text-muted); }
+      .error { font-size: var(--font-size-sm); color: var(--color-danger-text); margin: 0; }
+      button {
+        font: inherit;
+        min-height: var(--control-min-height);
+        padding: var(--space-1) var(--space-3);
+        border-radius: var(--radius-sm);
+        border: 1px solid var(--color-primary);
+        background: var(--color-primary);
+        color: var(--color-primary-contrast);
+        cursor: pointer;
+      }
+      a:focus-visible, button:focus-visible, input:focus-visible {
+        outline: var(--focus-width) solid var(--focus-color);
+        outline-offset: var(--focus-offset);
+      }
+      .pie { margin-top: var(--space-6); font-size: var(--font-size-sm); color: var(--color-text-muted); }
+      .flujo { margin: 0 0 var(--space-4); padding: var(--space-3); border-left: 3px solid var(--color-primary); background: var(--color-surface-soft); }
+    </style>
+  </head>
+  <body>
+    <div class="pagina">
+      <header class="cabecera">
+        <img src="../../../../design-system/assets/logo.svg" alt="Logo provisional (TBD)" />
+        <div>
+          <h1 data-brand-name>Turnos odontológicos</h1>
+          <span class="etiqueta">Mockup C-13 · revisión 1 · US-001 / Flujo 1</span>
+        </div>
+      </header>
+
+      <p class="flujo">Ruta pública del área admin: <code>/admin/login</code>. Al iniciar sesión se guarda la sesión y se navega a <code>/admin/agenda</code>. Sin sesión válida, las rutas privadas vuelven acá.</p>
+
+      <main class="estados">
+        <section class="estado" aria-labelledby="inicial">
+          <h2 id="inicial">Estado inicial</h2>
+          <p>Campos vacíos, sin mensajes de error.</p>
+          <form class="formulario" onsubmit="return false">
+            <div class="campo">
+              <label for="email-inicial">Email</label>
+              <input id="email-inicial" type="email" autocomplete="username" placeholder="odontologo@ejemplo.com" aria-describedby="ayuda-inicial" />
+              <span class="ayuda" id="ayuda-inicial">Dato ficticio de ejemplo.</span>
+            </div>
+            <div class="campo">
+              <label for="pass-inicial">Contraseña</label>
+              <input id="pass-inicial" type="password" autocomplete="current-password" />
+            </div>
+            <button type="submit">Ingresar</button>
+          </form>
+        </section>
+
+        <section class="estado" aria-labelledby="validacion">
+          <h2 id="validacion">Validación local</h2>
+          <p>Email vacío: no se envía la solicitud.</p>
+          <form class="formulario" onsubmit="return false">
+            <div class="campo">
+              <label for="email-val">Email</label>
+              <input id="email-val" type="email" autocomplete="username" value="" aria-invalid="true" aria-describedby="error-email-val" />
+              <p class="error" id="error-email-val" role="alert">Ingresá tu email.</p>
+            </div>
+            <div class="campo">
+              <label for="pass-val">Contraseña</label>
+              <input id="pass-val" type="password" autocomplete="current-password" value="clave-de-ejemplo" />
+            </div>
+            <button type="submit">Ingresar</button>
+          </form>
+        </section>
+
+        <section class="estado" aria-labelledby="credenciales">
+          <h2 id="credenciales">Credenciales inválidas (401)</h2>
+          <p>Mensaje genérico: no revela qué dato falló.</p>
+          <form class="formulario" onsubmit="return false">
+            <div class="campo">
+              <label for="email-401">Email</label>
+              <input id="email-401" type="email" autocomplete="username" value="odontologo@ejemplo.com" aria-invalid="true" aria-describedby="error-401" />
+            </div>
+            <div class="campo">
+              <label for="pass-401">Contraseña</label>
+              <input id="pass-401" type="password" autocomplete="current-password" value="clave-incorrecta" aria-invalid="true" />
+            </div>
+            <p class="error" id="error-401" role="alert">Email o contraseña incorrectos.</p>
+            <button type="submit">Ingresar</button>
+          </form>
+        </section>
+      </main>
+
+      <p class="pie">No se muestra la navegación del área admin. Nombre y logo definitivos: (TBD); este mockup no constituye una marca aprobada.</p>
+    </div>
+    <script src="../../../../design-system/brand.js"></script>
+  </body>
+</html>
