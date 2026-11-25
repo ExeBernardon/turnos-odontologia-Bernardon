@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<body>
+
+<!-- Datos del turno comunes a todos los mails -->
+<table th:fragment="datosTurno" role="presentation" style="border-collapse:collapse;margin:16px 0;font-size:15px;">
+    <tr>
+        <td style="padding:4px 12px 4px 0;color:#555;">Paciente</td>
+        <td style="padding:4px 0;"><strong th:text="${paciente}">Paciente</strong></td>
+    </tr>
+    <tr>
+        <td style="padding:4px 12px 4px 0;color:#555;">Prestaci&oacute;n</td>
+        <td style="padding:4px 0;"><strong th:text="${prestacion}">Prestaci&oacute;n</strong></td>
+    </tr>
+    <tr>
+        <td style="padding:4px 12px 4px 0;color:#555;">Fecha y hora</td>
+        <td style="padding:4px 0;"><strong th:text="${fechaHora}">Fecha y hora</strong></td>
+    </tr>
+</table>
+
+<!-- Boton: parametros url, texto y color de fondo -->
+<a th:fragment="boton(url, texto, color)" th:href="${url}" th:text="${texto}"
+   th:style="'display:inline-block;margin:8px 8px 8px 0;padding:12px 22px;border-radius:6px;color:#ffffff;text-decoration:none;font-weight:bold;background:' + ${color} + ';'">Boton</a>
+
+<!-- Pie con el contacto del consultorio (mails sin botones) -->
+<p th:fragment="contacto" style="margin-top:24px;color:#555;font-size:14px;">
+    Ante cualquier duda, contactate con el consultorio: <span th:text="${contacto}">Contacto</span>
+</p>
+
+</body>
+</html>

@@ -5,3 +5,10 @@ spring:
   mail:
     host: localhost
     port: 1025
+    default-encoding: UTF-8
+    properties:
+      mail:
+        smtp:
+          connectiontimeout: 1000
+          timeout: 1000
+          writetimeout: 1000
