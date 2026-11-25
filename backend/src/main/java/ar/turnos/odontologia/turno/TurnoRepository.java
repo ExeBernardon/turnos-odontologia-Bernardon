@@ -13,6 +13,9 @@ public interface TurnoRepository extends JpaRepository<Turno, Long> {
 
     Optional<Turno> findByToken(String token);
 
+    /** Agenda: todos los estados con inicio en [desde, hasta), ordenados por horario. */
+    List<Turno> findByInicioGreaterThanEqualAndInicioLessThanOrderByInicioAsc(Instant desde, Instant hasta);
+
     /** Turnos activos cuyo rango [inicio, fin) interseca [desde, hasta); los que solo tocan un borde no entran. */
     default List<Turno> findActivosQueIntersecan(Instant desde, Instant hasta) {
         return findPorEstadosQueIntersecan(EstadoTurno.ACTIVOS, desde, hasta);

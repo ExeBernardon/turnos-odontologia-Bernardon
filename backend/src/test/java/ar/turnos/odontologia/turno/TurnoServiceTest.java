@@ -61,7 +61,7 @@ class TurnoServiceTest {
     void setUp() {
         TurnoMapper mapper = new TurnoMapper(RELOJ, APP.zonaHoraria(), APP.consultorio().contacto());
         service = new TurnoService(turnos, pacientes, prestaciones, disponibilidad, notificaciones,
-                generador, mapper, RELOJ);
+                generador, mapper, RELOJ, APP);
     }
 
     @Test

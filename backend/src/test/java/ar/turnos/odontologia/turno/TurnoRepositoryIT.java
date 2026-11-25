@@ -158,6 +158,17 @@ class TurnoRepositoryIT {
     }
 
     @Test
+    void porRangoDeInicioIncluyeElLimiteInferiorExcluyeElSuperiorYTraeTodosLosEstados() {
+        turnos.save(turno(9, 0, 9, 30, EstadoTurno.PENDIENTE, "tok-rango-1"));
+        turnos.save(turno(11, 0, 11, 30, EstadoTurno.CANCELADO, "tok-rango-2"));
+        turnos.save(turno(13, 0, 13, 30, EstadoTurno.CONFIRMADO, "tok-rango-3"));
+        turnos.flush();
+
+        assertThat(turnos.findByInicioGreaterThanEqualAndInicioLessThanOrderByInicioAsc(a(9, 0), a(13, 0)))
+                .extracting(Turno::getToken).containsExactly("tok-rango-1", "tok-rango-2");
+    }
+
+    @Test
     void activosQueIntersecanIncluyeUnoQueCruzaElBordeYVieneOrdenado() {
         turnos.save(turno(11, 30, 12, 15, EstadoTurno.CONFIRMADO, "tok-e"));
         turnos.save(turno(8, 45, 9, 15, EstadoTurno.PENDIENTE, "tok-f"));

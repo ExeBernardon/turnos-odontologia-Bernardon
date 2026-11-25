@@ -31,4 +31,14 @@ public class TurnoPublicoController {
     public TurnoPublicoResponse consultar(@PathVariable String token) {
         return service.consultarPublico(token);
     }
+
+    @PostMapping("/{token}/confirmar")
+    public TurnoPublicoResponse confirmar(@PathVariable String token) {
+        return service.confirmarPublico(token);
+    }
+
+    @PostMapping("/{token}/cancelar")
+    public TurnoPublicoResponse cancelar(@PathVariable String token) {
+        return service.cancelarPublico(token);
+    }
 }

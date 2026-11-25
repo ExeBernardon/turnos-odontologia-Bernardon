@@ -70,7 +70,8 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(ApiException.class)
     ResponseEntity<ApiError> negocio(ApiException e, HttpServletRequest req) {
-        return responder(e.getStatus(), e.getCodigo(), e.getMessage(), req, null);
+        return responder(e.getStatus(), e.getCodigo(), e.getMessage(), req,
+                e.getDetalles().isEmpty() ? null : e.getDetalles());
     }
 
     /**
