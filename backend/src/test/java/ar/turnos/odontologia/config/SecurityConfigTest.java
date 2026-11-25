@@ -15,10 +15,16 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.bind.annotation.RestController;
 
+import ar.turnos.odontologia.auth.AuthService;
+import ar.turnos.odontologia.auth.JwtService;
+import ar.turnos.odontologia.auth.OdontologoRepository;
+import ar.turnos.odontologia.auth.OdontologoUserDetailsService;
 import ar.turnos.odontologia.common.ApiErrorFactory;
 import ar.turnos.odontologia.common.GlobalExceptionHandler;
 import ar.turnos.odontologia.security.ApiAuthenticationEntryPoint;
@@ -27,11 +33,18 @@ import ar.turnos.odontologia.security.ApiAuthenticationEntryPoint;
 @WebMvcTest(excludeFilters = @ComponentScan.Filter(type = FilterType.ANNOTATION, classes = RestController.class))
 @ActiveProfiles("test")
 @Import({ SecurityConfig.class, ApiAuthenticationEntryPoint.class, ApiErrorFactory.class,
-        GlobalExceptionHandler.class, ClockConfig.class, AppPropertiesConfig.class })
+        GlobalExceptionHandler.class, ClockConfig.class, AppPropertiesConfig.class, AuthService.class,
+        JwtService.class, OdontologoUserDetailsService.class })
 class SecurityConfigTest {
 
     @Autowired
     private MockMvc mvc;
+
+    @MockitoBean
+    private OdontologoRepository odontologos;
+
+    @MockitoBean
+    private AuthenticationManager manager;
 
     @Test
     void rutaPrivadaSinTokenDevuelve401UniformeNoAutenticado() throws Exception {
