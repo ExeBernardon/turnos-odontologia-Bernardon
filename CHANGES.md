@@ -455,7 +455,7 @@ Primer change recomendado: **C-01 `contrato-api`** (`/opsx:propose contrato-api`
 ---
 
 ### [C-14] `configuracion-prestaciones-horarios-front`
-- **Estado**: `[ ]` pendiente
+- **Estado**: `[x]` hecho (archivado 2026-11-25, PR #12)
 - **Scope**: Pantalla `/admin/configuracion`, secciones de prestaciones y horarios (US-002, US-003)
   - `src/admin/configuracion/prestaciones.ts`: listado (activas e inactivas), alta, edición de nombre y duración, activar/desactivar; mensaje claro cuando el borrado devuelve 422
   - `src/admin/configuracion/horarios.ts`: rangos por día de la semana (varios por día), alta, edición, baja; muestra los 422 de rango inválido o solapado

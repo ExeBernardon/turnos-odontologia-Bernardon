@@ -20,6 +20,14 @@ export function leerTexto(o: Record<string, unknown>, campo: string): string {
   return v;
 }
 
+export function leerTextoONulo(o: Record<string, unknown>, campo: string): string | null {
+  const v = o[campo];
+  if (v !== null && typeof v !== 'string') {
+    throw new Error('Respuesta inválida: ' + campo);
+  }
+  return v;
+}
+
 export function leerBooleano(o: Record<string, unknown>, campo: string): boolean {
   const v = o[campo];
   if (typeof v !== 'boolean') {
