@@ -415,7 +415,7 @@ Primer change recomendado: **C-01 `contrato-api`** (`/opsx:propose contrato-api`
 ---
 
 ### [C-12] `recordatorio-alerta-job`
-- **Estado**: `[ ]` pendiente
+- **Estado**: `[x]` hecho (archivado 2026-11-25, PR #27)
 - **Scope**: Job programado único con dos tareas (US-015, US-022)
   - `RecordatorioJob` con `@Scheduled(fixedDelay)` cada `APP_RECORDATORIO_INTERVALO_MIN` (15 min), con `Clock` inyectado para poder testear
   - Tarea 1: turnos `PENDIENTE` con inicio a `APP_RECORDATORIO_HORAS_ANTES` (48 h) o menos y `recordatorio_enviado=false` → Recordatorio al email del turno → `recordatorio_enviado=true` (también reintenta los que fallaron al crear)
