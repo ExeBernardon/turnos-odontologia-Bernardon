@@ -362,7 +362,7 @@ Primer change recomendado: **C-01 `contrato-api`** (`/opsx:propose contrato-api`
 ---
 
 ### [C-09] `pacientes-backend`
-- **Estado**: `[ ]` pendiente
+- **Estado**: `[x]` hecho (archivado 2026-11-25, PR #20)
 - **Scope**: ABM de pacientes, parte backend (US-014)
   - `GET /api/pacientes?q` — búsqueda por DNI o apellido; cada ítem con `ultimoContacto` (email y teléfono del último turno o null)
   - `GET /api/pacientes/{id}` (con `ultimoContacto`), `POST /api/pacientes` (422 `DNI_DUPLICADO`), `PUT /api/pacientes/{id}` (única vía para modificar datos del paciente)

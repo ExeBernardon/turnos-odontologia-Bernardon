@@ -30,7 +30,7 @@
 ## 5. Cierre
 
 - [x] 5.1 Refactor final con tests verdes, `./mvnw verify` en `backend/` completo (nuevos + baseline) y `openspec validate c-09-pacientes-backend --strict`
-- [ ] 5.2 Plantear al equipo en el PR (sin editar el contrato): criterio de "último turno" elegido (creado más reciente), búsqueda sensible a acentos aceptada, campos extra ignorados pese a `additionalProperties: false`, y sugerirle a Salinas (C-07) que `resolverPacienteManual` reutilice la traducción de `DNI_DUPLICADO` para cubrir la carrera de altas
+- [x] 5.2 Plantear al equipo en el PR (hecho en PR #20) (sin editar el contrato): criterio de "último turno" elegido (creado más reciente), búsqueda sensible a acentos aceptada, campos extra ignorados pese a `additionalProperties: false`, y sugerirle a Salinas (C-07) que `resolverPacienteManual` reutilice la traducción de `DNI_DUPLICADO` para cubrir la carrera de altas
 
 ## Workflow follow-up
 
