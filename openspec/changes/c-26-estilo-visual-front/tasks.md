@@ -14,15 +14,15 @@
 
 ## 3. Retoques por pantalla (solo donde la capa global no llega)
 
-- [ ] 3.1 Admin (`admin.css`): cabecera, menú lateral con página actual destacada, login en tarjeta, ancho completo del shell; verificar en `/admin/login` y `/admin/agenda` a 375 px y escritorio
-- [ ] 3.2 Agenda y acciones (`agenda.css`, `acciones.css`): tarjetas de turno, badges con color + texto, destructivo con borde; verificar `agenda.css.test.ts` y `acciones.css.test.ts` en verde
-- [ ] 3.3 Configuración, pacientes y buscador: reemplazar hex por tokens y dar estilo de tarjeta a ítems; verificar visualmente `/admin/configuracion` y `/admin/pacientes`
-- [ ] 3.4 Públicas (`reservar.css`, `turno-token.css`): columna centrada, secciones como tarjetas, radios como chips, destructivo con borde; verificar `/reservar` eligiendo prestación y fecha, sin reservar
+- [x] 3.1 Admin (`admin.css`): cabecera, menú lateral con página actual destacada, login en tarjeta, ancho completo del shell; verificar en `/admin/login` y `/admin/agenda` a 375 px y escritorio
+- [x] 3.2 Agenda y acciones (`agenda.css`, `acciones.css`): tarjetas de turno, badges con color + texto, destructivo con borde; verificar `agenda.css.test.ts` y `acciones.css.test.ts` en verde
+- [x] 3.3 Configuración, pacientes y buscador: reemplazar hex por tokens y dar estilo de tarjeta a ítems; verificar visualmente `/admin/configuracion` y `/admin/pacientes`
+- [x] 3.4 Públicas (`reservar.css`, `turno-token.css`): columna centrada, secciones como tarjetas, radios como chips, destructivo con borde; verificar `/reservar` eligiendo prestación y fecha, sin reservar
 
 ## 4. Verificación integral
 
-- [ ] 4.1 `npm run lint && npm run typecheck && npm test && npm run build` en verde, sin cambios en archivos `.ts` de pantallas
-- [ ] 4.2 Reconstruir el contenedor (`docker compose up -d --build --wait frontend`) y revisar todas las pantallas a 320/375 px y escritorio: sin scroll horizontal, foco visible con Tab, objetivos de 44 px
+- [x] 4.1 `npm run lint && npm run typecheck && npm test && npm run build` en verde, sin cambios en archivos `.ts` de pantallas
+- [x] 4.2 Reconstruir el contenedor (`docker compose up -d --build --wait frontend`) y revisar todas las pantallas a 320/375 px y escritorio: sin scroll horizontal, foco visible con Tab, objetivos de 44 px
 - [ ] 4.3 Avisar en el PR a los dueños de cada hoja de estilo tocada (regla 16) y pedir aprobación de la revisión 2 del design system
 
 ## Workflow follow-up

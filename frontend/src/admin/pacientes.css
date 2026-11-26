@@ -1,22 +1,26 @@
 /* Pantalla Pacientes: mobile-first; detalle y formulario apilados, sin scroll horizontal. */
 .pac-acciones { margin: 0 0 1rem; }
-.pac-acciones button { font: inherit; min-height: 2.75rem; padding: 0.25rem 0.9rem; cursor: pointer; }
+.pac-acciones button { font: inherit; font-weight: var(--font-weight-bold); min-height: 2.75rem; padding: 0.25rem 1rem; cursor: pointer; }
 
 .pac-detalle {
   margin: 0 0 1rem;
-  padding: 0.75rem;
-  border: 1px solid #c7ccd4;
-  border-radius: 0.5rem;
+  padding: var(--space-5);
+  border: 1px solid var(--color-border);
+  border-top: 4px solid var(--color-primary);
+  border-radius: var(--radius-lg);
+  background: var(--color-bg);
+  box-shadow: var(--shadow-card);
   min-width: 0;
 }
 .pac-detalle h2 { margin: 0 0 0.5rem; font-size: 1.15rem; overflow-wrap: anywhere; }
-.pac-detalle button { font: inherit; min-height: 2.75rem; padding: 0.25rem 0.9rem; cursor: pointer; }
+.pac-detalle button { font: inherit; font-weight: var(--font-weight-bold); min-height: 2.75rem; padding: 0.25rem 1rem; cursor: pointer; }
 .pac-datos { display: grid; grid-template-columns: max-content 1fr; gap: 0.25rem 1rem; margin: 0 0 0.5rem; }
-.pac-datos dt { font-weight: 600; }
+.pac-datos dt { font-weight: 600; color: var(--color-text-muted); }
 .pac-datos dd { margin: 0; min-width: 0; overflow-wrap: anywhere; }
 
 .pac-form { margin-bottom: 1rem; }
 
 @media (max-width: 30rem) {
-  .pac-datos { grid-template-columns: 1fr; }
+  .pac-datos { grid-template-columns: minmax(0, 1fr); gap: 0; }
+  .pac-datos dd + dt { margin-top: var(--space-3); }
 }

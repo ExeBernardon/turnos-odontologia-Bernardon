@@ -1,12 +1,4 @@
 :root {
-  --color-success-text: #14532d;
-  --color-success-bg: #dcfce7;
-  --color-danger-border: #b91c1c;
-  --color-warning-text: #78350f;
-  --color-warning-bg: #fffbeb;
-  --color-warning-border: #b45309;
-  --color-neutral-badge-bg: #e5e7eb;
-  --color-neutral-badge-text: #374151;
   --radius-pill: 999px;
 }
 
@@ -33,7 +25,6 @@
   gap: var(--space-2);
 }
 
-.agenda-periodo,
 .agenda-vista {
   display: flex;
   flex-wrap: wrap;
@@ -41,20 +32,36 @@
   gap: var(--space-2);
 }
 
+/* Anterior / etiqueta / siguiente quedan en una sola línea; la etiqueta cede ancho. */
+.agenda-periodo {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: var(--space-2);
+}
+
 .agenda-periodo__etiqueta {
-  min-width: 14rem;
+  min-width: 0;
   font-weight: 600;
 }
 
 .agenda-control {
+  flex: none;
   min-height: var(--control-min-height);
+  min-width: var(--control-min-height);
   padding: var(--space-1) var(--space-3);
-  border: 1px solid var(--color-border);
+  border: 1px solid var(--color-input-border);
   border-radius: var(--radius-sm);
   background: var(--color-bg);
   color: var(--color-text);
   font: inherit;
+  font-weight: var(--font-weight-medium);
   cursor: pointer;
+}
+
+.agenda-control:hover:not([aria-pressed='true']) {
+  border-color: var(--color-primary);
+  background: var(--color-primary-soft);
 }
 
 .agenda-control[aria-pressed='true'] {
@@ -85,6 +92,7 @@
   padding: var(--space-3);
   border: 1px solid var(--color-danger-border);
   border-radius: var(--radius-md);
+  background: var(--color-danger-bg);
   color: var(--color-danger-text);
 }
 
@@ -93,15 +101,17 @@
 .agenda-sin-atencion {
   margin: 0;
   padding: var(--space-3);
-  border: 1px dashed var(--color-border);
+  border: 1px dashed var(--color-input-border);
   border-radius: var(--radius-md);
+  background: var(--color-bg);
   color: var(--color-text-muted);
   font-size: var(--font-size-sm);
 }
 
 .agenda-semana {
   display: grid;
-  grid-template-columns: repeat(7, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(12.5rem, 1fr));
+  align-items: start;
   gap: var(--space-2);
 }
 
@@ -110,10 +120,10 @@
   align-content: start;
   gap: var(--space-2);
   min-width: 0;
-  padding: var(--space-2);
+  padding: var(--space-3);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
-  background: var(--color-surface-soft);
+  background: var(--color-bg);
 }
 
 .agenda-dia__titulo {
@@ -124,13 +134,15 @@
 
 .agenda-turno {
   display: grid;
-  grid-template-columns: 5.5rem minmax(0, 1fr);
+  grid-template-columns: 7.5rem minmax(0, 1fr);
   gap: var(--space-3);
   min-width: 0;
-  padding: var(--space-3);
+  padding: var(--space-4);
   border: 1px solid var(--color-border);
+  border-left: 4px solid var(--color-primary);
   border-radius: var(--radius-md);
   background: var(--color-bg);
+  box-shadow: var(--shadow-card);
 }
 
 .agenda-turno--compacta {
@@ -152,7 +164,7 @@
 }
 
 .agenda-turno__hora {
-  color: var(--color-text-muted);
+  color: var(--color-primary-strong);
   font-variant-numeric: tabular-nums;
   font-weight: 600;
   overflow-wrap: anywhere;
@@ -187,12 +199,19 @@
 .agenda-badge--confirmado,
 .agenda-badge--pendiente {
   display: inline-block;
-  padding: 0.1rem var(--space-2);
+  padding: 0.15rem var(--space-3);
   border-radius: var(--radius-pill);
   background: var(--color-neutral-badge-bg);
   color: var(--color-neutral-badge-text);
   font-size: var(--font-size-sm);
-  overflow-wrap: anywhere;
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-tight);
+  white-space: nowrap;
+}
+
+.agenda-turno--compacta .agenda-badge {
+  padding: 0.1rem var(--space-2);
+  font-size: 0.8125rem;
 }
 
 .agenda-badge--confirmado {
@@ -212,13 +231,9 @@
   margin-top: var(--space-2);
 }
 
-.agenda-acciones button {
+.agenda-acciones button:not([class]) {
   min-height: var(--control-min-height);
   padding: var(--space-1) var(--space-3);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-sm);
-  background: var(--color-bg);
-  color: var(--color-text-muted);
   font: inherit;
 }
 
@@ -231,8 +246,15 @@
   overflow-wrap: anywhere;
 }
 
+.agenda-dia .agenda-franja {
+  min-height: 0;
+  padding: var(--space-1) var(--space-2);
+  font-size: 0.75rem;
+  line-height: var(--line-height-tight);
+}
+
 .agenda-franja--sin-atencion {
-  background: repeating-linear-gradient(135deg, var(--color-bg), var(--color-bg) 8px, #eef1f5 8px, #eef1f5 16px);
+  background: repeating-linear-gradient(135deg, var(--color-bg), var(--color-bg) 8px, var(--color-surface-soft) 8px, var(--color-surface-soft) 16px);
 }
 
 .agenda-franja--bloqueo {
@@ -240,15 +262,23 @@
   color: var(--color-bg);
 }
 
-@media (max-width: 56rem) {
-  .agenda-semana {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
+/* La vista semanal necesita más ancho que el contenido de lectura (7 columnas). */
+.admin-main:has(.agenda-semana) {
+  max-width: 80rem;
+}
+
+/* En la semana, las franjas fuera de horario no empujan los turnos hacia abajo (la vista diaria las muestra). */
+.agenda-semana .agenda-franja--sin-atencion {
+  display: none;
 }
 
 @media (max-width: 40rem) {
+  .agenda-periodo {
+    flex-wrap: wrap;
+  }
+
   .agenda-periodo__etiqueta {
-    min-width: 0;
+    flex: 1 1 8rem;
   }
 
   .agenda-semana,

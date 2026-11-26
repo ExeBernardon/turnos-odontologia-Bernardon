@@ -4,10 +4,11 @@ Base visual portable del proyecto. Conserva las decisiones visuales ya presentes
 el front; no introduce una marca nueva.
 
 Mode: system-and-mockups
-Revision: 1
-Approval: approved (2026-11-24, by user)
-Decision source: usuario (sesión 2026-11-24, política project-wide)
-Date: 2026-11-24
+Revision: 2
+Approval: approved (2026-11-25, by user)
+Previous: revision 1 approved (2026-11-24, by user)
+Decision source: equipo (pedido de rediseño visual solo CSS, 2026-11-25)
+Date: 2026-11-25
 
 ## Propósito
 
@@ -16,7 +17,24 @@ el login del odontólogo y el área de administración. Los mockups de cada chan
 importan `tokens.css` y `brand.js`; el front puede copiar los valores a su CSS
 cuando el change lo requiera, sin inventar estilos por pantalla.
 
-## Fuentes (hechos observados)
+## Revisión 2 (pendiente de aprobación)
+
+Paleta teal serena, fondo de página blanco roto, tarjetas blancas con radio de
+12–16 px y sombra suave. Contrastes WCAG medidos en
+`openspec/changes/c-26-estilo-visual-front/design.md`.
+
+- Tokens nuevos: `--color-page`, `--color-input-border`, `--color-primary-soft`,
+  `--color-primary-strong`, `--color-danger-bg`, `--color-disabled-bg`,
+  `--color-disabled-text`, `--color-overlay`, `--font-size-md`, `--font-size-xl`,
+  `--font-weight-medium`, `--font-weight-bold`, `--line-height-tight`, `--space-5`,
+  `--radius-lg`, `--shadow-raised`, `--public-max-width`.
+- Valores cambiados: primario `#1a56db` → `#0f6e66`, texto, bordes, estados,
+  radios (`--radius-sm` 0.5rem, `--radius-md` 0.75rem) y sombras.
+- El front usa una copia exacta en `frontend/src/styles/tokens.css`; el test
+  `frontend/src/styles/tokens.sync.test.ts` falla si difieren. Al cambiar este
+  archivo, copiarlo también allí.
+
+## Fuentes (hechos observados, revisión 1)
 
 - `frontend/index.html:7` y `frontend/admin/index.html:8`: título "Turnos odontológicos" / "Turnos odontológicos - Administración".
 - `frontend/src/styles/base.css:1-29`: `system-ui`, color de texto `#1a1a1a`, fondo blanco, ancho máximo `60rem`, foco `3px solid #1a56db` con offset `2px`.

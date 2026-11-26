@@ -181,6 +181,7 @@ Notas de reparto:
 | C-23 | ics-turno | 4 | 3 | C-18 | BAJO | No — recortable |
 | C-24 | exportacion-csv | 4 | 1 | C-08, C-09 | BAJO | No — recortable |
 | C-25 | lista-espera-simple | 4 | 2 | C-08, C-20 | MEDIO | No — recortable |
+| C-26 | estilo-visual-front | post-MVP | 5 | C-13 a C-20 | BAJO | No — post-MVP |
 
 Primer change recomendado: **C-01 `contrato-api`** (`/opsx:propose contrato-api`).
 
@@ -646,3 +647,19 @@ Primer change recomendado: **C-01 `contrato-api`** (`/opsx:propose contrato-api`
   - `knowledge-base/06_funcionalidades.md` US-017 (Épica 8)
   - `knowledge-base/04_modelo_de_datos.md` (para extender el modelo)
   - `knowledge-base/09_decisiones_y_supuestos.md` DD-04, DD-11
+
+---
+
+## POST-MVP — Pulido visual
+
+### [C-26] `estilo-visual-front` — post-MVP, no bloquea la entrega
+- **Estado**: `[ ]` pendiente (change `c-26-estilo-visual-front` con propuesta, diseño y specs; implementación lista para revisión)
+- **Scope**: capa de estilo global y retoques por pantalla, solo CSS (design system revisión 2 aprobada 2026-11-25)
+  - Tokens como fuente única (`frontend/src/styles/tokens.css`, sincronizado con `design-system/tokens.css`) y capa global en `base.css`
+  - Retoques de `admin.css`, `agenda.css`, `acciones.css`, `configuracion.css`, `pacientes.css`, `buscador-pacientes.css`, `reservar.css` y `turno-token.css`
+  - Accesibilidad: contraste AA, foco visible, objetivos de 44 px, sin scroll horizontal a 320 px, `prefers-reduced-motion`
+- **Dependencias**: C-13 a C-20 (las pantallas que estiliza)
+- **Governance**: BAJO
+- **Leer antes**:
+  - `design-system/README.md`
+  - `openspec/changes/c-26-estilo-visual-front/design.md`
