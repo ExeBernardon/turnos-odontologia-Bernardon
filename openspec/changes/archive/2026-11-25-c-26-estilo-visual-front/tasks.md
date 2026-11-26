@@ -23,7 +23,7 @@
 
 - [x] 4.1 `npm run lint && npm run typecheck && npm test && npm run build` en verde, sin cambios en archivos `.ts` de pantallas
 - [x] 4.2 Reconstruir el contenedor (`docker compose up -d --build --wait frontend`) y revisar todas las pantallas a 320/375 px y escritorio: sin scroll horizontal, foco visible con Tab, objetivos de 44 px
-- [ ] 4.3 Avisar en el PR a los dueños de cada hoja de estilo tocada (regla 16) y pedir aprobación de la revisión 2 del design system
+- [x] 4.3 Avisar en el PR a los dueños de cada hoja de estilo tocada (regla 16) y pedir aprobación de la revisión 2 del design system
 
 ## Workflow follow-up
 
