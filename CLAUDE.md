@@ -68,7 +68,7 @@ Cargá la skill correspondiente al contexto ANTES de escribir código.
 
 > **No aplican** `react-testing`, `tanstack-query-best-practices` ni `vercel-react-best-practices`: son de React y este proyecto es TypeScript vanilla.
 
-> Los compact rules de cada skill los resuelve el orquestador desde `.atl/skill-registry.md` (generado por `skill-registry`; no versionado — no está en el repo).
+> Los compact rules de cada skill los resuelve el orquestador desde `.atl/skill-registry.md` (generado por `skill-registry` y versionado en el repo; regeneralo si instalás o quitás skills).
 
 ---
 
