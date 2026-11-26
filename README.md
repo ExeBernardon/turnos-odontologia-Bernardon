@@ -4,19 +4,58 @@ Sistema de turnos para un consultorio odontológico: reserva pública sin cuenta
 
 Más contexto en [`knowledge-base/`](knowledge-base/README.md); el contrato de la API está en [`docs/api/`](docs/api/openapi.yaml) y el plan de trabajo en [`CHANGES.md`](CHANGES.md).
 
+## Dónde está cada entregable del TP
+
+| Entregable | Dónde |
+|---|---|
+| Informe de Discovery (A, B, C, D y verificación de fuentes) | [`docs/discovery/informe-discovery.md`](docs/discovery/informe-discovery.md) y [`informe-discovery.pdf`](docs/discovery/informe-discovery.pdf) |
+| Checklist de `discovery-research` y notas de los 21 competidores | [`docs/discovery/discovery.md`](docs/discovery/discovery.md) y [`docs/discovery/sources/`](docs/discovery/sources/) |
+| Estado de la fundación | [`.active-orchestrator-state.json`](.active-orchestrator-state.json) |
+| Base de conocimiento (10 archivos canónicos) | [`knowledge-base/`](knowledge-base/README.md) |
+| Roadmap | [`CHANGES.md`](CHANGES.md) |
+| Reglas del agente | [`AGENTS.md`](AGENTS.md) y [`CLAUDE.md`](CLAUDE.md) |
+| Registro de skills | [`.atl/skill-registry.md`](.atl/skill-registry.md) |
+| Specs vigentes | [`openspec/specs/`](openspec/specs/) |
+| Change elegido para la defensa (C-07, crear un turno sin solapamientos), archivado | [`openspec/changes/archive/2026-11-25-turnos-alta-reserva-backend/`](openspec/changes/archive/2026-11-25-turnos-alta-reserva-backend/) |
+| Implementación del change | [`backend/src/main/java/ar/turnos/odontologia/turno/`](backend/src/main/java/ar/turnos/odontologia/turno/) |
+| Tests de cada escenario del change | [`backend/src/test/java/ar/turnos/odontologia/turno/`](backend/src/test/java/ar/turnos/odontologia/turno/) (ver [Tests del change elegido](#tests-del-change-elegido-c-07)) |
+| Resto de los changes del MVP, archivados | [`openspec/changes/archive/`](openspec/changes/archive/) |
+
 ## Requisitos
 
-- Docker con Compose v2 (corriendo, también para los tests del backend).
-- Java 21 (para el backend fuera de Docker y los tests).
-- Node 22 o superior (para el front fuera de Docker; la imagen de build usa Node 24).
+- Git.
+- Docker Desktop (o Docker Engine) con Compose v2. **Tiene que estar abierto y corriendo**, también para los tests del backend.
+- Java 21 (para los tests del backend y para correrlo fuera de Docker). Comprobalo con `java -version`.
+- Node 22 o superior (para los tests del front y para correrlo fuera de Docker; la imagen de build usa Node 24). Comprobalo con `node -v`.
+
+Maven no hace falta: el repo trae el wrapper (`mvnw` / `mvnw.cmd`), que lo descarga solo la primera vez.
+
+## Clonar el repositorio
+
+```bash
+git clone https://github.com/ExeBernardon/turnos-odontologia-Bernardon.git
+cd turnos-odontologia-Bernardon
+```
 
 ## Levantar todo desde cero (un solo comando)
+
+Linux, macOS o Git Bash:
 
 ```bash
 cp .env.example .env
 docker compose down -v
 docker compose up --build
 ```
+
+Windows (PowerShell):
+
+```powershell
+Copy-Item .env.example .env
+docker compose down -v
+docker compose up --build
+```
+
+El `.env.example` ya trae valores de ejemplo que funcionan tal cual con Mailpit: no hace falta editar nada para probar el sistema.
 
 - `.env` no se versiona (solo `.env.example`). Si falta, Compose falla a propósito.
 - `down -v` borra la base: sirve para empezar de cero y es necesario cada vez que se cambia el odontólogo del seed (el seed solo corre sobre una base vacía). Con `docker compose down` los datos se conservan.
@@ -36,7 +75,7 @@ Los puertos de host se cambian desde `.env` (`FRONTEND_PORT`, `BACKEND_PORT`, `D
 Con la base vacía el backend crea un odontólogo ficticio, 4 prestaciones y horarios de atención. Se configura en `.env`:
 
 - Email: el valor de `SEED_ODONTOLOGO_EMAIL` (por defecto `odontologo@ejemplo.com`).
-- Contraseña: la de `SEED_ODONTOLOGO_PASSWORD` en tu `.env` (no está en el repositorio).
+- Contraseña: el valor de `SEED_ODONTOLOGO_PASSWORD` en tu `.env`. Si copiaste `.env.example` sin cambiarlo, es el valor de ejemplo que trae ese archivo; abrí tu `.env` para verlo. La contraseña real de una demo nunca se versiona.
 
 Ese mismo email recibe la alerta de turnos pendientes a menos de 24 h.
 
@@ -61,16 +100,71 @@ Si tu `.env` usa otra contraseña de base, exportala antes de arrancar el backen
 
 ## Tests
 
+Antes de empezar: Docker abierto y corriendo. Los tests del backend levantan un PostgreSQL 16 real con Testcontainers (no usan H2); la primera vez bajan la imagen y el wrapper descarga Maven, así que tardan varios minutos. No hace falta tener el sistema levantado con `docker compose up`.
+
+Cada bloque se corre desde la raíz del repo.
+
+**Backend** (JUnit 5 + Testcontainers). Resultado esperado: `BUILD SUCCESS` con todos los tests en 0 fallas.
+
+Linux, macOS o Git Bash:
+
 ```bash
-# backend: JUnit 5 + Testcontainers (PostgreSQL 16 real, requiere Docker corriendo)
-cd backend && ./mvnw verify
-
-# frontend: Vitest, lint, tipos y build
-cd frontend && npm test && npm run lint && npm run typecheck && npm run build
-
-# contrato de la API
-cd docs/api/scripts && npm install && npm run verificar
+cd backend
+./mvnw verify
 ```
+
+Windows (PowerShell):
+
+```powershell
+cd backend
+.\mvnw.cmd verify
+```
+
+**Frontend** (Vitest, lint, tipos y build):
+
+```bash
+cd frontend
+npm install
+npm test
+npm run lint
+npm run typecheck
+npm run build
+```
+
+**Contrato de la API**:
+
+```bash
+cd docs/api/scripts
+npm install
+npm run verificar
+```
+
+### Tests del change elegido (C-07)
+
+Para correr solo los tests de C-07, que cubren los escenarios de su spec ([`openspec/specs/alta-turnos/spec.md`](openspec/specs/alta-turnos/spec.md)):
+
+Linux, macOS o Git Bash:
+
+```bash
+cd backend
+./mvnw test -Dtest='TurnoAltaConcurrenciaIT,TurnoPublicoApiIT,TurnoManualApiIT,TurnoTokenApiIT,TurnoSolapamientoIT,EstadoInicialTurnoTest,TurnoServiceTest,TurnoAvisosServiceTest'
+```
+
+Windows (PowerShell):
+
+```powershell
+cd backend
+.\mvnw.cmd test "-Dtest=TurnoAltaConcurrenciaIT,TurnoPublicoApiIT,TurnoManualApiIT,TurnoTokenApiIT,TurnoSolapamientoIT,EstadoInicialTurnoTest,TurnoServiceTest,TurnoAvisosServiceTest"
+```
+
+| Escenario del spec | Test |
+|---|---|
+| Reserva pública válida (caso feliz) | `TurnoPublicoApiIT.reservaValidaDevuelve201ConElResumenDelContrato` |
+| Dos reservas simultáneas sobre el mismo horario (error de negocio: una recibe 201 y la otra 409 `HORARIO_OCUPADO`) | `TurnoAltaConcurrenciaIT.dosReservasSimultaneasSoloUnaSeQuedaConElHorario` |
+| Reserva sin consentimiento (error de negocio, 422) | `TurnoPublicoApiIT.sinConsentimientoEs422YNoCreaElTurno` |
+| Turnos adyacentes: uno empieza justo cuando termina otro (borde, se acepta) | `TurnoSolapamientoIT.turnosAdyacentesSeAceptan` |
+| Bordes exactos de 48 h y 24 h (borde) | `EstadoInicialTurnoTest` |
+| Turno cancelado no bloquea | `TurnoPublicoApiIT.turnoCanceladoNoBloqueaLaReserva` |
 
 Los tipos del front (`frontend/src/api/types.ts`) son una copia exacta de `docs/api/tipos.ts`. Si el contrato cambia: `npm run tipos:sync` en `frontend/`.
 
@@ -115,6 +209,9 @@ Datos ficticios: DNI `99999999` (o `9999999x`), emails `<cuenta-demo>+ana@gmail.
 
 ## Resolución de problemas
 
+- **Los tests del backend fallan con "Could not find a valid Docker environment"**: Docker no está corriendo. Abrí Docker Desktop, esperá a que diga que está activo y volvé a correrlos.
+- **`./mvnw` no funciona en Windows**: en PowerShell se usa `.\mvnw.cmd`.
+- **`java` no se reconoce o la versión no es 21**: instalá un JDK 21 y revisá que `JAVA_HOME` apunte a él.
 - **El SMTP no responde** (credenciales mal, sin internet, host equivocado): cada acción que manda mail tarda unos 5 s (timeout) y el turno se crea igual. Revisar las variables `SPRING_MAIL_*` y `docker compose logs backend`.
 - **Con Gmail la reserva tarda unos segundos**: el envío es sincrónico; esperar el resumen.
 - **El mail no llega con Gmail**: mirar la carpeta de spam y el límite diario de envíos de la cuenta; como plan B usar Mailpit.
