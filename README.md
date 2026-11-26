@@ -74,8 +74,12 @@ Los puertos de host se cambian desde `.env` (`FRONTEND_PORT`, `BACKEND_PORT`, `D
 
 Con la base vacía el backend crea un odontólogo ficticio, 4 prestaciones y horarios de atención. Se configura en `.env`:
 
-- Email: el valor de `SEED_ODONTOLOGO_EMAIL` (por defecto `odontologo@ejemplo.com`).
-- Contraseña: el valor de `SEED_ODONTOLOGO_PASSWORD` en tu `.env`. Si copiaste `.env.example` sin cambiarlo, es el valor de ejemplo que trae ese archivo; abrí tu `.env` para verlo. La contraseña real de una demo nunca se versiona.
+Si copiaste `.env.example` sin cambiarlo, para entrar a http://localhost:8080/admin/ usá:
+
+- Email: `odontologo@ejemplo.com` (variable `SEED_ODONTOLOGO_EMAIL`).
+- Contraseña: `cambiar-esto` (variable `SEED_ODONTOLOGO_PASSWORD`).
+
+Son valores de ejemplo para desarrollo, no secretos. Si los cambiás en tu `.env`, corré `docker compose down -v` antes de volver a levantar. La contraseña de una demo real nunca se versiona.
 
 Ese mismo email recibe la alerta de turnos pendientes a menos de 24 h.
 
