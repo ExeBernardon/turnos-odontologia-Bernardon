@@ -5,10 +5,10 @@
 .bp-campo { flex: 1 1 12rem; min-width: 0; box-sizing: border-box; }
 .bp-campo,
 .bp button { font: inherit; min-height: 2.75rem; padding: 0.25rem 0.75rem; }
-.bp button { cursor: pointer; }
+.bp button { cursor: pointer; font-weight: var(--font-weight-bold); }
 
-.bp-estado { margin: 0.25rem 0; color: #14532d; }
-.bp-alerta { margin: 0.25rem 0; color: #991b1b; font-weight: 600; }
+.bp-estado { margin: 0.25rem 0; color: var(--color-success-text); }
+.bp-alerta { margin: 0.25rem 0; color: var(--color-danger-text); font-weight: 600; }
 .bp-estado:empty,
 .bp-alerta:empty,
 .bp-accion:empty { display: none; }
@@ -20,8 +20,10 @@
   align-items: center;
   justify-content: space-between;
   gap: 0.5rem 1rem;
-  padding: 0.5rem 0.75rem;
-  border: 1px solid #c7ccd4;
-  border-radius: 0.5rem;
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-bg);
+  box-shadow: var(--shadow-card);
 }
 .bp-datos { display: grid; min-width: 0; overflow-wrap: anywhere; }

@@ -18,4 +18,18 @@ describe('agenda.css', () => {
     expect(css).toContain('grid-template-columns: 1fr');
     expect(css).toContain('overflow-wrap: anywhere');
   });
+
+  it('la vista semanal envuelve columnas legibles y alinea las tarjetas arriba', () => {
+    expect(css).toContain('repeat(auto-fill, minmax(12.5rem, 1fr))');
+    expect(css).toMatch(/\.agenda-semana \{[^}]*align-items: start/);
+    expect(css).toMatch(/\.admin-main:has\(\.agenda-semana\)/);
+  });
+
+  it('el badge de estado no se parte en dos líneas', () => {
+    expect(css).toMatch(/\.agenda-badge,[^{]*\{[^}]*white-space: nowrap/);
+  });
+
+  it('en lista apilada se ocultan las franjas fuera de horario de la semana', () => {
+    expect(css).toMatch(/\.agenda-semana \.agenda-franja--sin-atencion \{[^}]*display: none/);
+  });
 });

@@ -1,77 +1,138 @@
-/* Pantalla publica de reserva: mobile-first. Los estilos cfg-* (de formulario.ts) se acotan a .reserva. */
-.reserva { max-width: 40rem; margin: 0 auto; }
-.reserva h2 { font-size: 1.15rem; margin: 0 0 0.5rem; }
-.reserva-seccion { margin: 0 0 1.5rem; }
+/* Pantalla publica de reserva: mobile-first, una columna centrada con secciones como tarjetas.
+   Los estilos cfg-* (de formulario.ts) se acotan a .reserva. Tokens en src/styles/tokens.css (revision 2). */
+.reserva { max-width: var(--public-max-width); margin: 0 auto; }
+.reserva > h1 {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin: 0 0 var(--space-6);
+}
+/* Acento decorativo junto al titulo, sin imagen. */
+.reserva > h1::before {
+  content: '';
+  flex: none;
+  width: 0.75rem;
+  height: 0.75rem;
+  border-radius: var(--radius-pill);
+  background: var(--color-primary);
+  box-shadow: 0 0 0 5px var(--color-primary-soft);
+}
+.reserva h2 { font-size: var(--font-size-md); margin: 0 0 var(--space-4); }
+.reserva-seccion {
+  min-width: 0;
+  margin: 0 0 var(--space-5);
+  padding: var(--space-5);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-bg);
+  box-shadow: var(--shadow-card);
+}
 .reserva-seccion[hidden],
 .reserva-grupo[hidden] { display: none; }
-.reserva-resumen h2:focus { outline: 3px solid #1a56db; outline-offset: 2px; }
+.reserva-resumen { border-top: 4px solid var(--color-success-text); }
+.reserva-resumen h2:focus { outline: var(--focus-width) solid var(--focus-color); outline-offset: var(--focus-offset); }
 
 .reserva .cfg-avisos { min-height: 1.5rem; }
-.reserva .cfg-estado { color: #14532d; margin: 0.25rem 0; }
-.reserva .cfg-alerta { color: #991b1b; font-weight: 600; margin: 0.25rem 0; }
-.reserva .cfg-error { color: #991b1b; margin: 0.25rem 0 0; font-size: 0.9rem; }
+.reserva .cfg-estado { color: var(--color-text-muted); margin: 0.25rem 0; }
+.reserva .cfg-alerta { color: var(--color-danger-text); font-weight: 600; margin: 0.25rem 0; }
+.reserva .cfg-error { color: var(--color-danger-text); margin: 0.25rem 0 0; font-size: var(--font-size-sm); }
 .reserva .cfg-error:empty { display: none; }
 .reserva .cfg-acciones { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; }
 
-.reserva .cfg-campo { display: grid; gap: 0.25rem; margin-bottom: 0.75rem; }
+.reserva .cfg-campo { display: grid; gap: 0.25rem; margin-bottom: var(--space-4); }
+.reserva .cfg-campo label { font-weight: var(--font-weight-bold); font-size: var(--font-size-sm); }
 .reserva .cfg-campo input:not([type='checkbox']) {
   font: inherit;
-  padding: 0.5rem;
+  padding: var(--space-2) var(--space-3);
   min-height: 2.75rem;
   box-sizing: border-box;
   width: 100%;
   max-width: 100%;
 }
-.reserva .cfg-campo [aria-invalid='true'] { border: 2px solid #b91c1c; }
+.reserva .cfg-campo [aria-invalid='true'] { border: 2px solid var(--color-danger-border); }
 .reserva button {
   font: inherit;
+  font-weight: var(--font-weight-bold);
   min-height: 2.75rem;
   min-width: 2.75rem;
-  padding: 0.25rem 1rem;
+  padding: 0.25rem 1.25rem;
   cursor: pointer;
 }
 .reserva button:disabled { cursor: progress; }
+.reserva-form .cfg-acciones button[type='submit'] { width: 100%; min-height: 3rem; font-size: var(--font-size-md); }
 
-.reserva-nota { margin: 0.25rem 0 0.75rem; color: #4b5563; }
+.reserva-nota { margin: 0.25rem 0 0.75rem; color: var(--color-text-muted); }
 .reserva-nota:empty { display: none; }
 
-.reserva-grupo { border: 1px solid #c7ccd4; border-radius: 0.5rem; padding: 0.75rem; margin: 0 0 0.75rem; min-width: 0; }
-.reserva-grupo legend { font-weight: 600; padding: 0 0.25rem; }
-.reserva-grupo:focus { outline: 3px solid #1a56db; outline-offset: 2px; }
-.reserva-nota:focus { outline: 3px solid #1a56db; outline-offset: 2px; }
+.reserva-grupo { border: 0; border-radius: var(--radius-md); padding: 0; margin: 0 0 0.75rem; min-width: 0; }
+.reserva-grupo legend {
+  margin-bottom: var(--space-2);
+  padding: 0;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+}
+.reserva-grupo:focus { outline: var(--focus-width) solid var(--focus-color); outline-offset: var(--focus-offset); }
+.reserva-nota:focus { outline: var(--focus-width) solid var(--focus-color); outline-offset: var(--focus-offset); }
 
-.reserva-horarios { display: grid; grid-template-columns: repeat(auto-fill, minmax(5.5rem, 1fr)); gap: 0.5rem; }
+.reserva-horarios { display: grid; grid-template-columns: repeat(auto-fill, minmax(6rem, 1fr)); gap: 0.5rem; }
 .reserva-horarios legend { grid-column: 1 / -1; }
 #res-prestaciones { display: grid; gap: 0.5rem; }
 
-/* Opciones de radio como tarjetas tactiles (>= 44 px); el elegido se marca por borde y peso, no solo por color. */
+/* Opciones de radio como chips tactiles (>= 44 px); el elegido se marca por borde y peso, no solo por color. */
 .reserva-opcion {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.625rem;
   min-height: 2.75rem;
   box-sizing: border-box;
-  padding: 0.25rem 0.75rem;
-  border: 1px solid #c7ccd4;
-  border-radius: 0.5rem;
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--color-input-border);
+  border-radius: var(--radius-md);
+  background: var(--color-bg);
+  font-weight: var(--font-weight-medium);
   cursor: pointer;
+  transition-property: background-color, border-color, box-shadow;
+  transition-duration: var(--motion-fast);
 }
+.reserva-opcion:hover { border-color: var(--color-primary); background: var(--color-primary-soft); }
 .reserva-opcion input { width: 1.25rem; height: 1.25rem; flex: none; }
-.reserva-opcion:has(input:checked) { border: 3px solid #1a56db; font-weight: 700; background: #eff6ff; }
-.reserva-opcion:focus-within { outline: 3px solid #1a56db; outline-offset: 2px; }
-.reserva-hora { justify-content: center; }
+.reserva-opcion:has(input:checked) {
+  border: 2px solid var(--color-primary);
+  padding: calc(var(--space-2) - 1px) calc(var(--space-3) - 1px);
+  background: var(--color-primary-soft);
+  color: var(--color-primary-strong);
+  font-weight: 700;
+}
+.reserva-opcion:focus-within { outline: var(--focus-width) solid var(--focus-color); outline-offset: var(--focus-offset); }
+.reserva-hora { justify-content: center; gap: var(--space-2); padding-inline: var(--space-2); white-space: nowrap; overflow-wrap: normal; font-variant-numeric: tabular-nums; border-radius: var(--radius-pill); }
 
 .reserva-fecha { display: grid; gap: 0.5rem; align-items: end; }
+.reserva-fecha .cfg-campo { margin-bottom: 0; }
+.reserva-fecha button { justify-self: start; }
 .reserva-datos { display: grid; gap: 0 1rem; }
-.reserva-casilla { display: flex; align-items: flex-start; gap: 0.5rem; }
+.reserva-casilla { display: flex; align-items: flex-start; gap: 0.5rem; margin: 0 0 var(--space-4); }
 .reserva-casilla input { width: 1.5rem; height: 1.5rem; flex: none; margin-top: 0.1rem; }
-.reserva-casilla label { padding: 0.25rem 0; }
+.reserva .reserva-casilla label { padding: 0.25rem 0; font-size: var(--font-size-sm); font-weight: 400; }
 
-.reserva-detalle { display: grid; grid-template-columns: max-content 1fr; gap: 0.25rem 1rem; }
+.reserva-detalle {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0 1rem;
+  padding: var(--space-4);
+  border-radius: var(--radius-md);
+  background: var(--color-surface-soft);
+}
 .reserva-detalle dt { font-weight: 600; }
+.reserva-detalle dd + dt { margin-top: var(--space-2); }
+@media (min-width: 30rem) {
+  .reserva-detalle { grid-template-columns: max-content minmax(0, 1fr); gap: var(--space-2) 1rem; }
+  .reserva-detalle dd + dt { margin-top: 0; }
+}
 .reserva-detalle dd { margin: 0; overflow-wrap: anywhere; }
 
 @media (min-width: 40rem) {
+  .reserva-seccion { padding: var(--space-6); }
   .reserva-datos { grid-template-columns: 1fr 1fr; }
   .reserva-fecha { grid-template-columns: minmax(10rem, 16rem) auto; }
 }
