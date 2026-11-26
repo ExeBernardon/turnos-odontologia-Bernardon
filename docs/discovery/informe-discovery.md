@@ -67,27 +67,27 @@ Abreviaturas: AR Argentina, CL Chile, BR Brasil, ES España, UK Reino Unido, US 
 
 | # | Sistema | Empresa | País | Segmento | Modalidad | Agenda | Turnos digitales | Automatización | Clínica | Administración | Integraciones locales | Seguridad | Modelo comercial | Precio | Fuente y fecha de consulta |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| 1 | DentalCore | DentalCore (La Plata) | AR | Consultorio a clínica (hasta 100 usuarios) | ◐ SaaS web + app Windows | ◐ multi-doctor, bloqueos, kanban; sillones NE | ◐ confirmar/cancelar por link; reserva autogestionada ✘ | ◐ WA/email/SMS a 48 y 24 h; recuperación de planificados | ◐ periodontograma, 22 consentimientos, odontograma 50+ hallazgos | ◐ caja, ARCA A/B/C, cobro MP, liquidación OS | ◐ ARCA, MP, WA Meta, FHIR; API pública ✘ | ◐ TLS, AES-256 en backups, 2FA, log de accesos; ★ sigue controles de ISO/IEC 27001, sin certificación (único cambio: la redacción) | Suscripción; prueba 1 semana; sin plan gratis | ARS 75.000 (2 usuarios) en home vs USD 50 en FAQ: inconsistente | [nota](sources/dentalcore.md) · consultada el 2026-11-23 |
-| 2 | DentalSoft | DentalSoft (La Plata/Rosario) | AR | Independiente y clínica chica (hasta 10 profesionales) | ★ SaaS web | ★ multi-prof., sobreturnos con detección de solapamiento, bloqueos, GCal; sillones ✘ | ★ reserva online 4 pasos (desde Pro), asistente WA 24 h (Pro); lista de espera ✘ | ★ WA (manual en Gestión, automático en Pro), reactivación, cobro de deudas | ★ odontograma 18 estados, plan de tratamiento, presupuesto con cobertura OS; periodontograma y Rx ✘ | ★ caja, MP, señas, liquidación OS y comisiones, **integración con ARCA y facturación** | ★ ARCA, GCal, WA, MP, Excel/CSV | ✘ cifrado y leyes NE; ★ backup/exportación en Gestión | Suscripción; gratis 3 meses con limitaciones | ARS 30.000 (Gestión) / 60.000 (Pro) por mes con 1 profesional, +ARS 10.000 por profesional agregado (máx. 10); WA automático USD 0,026/mensaje (Meta) | [nota](sources/dentalsoft.md) · consultada el 2026-11-23 |
-| 3 | Dentalink | Engenis SpA | CL (módulo AR) | Independiente y clínicas | ✔ SaaS (AWS) | ★ agenda con confirmaciones y reprogramación automática; lista de espera ✘ | ★ agendamiento online y por WA; IA ◐ (no verificada) | ★ recordatorios WA, campañas por email, seguimiento de presupuestos | ★ fichas, odontograma, presupuestos, planes, recetas; periodontograma ✖ (se muestra en la web pero ningún plan lo incluye) | ★ pagos, convenios, reembolsos (Chile); conciliación de pagos de OS (AR); ARCA no verificado | ★ módulo AR: OS (aranceles, copago, conciliación) y receta electrónica Decreto 345/2024; ARCA y MP no verificados | ◐ ISO 27001 y HIPAA afirmados, no verificados; Leyes 25.326/26.529 no verificadas | Planes Esencial/Pro/Titanium; cobro mensual, semestral o anual | ★ USD/mes: Esencial 35 (incl. 1 odontólogo, +10 c/u adicional), Pro 50 (+12), Titanium 75 (+15); administrativos gratis e ilimitados | [nota](sources/dentalink.md) · consultada el 2026-11-23 |
-| 4 | AgendaPro | AgendaPro Inc. | NE (opera en AR) | Multivertical (no es sistema odontológico completo) | ★ SaaS | ★ agenda por profesional, reportes por sede; sobreturnos y lista de espera ✘ | ★ reserva 24/7 desde web, Google, IG, FB, WA; IA en WA; confirmar/cancelar con un clic | ★ recordatorios WA y email, seguimiento de presupuestos; "hasta 90% menos faltas" ◐ | ✖ sin ficha clínica, odontograma, radiografías, firmas ni periodontograma | ✖ sin seña o pago total, MP, QR, caja, ARCA ni OS | ★ WA, Google, IG, FB; MP ✖ | No verificado (ficha cifrada, AWS, Leyes 25.326/26.529) | Suscripción; prueba 7 días; sin plan gratis | ★ desde ARS 19.000/mes | [nota](sources/agendapro.md) · consultada el 2026-11-23 |
-| 5 | Odonthia | Genera Impacto | AR | Independiente y consultorio chico | ◐ SaaS web | ✘ vistas y sillones NE; agenda en plan gratis | ◐ reserva online (sin detalle) | ◐ recordatorio manual gratis; WA automático en planes pagos | ◐ odontograma FDI, consentimientos con firma electrónica, IA | ◐ presupuestos y caja sin detalle; admite no tener OS, ARCA ni receta | ✘ ARCA y MP NE; ◐ importación CSV | ◐ registro de actividad, aislamiento por consultorio; leyes ✘ | Freemium + IA por créditos | Gestión gratis; IA ARS 78.700; Max ARS 162.500 (octubre: 74.500 y 153.700) | [nota](sources/odonthia.md) · consultada el 2026-11-22 |
-| 6 | ClinIA / OdontoClinIA | Emprinet | AR | Instituciones públicas y privadas | ◐ web con instancia por cliente | ◐ por profesional/consultorio/sillón; bloqueos ✖ (no figuran en la landing, confirmado por el equipo) | ◐ turnero web, app y asistente WA con IA | ◐ recordatorios WA y correo | ◐ odontograma FDI 52 piezas, plan con nomenclador, IA | ◐ caja con arqueo, multimoneda, factura ARCA, cobertura PUCO | ✔ ReNaPDiS N.º 248 (verificable); ◐ ARCA, PUCO, RENAPER, FHIR | ✘ cifrado y leyes NE; backups cada 10 min (afirmado) | Por cotización institucional; demo de 45 min (el equipo no pudo probarla: exige ser empresa) | No publicado | [nota](sources/clinia-odontoclinia.md) · consultada el 2026-11-23 |
-| 7 | DentalTec | DentalTec (Tándem Digital) | AR | Odontólogos de círculos e instituciones | ◐ web | ✘ vistas y sillones NE | ✘ reserva online NE; ◐ recordatorios WA | ◐ recordatorios WA (cifras sin fuente) | ◐ historia, odontograma con CIE-10 | ◐ validación OS en línea, 15+ OS, planillas hacia ARCA | ◐ ARCA, OS por SOAP, WA | ✘ NE (10 roles y "trazabilidad 100%" sin detalle) | Por cotización; demo a pedido | No publicado | [nota](sources/dentaltec.md) · consultada el 2026-11-22 |
-| 8 | Odonto.ar | No identificada | AR (inferido) | Individual a clínica de 10 usuarios | ◐ SaaS web | ◐ día/semana/mes, agenda compartida | ◐ reserva por link con reglas de cancelación (demo) | ✘ WA y recordatorios NE | ◐ odontograma con trazabilidad por diente, presupuestos | ◐ cálculo parte OS/paciente; liquidación, ARCA, MP ✘ | ✘ NE | ✘ NE | Suscripción; prueba 30 días | USD 29 / 49 / 99 (pago en ARS por MP) | [nota](sources/odonto-ar.md) · consultada el 2026-11-22 |
-| 9 | Doctoralia Pro | Docplanner | NE (opera en AR) | Profesional independiente (no odontológico) | ✔ SaaS + app | ✔ agenda online configurable; vistas y sobreturnos ✘ | ✔ reserva desde perfil, web, Google y redes; WA confirmar/cancelar/reprogramar | ✔ recordatorios y confirmaciones; campañas | ✘ solo "episodios clínicos"; odontograma ✘ | ✘ facturación, caja, ARCA y MP NE | ✔ filtro de OS argentinas en directorio; WA | ◐ AWS, "GDPR"; ley argentina ✘ | Suscripción anual + marketplace | ARS no publicado; referencia ES 89 a 129 EUR (no vale para AR) | [nota](sources/doctoralia-pro.md) · consultada el 2026-11-22 |
-| 10 | Turnito | Turnito | AR | Generalista (sin odontología) | ◐ SaaS web | ◐ servicios, GCal bidireccional, Meet; solapamiento explícito ✘ | ◐ reserva 24/7 sin cuenta, seña o pago total | ◐ recordatorios desde plan Plus (WA con tope mensual) | ✘ | ◐ cobros MP/Talo/PayPal con comisión; ARCA y OS ✘ | ◐ MP, Talo, GCal, WA | ✘ NE | Freemium con comisión por cobro | Gratis; ARS 9.900 / 20.300 / 34.800 + IVA | [nota](sources/turnito.md) · consultada el 2026-11-22 |
-| 11 | DentiClick | No identificada | AR/VE | Individual a multisucursal | ◐ SaaS web (PWA) | ◐ vistas día/semana/mes; sillones ✘ | ◐ reserva 24/7 en subdominio de la clínica | ✘ WA NE; ◐ chat IA | ◐ odontograma, Rx con visor 3D, presupuestos | ◐ cuenta corriente, liquidación OS CSV/PDF, inventario; ARCA y MP ✘ | ✘ NE | ✘ NE; backup semanal por email | Todas las funciones por plan; prueba 1 mes | USD 0 / 12 / 29 / 35 | [nota](sources/denticlick.md) · consultada el 2026-11-22 |
-| 12 | Clinicorp | Clinicorp | BR | Consultorio a red | ◐ SaaS | ✔ informes de ocupación, check-in por QR; sillones ✘ | ✔ agendamiento online (Google); IA ◐ | ✔ confirmación y follow-up por WA, retorno | ✔ prontuario, planes/orçamento, firma digital; odontograma ✘ en home | ✔ Clinipay (Pix, boleto, notas fiscais), todo de BR | ✘ AR NE | ✘ NE | Suscripción; demo, sin prueba | R$ 149,90 / 369,90 | [nota](sources/clinicorp.md) · consultada el 2026-11-22 |
-| 13 | Simples Dental | Simples Dental | BR | Consultorio y clínica | ✔ SaaS + app paciente | ✔ link de reserva, encaixes, voz | ✔ confirmación WA (paga aparte); secretaria IA (pre-lanzamiento) | ✔ campañas, CRM de presupuestos (Pro) | ✔ odontograma, evoluciones, recetas, contratos; periodontograma ✘ | ✔ cobros, Pix, NF, caja (BR) | ✘ AR NE | ✘ NE | Planes + extras por uso; prueba 7 días | R$ 149,90 / 249,90 / 349,90 | [nota](sources/simples-dental.md) · consultada el 2026-11-22 |
-| 14 | Dentidesk | Dentidesk | CL | Clínicas, facultades | ◐ SaaS | ✔ agendar, reprogramar; sillones ✘ | ✔ agendamiento online (sin detalle); WA "próximamente" | ✘ WA ausente | ✔ odontograma con nomenclaturas; fichas; periodontograma ✘ | ✔ boletas SII, Alegra (DR) | ✘ AR NE | ✘ sin medidas técnicas | Por cotización; prueba 15 días | No publicado | [nota](sources/dentidesk.md) · consultada el 2026-11-22 |
-| 15 | Medilink | Engenis SpA | CL | Centros de salud (sin odontología) | ◐ SaaS | ✔ agenda médica | ✔ agendamiento online, contact center WA | ✔ confirmación por email/WA | ✘ odontograma NE | ✔ boletas electrónicas, caja (CL) | ✘ AR NE; ERPs chilenos | ✔ enlaces a DPA y política (sin detalle) | Sin permanencia; asesoría | No publicado | [nota](sources/medilink.md) · consultada el 2026-11-22 |
-| 16 | Encuadrado | Encuadrado | CL | Profesionales independientes (sin odontología) | ✔ SaaS móvil | ✔ horarios, repetición, bloqueos | ✔ reserva en perfil | ✔ recordatorios WA y email | ✘ | ✔ transferencia, tarjeta, boleta CL; comisión 1% en Esencial | ✘ AR NE | ✘ NE | Suscripción en UF | CLP 26.107 / 43.511 / 141.218 + IVA | [nota](sources/encuadrado.md) · consultada el 2026-11-22 |
-| 17 | Open Dental | Open Dental Software | US (inferido) | Consultorio a cadena | ✔ instalado; Cloud con cargo | ✔ bloqueos, lista ASAP | ✔ Web Sched en 4 modos, portal | ✔ eReminders/eConfirmations, texting | ✔ tooth chart 2D/3D; periodontograma y Rx no detallados | ✔ facturación, estados de cuenta, Payment Portal (US) | ✘ AR NE (tarifa "otros países") | ✘ NE | Suscripción por local; eServices modulares | USD 89 "otros países" + módulos; gratis en países en desarrollo | [nota](sources/open-dental.md) · consultada el 2026-11-22 |
-| 18 | Dentally | Henry Schein One UK | UK | Consultorio y grupo | ✔ SaaS | ✔ diario, lista de espera, relleno de último momento | ✔ Portal: reserva, formularios, kiosco | ✔ recordatorios, recalls, feedback | ◐ charting, notas con IA; odontograma/periodontograma no descritos | ✔ pagos vía Portal (sin detalle) | ✘ AR NE; WA ✘ | ✔ cifrado, 2FA, roles, IP/horario; GDPR y backups NE | Plan por gabinete (público) | GBP 134 a 1.021 por 3 gabinetes | [nota](sources/dentally.md) · consultada el 2026-11-22 |
-| 19 | NexHealth | NexHealth | US | Consultorios (capa sobre otro sistema) | ◐ SaaS | ✔ sincroniza con el sistema existente | ✔ reserva desde Google Maps, lista ASAP | ✔ recalls, recordatorios, campañas | ✘ no es sistema clínico | ✔ pagos por texto, verificación de seguros (US) | ✘ AR NE; Health Records API | ◐ HIPAA declarado; SOC 2 NE | Módulos a medida | No publicado | [nota](sources/nexhealth.md) · consultada el 2026-11-22 |
-| 20 | Curve Dental | CD Newco | US | Consultorios US/CA | ✔ nube desde 2004 | ✔ agenda, recare (listado oficial) | ✔ reserva online (sin detalle del flujo) | ✔ recordatorios, campañas | ✔ perio charting, planes, imágenes | ✔ eClaims, pagos, membresías (US) | ✘ AR NE | ◐ "HIPAA-compliant" sin certificaciones | A medida; solo demo | No publicado | [nota](sources/curve-dental.md) · consultada el 2026-11-22 |
-| 21 | Gesden | Infomed / Henry Schein | ES | Clínica dental | ◐ G5 escritorio / ONE nube (terceros) | ◐ multigabinete (terceros) | ✘ NE | ✘ NE | ◐ odontograma y periodontograma (terceros) | ◐ facturación VeriFactu (terceros) | ✘ AR NE | ✘ NE | G5 y ONE por usuarios concurrentes | ONE desde 75 EUR + IVA (tercero, sin verificar) | [nota](sources/gesden.md) · consultada el 2026-11-22 |
+| 1 | DentalCore | DentalCore (La Plata) | AR | Consultorio a clínica (hasta 100 usuarios) | ◐ SaaS web + app Windows | ◐ multi-doctor, bloqueos, kanban; sillones NE | ◐ confirmar/cancelar por link; reserva autogestionada ✘ | ◐ WA/email/SMS a 48 y 24 h; recuperación de planificados | ◐ periodontograma, 22 consentimientos, odontograma 50+ hallazgos | ◐ caja, ARCA A/B/C, cobro MP, liquidación OS | ◐ ARCA, MP, WA Meta, FHIR; API pública ✘ | ◐ TLS, AES-256 en backups, 2FA, log de accesos; ★ sigue controles de ISO/IEC 27001, sin certificación (único cambio: la redacción) | Suscripción; prueba 1 semana; sin plan gratis | ARS 75.000 (2 usuarios) en home vs USD 50 en FAQ: inconsistente | [https://dentalcore.app](https://dentalcore.app) · consultada el 2026-11-23 · detalle: [nota](sources/dentalcore.md) |
+| 2 | DentalSoft | DentalSoft (La Plata/Rosario) | AR | Independiente y clínica chica (hasta 10 profesionales) | ★ SaaS web | ★ multi-prof., sobreturnos con detección de solapamiento, bloqueos, GCal; sillones ✘ | ★ reserva online 4 pasos (desde Pro), asistente WA 24 h (Pro); lista de espera ✘ | ★ WA (manual en Gestión, automático en Pro), reactivación, cobro de deudas | ★ odontograma 18 estados, plan de tratamiento, presupuesto con cobertura OS; periodontograma y Rx ✘ | ★ caja, MP, señas, liquidación OS y comisiones, **integración con ARCA y facturación** | ★ ARCA, GCal, WA, MP, Excel/CSV | ✘ cifrado y leyes NE; ★ backup/exportación en Gestión | Suscripción; gratis 3 meses con limitaciones | ARS 30.000 (Gestión) / 60.000 (Pro) por mes con 1 profesional, +ARS 10.000 por profesional agregado (máx. 10); WA automático USD 0,026/mensaje (Meta) | [https://dentalsoft.com.ar/](https://dentalsoft.com.ar/) · consultada el 2026-11-23 · detalle: [nota](sources/dentalsoft.md) |
+| 3 | Dentalink | Engenis SpA | CL (módulo AR) | Independiente y clínicas | ✔ SaaS (AWS) | ★ agenda con confirmaciones y reprogramación automática; lista de espera ✘ | ★ agendamiento online y por WA; IA ◐ (no verificada) | ★ recordatorios WA, campañas por email, seguimiento de presupuestos | ★ fichas, odontograma, presupuestos, planes, recetas; periodontograma ✖ (se muestra en la web pero ningún plan lo incluye) | ★ pagos, convenios, reembolsos (Chile); conciliación de pagos de OS (AR); ARCA no verificado | ★ módulo AR: OS (aranceles, copago, conciliación) y receta electrónica Decreto 345/2024; ARCA y MP no verificados | ◐ ISO 27001 y HIPAA afirmados, no verificados; Leyes 25.326/26.529 no verificadas | Planes Esencial/Pro/Titanium; cobro mensual, semestral o anual | ★ USD/mes: Esencial 35 (incl. 1 odontólogo, +10 c/u adicional), Pro 50 (+12), Titanium 75 (+15); administrativos gratis e ilimitados | [https://www.softwaredentalink.com/cl](https://www.softwaredentalink.com/cl) · consultada el 2026-11-23 · detalle: [nota](sources/dentalink.md) |
+| 4 | AgendaPro | AgendaPro Inc. | NE (opera en AR) | Multivertical (no es sistema odontológico completo) | ★ SaaS | ★ agenda por profesional, reportes por sede; sobreturnos y lista de espera ✘ | ★ reserva 24/7 desde web, Google, IG, FB, WA; IA en WA; confirmar/cancelar con un clic | ★ recordatorios WA y email, seguimiento de presupuestos; "hasta 90% menos faltas" ◐ | ✖ sin ficha clínica, odontograma, radiografías, firmas ni periodontograma | ✖ sin seña o pago total, MP, QR, caja, ARCA ni OS | ★ WA, Google, IG, FB; MP ✖ | No verificado (ficha cifrada, AWS, Leyes 25.326/26.529) | Suscripción; prueba 7 días; sin plan gratis | ★ desde ARS 19.000/mes | [https://www.agendapro.com/ar](https://www.agendapro.com/ar) · consultada el 2026-11-23 · detalle: [nota](sources/agendapro.md) |
+| 5 | Odonthia | Genera Impacto | AR | Independiente y consultorio chico | ◐ SaaS web | ✘ vistas y sillones NE; agenda en plan gratis | ◐ reserva online (sin detalle) | ◐ recordatorio manual gratis; WA automático en planes pagos | ◐ odontograma FDI, consentimientos con firma electrónica, IA | ◐ presupuestos y caja sin detalle; admite no tener OS, ARCA ni receta | ✘ ARCA y MP NE; ◐ importación CSV | ◐ registro de actividad, aislamiento por consultorio; leyes ✘ | Freemium + IA por créditos | Gestión gratis; IA ARS 78.700; Max ARS 162.500 (octubre: 74.500 y 153.700) | [https://odonthia.com](https://odonthia.com) · consultada el 2026-11-22 · detalle: [nota](sources/odonthia.md) |
+| 6 | ClinIA / OdontoClinIA | Emprinet | AR | Instituciones públicas y privadas | ◐ web con instancia por cliente | ◐ por profesional/consultorio/sillón; bloqueos ✖ (no figuran en la landing, confirmado por el equipo) | ◐ turnero web, app y asistente WA con IA | ◐ recordatorios WA y correo | ◐ odontograma FDI 52 piezas, plan con nomenclador, IA | ◐ caja con arqueo, multimoneda, factura ARCA, cobertura PUCO | ✔ ReNaPDiS N.º 248 (verificable); ◐ ARCA, PUCO, RENAPER, FHIR | ✘ cifrado y leyes NE; backups cada 10 min (afirmado) | Por cotización institucional; demo de 45 min (el equipo no pudo probarla: exige ser empresa) | No publicado | [https://www.clinia.com.ar/odontologia](https://www.clinia.com.ar/odontologia) · consultada el 2026-11-23 · detalle: [nota](sources/clinia-odontoclinia.md) |
+| 7 | DentalTec | DentalTec (Tándem Digital) | AR | Odontólogos de círculos e instituciones | ◐ web | ✘ vistas y sillones NE | ✘ reserva online NE; ◐ recordatorios WA | ◐ recordatorios WA (cifras sin fuente) | ◐ historia, odontograma con CIE-10 | ◐ validación OS en línea, 15+ OS, planillas hacia ARCA | ◐ ARCA, OS por SOAP, WA | ✘ NE (10 roles y "trazabilidad 100%" sin detalle) | Por cotización; demo a pedido | No publicado | [https://web.dentaltec.com.ar/software-odontologos-argentina](https://web.dentaltec.com.ar/software-odontologos-argentina) · consultada el 2026-11-22 · detalle: [nota](sources/dentaltec.md) |
+| 8 | Odonto.ar | No identificada | AR (inferido) | Individual a clínica de 10 usuarios | ◐ SaaS web | ◐ día/semana/mes, agenda compartida | ◐ reserva por link con reglas de cancelación (demo) | ✘ WA y recordatorios NE | ◐ odontograma con trazabilidad por diente, presupuestos | ◐ cálculo parte OS/paciente; liquidación, ARCA, MP ✘ | ✘ NE | ✘ NE | Suscripción; prueba 30 días | USD 29 / 49 / 99 (pago en ARS por MP) | [https://odonto.ar/](https://odonto.ar/) · consultada el 2026-11-22 · detalle: [nota](sources/odonto-ar.md) |
+| 9 | Doctoralia Pro | Docplanner | NE (opera en AR) | Profesional independiente (no odontológico) | ✔ SaaS + app | ✔ agenda online configurable; vistas y sobreturnos ✘ | ✔ reserva desde perfil, web, Google y redes; WA confirmar/cancelar/reprogramar | ✔ recordatorios y confirmaciones; campañas | ✘ solo "episodios clínicos"; odontograma ✘ | ✘ facturación, caja, ARCA y MP NE | ✔ filtro de OS argentinas en directorio; WA | ◐ AWS, "GDPR"; ley argentina ✘ | Suscripción anual + marketplace | ARS no publicado; referencia ES 89 a 129 EUR (no vale para AR) | [https://pro.doctoralia.com/ar](https://pro.doctoralia.com/ar) · consultada el 2026-11-22 · detalle: [nota](sources/doctoralia-pro.md) |
+| 10 | Turnito | Turnito | AR | Generalista (sin odontología) | ◐ SaaS web | ◐ servicios, GCal bidireccional, Meet; solapamiento explícito ✘ | ◐ reserva 24/7 sin cuenta, seña o pago total | ◐ recordatorios desde plan Plus (WA con tope mensual) | ✘ | ◐ cobros MP/Talo/PayPal con comisión; ARCA y OS ✘ | ◐ MP, Talo, GCal, WA | ✘ NE | Freemium con comisión por cobro | Gratis; ARS 9.900 / 20.300 / 34.800 + IVA | [https://turnito.app](https://turnito.app) · consultada el 2026-11-22 · detalle: [nota](sources/turnito.md) |
+| 11 | DentiClick | No identificada | AR/VE | Individual a multisucursal | ◐ SaaS web (PWA) | ◐ vistas día/semana/mes; sillones ✘ | ◐ reserva 24/7 en subdominio de la clínica | ✘ WA NE; ◐ chat IA | ◐ odontograma, Rx con visor 3D, presupuestos | ◐ cuenta corriente, liquidación OS CSV/PDF, inventario; ARCA y MP ✘ | ✘ NE | ✘ NE; backup semanal por email | Todas las funciones por plan; prueba 1 mes | USD 0 / 12 / 29 / 35 | [https://www.denticlick.app/](https://www.denticlick.app/) · consultada el 2026-11-22 · detalle: [nota](sources/denticlick.md) |
+| 12 | Clinicorp | Clinicorp | BR | Consultorio a red | ◐ SaaS | ✔ informes de ocupación, check-in por QR; sillones ✘ | ✔ agendamiento online (Google); IA ◐ | ✔ confirmación y follow-up por WA, retorno | ✔ prontuario, planes/orçamento, firma digital; odontograma ✘ en home | ✔ Clinipay (Pix, boleto, notas fiscais), todo de BR | ✘ AR NE | ✘ NE | Suscripción; demo, sin prueba | R$ 149,90 / 369,90 | [https://clinicorp.com/](https://clinicorp.com/) · consultada el 2026-11-22 · detalle: [nota](sources/clinicorp.md) |
+| 13 | Simples Dental | Simples Dental | BR | Consultorio y clínica | ✔ SaaS + app paciente | ✔ link de reserva, encaixes, voz | ✔ confirmación WA (paga aparte); secretaria IA (pre-lanzamiento) | ✔ campañas, CRM de presupuestos (Pro) | ✔ odontograma, evoluciones, recetas, contratos; periodontograma ✘ | ✔ cobros, Pix, NF, caja (BR) | ✘ AR NE | ✘ NE | Planes + extras por uso; prueba 7 días | R$ 149,90 / 249,90 / 349,90 | [https://simplesdental.com/](https://simplesdental.com/) · consultada el 2026-11-22 · detalle: [nota](sources/simples-dental.md) |
+| 14 | Dentidesk | Dentidesk | CL | Clínicas, facultades | ◐ SaaS | ✔ agendar, reprogramar; sillones ✘ | ✔ agendamiento online (sin detalle); WA "próximamente" | ✘ WA ausente | ✔ odontograma con nomenclaturas; fichas; periodontograma ✘ | ✔ boletas SII, Alegra (DR) | ✘ AR NE | ✘ sin medidas técnicas | Por cotización; prueba 15 días | No publicado | [https://www.dentidesk.com/](https://www.dentidesk.com/) · consultada el 2026-11-22 · detalle: [nota](sources/dentidesk.md) |
+| 15 | Medilink | Engenis SpA | CL | Centros de salud (sin odontología) | ◐ SaaS | ✔ agenda médica | ✔ agendamiento online, contact center WA | ✔ confirmación por email/WA | ✘ odontograma NE | ✔ boletas electrónicas, caja (CL) | ✘ AR NE; ERPs chilenos | ✔ enlaces a DPA y política (sin detalle) | Sin permanencia; asesoría | No publicado | [https://web-latam.softwaremedilink.com/](https://web-latam.softwaremedilink.com/) · consultada el 2026-11-22 · detalle: [nota](sources/medilink.md) |
+| 16 | Encuadrado | Encuadrado | CL | Profesionales independientes (sin odontología) | ✔ SaaS móvil | ✔ horarios, repetición, bloqueos | ✔ reserva en perfil | ✔ recordatorios WA y email | ✘ | ✔ transferencia, tarjeta, boleta CL; comisión 1% en Esencial | ✘ AR NE | ✘ NE | Suscripción en UF | CLP 26.107 / 43.511 / 141.218 + IVA | [https://www.encuadrado.com/](https://www.encuadrado.com/) · consultada el 2026-11-22 · detalle: [nota](sources/encuadrado.md) |
+| 17 | Open Dental | Open Dental Software | US (inferido) | Consultorio a cadena | ✔ instalado; Cloud con cargo | ✔ bloqueos, lista ASAP | ✔ Web Sched en 4 modos, portal | ✔ eReminders/eConfirmations, texting | ✔ tooth chart 2D/3D; periodontograma y Rx no detallados | ✔ facturación, estados de cuenta, Payment Portal (US) | ✘ AR NE (tarifa "otros países") | ✘ NE | Suscripción por local; eServices modulares | USD 89 "otros países" + módulos; gratis en países en desarrollo | [https://www.opendental.com/](https://www.opendental.com/) · consultada el 2026-11-22 · detalle: [nota](sources/open-dental.md) |
+| 18 | Dentally | Henry Schein One UK | UK | Consultorio y grupo | ✔ SaaS | ✔ diario, lista de espera, relleno de último momento | ✔ Portal: reserva, formularios, kiosco | ✔ recordatorios, recalls, feedback | ◐ charting, notas con IA; odontograma/periodontograma no descritos | ✔ pagos vía Portal (sin detalle) | ✘ AR NE; WA ✘ | ✔ cifrado, 2FA, roles, IP/horario; GDPR y backups NE | Plan por gabinete (público) | GBP 134 a 1.021 por 3 gabinetes | [https://www.dentally.com/en-gb/](https://www.dentally.com/en-gb/) · consultada el 2026-11-22 · detalle: [nota](sources/dentally.md) |
+| 19 | NexHealth | NexHealth | US | Consultorios (capa sobre otro sistema) | ◐ SaaS | ✔ sincroniza con el sistema existente | ✔ reserva desde Google Maps, lista ASAP | ✔ recalls, recordatorios, campañas | ✘ no es sistema clínico | ✔ pagos por texto, verificación de seguros (US) | ✘ AR NE; Health Records API | ◐ HIPAA declarado; SOC 2 NE | Módulos a medida | No publicado | [https://www.nexhealth.com/](https://www.nexhealth.com/) · consultada el 2026-11-22 · detalle: [nota](sources/nexhealth.md) |
+| 20 | Curve Dental | CD Newco | US | Consultorios US/CA | ✔ nube desde 2004 | ✔ agenda, recare (listado oficial) | ✔ reserva online (sin detalle del flujo) | ✔ recordatorios, campañas | ✔ perio charting, planes, imágenes | ✔ eClaims, pagos, membresías (US) | ✘ AR NE | ◐ "HIPAA-compliant" sin certificaciones | A medida; solo demo | No publicado | [https://www.curvedental.com/](https://www.curvedental.com/) · consultada el 2026-11-22 · detalle: [nota](sources/curve-dental.md) |
+| 21 | Gesden | Infomed / Henry Schein | ES | Clínica dental | ◐ G5 escritorio / ONE nube (terceros) | ◐ multigabinete (terceros) | ✘ NE | ✘ NE | ◐ odontograma y periodontograma (terceros) | ◐ facturación VeriFactu (terceros) | ✘ AR NE | ✘ NE | G5 y ONE por usuarios concurrentes | ONE desde 75 EUR + IVA (tercero, sin verificar) | Sitio oficial no accesible (gesden.es e infomed.es rechazaron la conexión); fuentes de terceros en Referencias · consultada el 2026-11-22 · detalle: [nota](sources/gesden.md) |
 
 ### Fortalezas, limitaciones y diferencial por sistema
 
@@ -375,31 +375,129 @@ El equipo comprobó personalmente cinco sistemas el 2026-11-23, contra lo que af
 
 ## Referencias
 
-Cada nota lista las URL consultadas y su fecha de consulta (2026-11-22; 2026-11-23 para los cinco sistemas verificados). Índice de las notas en `docs/discovery/sources/` (cada nota lista sus URL y fecha de consulta 2026-11-22; las 5 notas verificadas por el equipo tienen una sección "Verificación del equipo (2026-11-23)" y sus URL consultadas):
+URL consultadas para cada sistema, con su fecha de consulta (2026-11-22; 2026-11-23 para los cinco sistemas verificados por el equipo). Entre paréntesis se indica cuando la fuente es de terceros, un resultado de búsqueda o no pudo revisarse. El detalle de lo extraído de cada fuente está en la nota de cada sistema, en `docs/discovery/sources/`.
 
-**Argentinos (8)**
-- [clinia-odontoclinia.md](sources/clinia-odontoclinia.md)
-- [dentalcore.md](sources/dentalcore.md)
-- [dentalsoft.md](sources/dentalsoft.md)
-- [dentaltec.md](sources/dentaltec.md)
-- [denticlick.md](sources/denticlick.md)
-- [odonthia.md](sources/odonthia.md)
-- [odonto-ar.md](sources/odonto-ar.md)
-- [turnito.md](sources/turnito.md)
+### Argentinos (8)
 
-**Latinoamericanos (7)**
-- [agendapro.md](sources/agendapro.md)
-- [clinicorp.md](sources/clinicorp.md)
-- [dentalink.md](sources/dentalink.md)
-- [dentidesk.md](sources/dentidesk.md)
-- [encuadrado.md](sources/encuadrado.md)
-- [medilink.md](sources/medilink.md)
-- [simples-dental.md](sources/simples-dental.md)
+**ClinIA / OdontoClinIA** ([nota](sources/clinia-odontoclinia.md))
 
-**Internacionales (6)**
-- [curve-dental.md](sources/curve-dental.md)
-- [dentally.md](sources/dentally.md)
-- [doctoralia-pro.md](sources/doctoralia-pro.md)
-- [gesden.md](sources/gesden.md)
-- [nexhealth.md](sources/nexhealth.md)
-- [open-dental.md](sources/open-dental.md)
+- https://www.clinia.com.ar/odontologia (2026-11-22; contrastada por el equipo 2026-11-23)
+- https://www.clinia.com.ar/seguridad y /faq (listadas, no revisadas)
+
+**DentalCore** ([nota](sources/dentalcore.md))
+
+- https://dentalcore.app (2026-11-22; equipo 2026-11-23)
+- https://dentalcore.app/faq (equipo, 2026-11-23)
+- https://dentalcore.app/interoperabilidad (equipo, 2026-11-23)
+- https://dentalcore.app/blog/mejor-software-dental-argentina (2026-11-22; contenido propio)
+- https://odonthia.com/blog/mejores-software-odontologicos-argentina-2026 (terceros interesada, 2026-11-22)
+
+**DentalSoft** ([nota](sources/dentalsoft.md))
+
+- https://dentalsoft.com.ar/ (consultada 2026-11-22 y verificada por el equipo 2026-11-23; precios, features, FAQ, integración con ARCA y facturación)
+- Demo de DentalSoft (probada por el equipo, 2026-11-23)
+- https://www.dentalsoft.com.ar/funcionalidades y subpáginas (listadas, no fetcheadas)
+- https://odonthia.com/blog/mejores-software-odontologicos-argentina-2026 (comparativa de terceros interesada, 2026-11-22)
+
+**DentalTec** ([nota](sources/dentaltec.md))
+
+- https://web.dentaltec.com.ar/software-odontologos-argentina (2026-11-22)
+- https://odonthia.com/blog/mejores-software-odontologicos-argentina-2026 (terceros interesada, 2026-11-22)
+
+**DentiClick** ([nota](sources/denticlick.md))
+
+- https://www.denticlick.app/ (2026-11-22)
+
+**Odonthia** ([nota](sources/odonthia.md))
+
+- https://odonthia.com (2026-11-22)
+- https://odonthia.com/blog/mejores-software-odontologicos-argentina-2026 (2026-11-22; fechada 09/10/2026)
+- https://odonthia.com/planes, /docs, /seguridad (listadas, no revisadas)
+
+**Odonto.ar** ([nota](sources/odonto-ar.md))
+
+- https://odonto.ar/ (2026-11-22)
+- https://odonthia.com/blog/mejores-software-odontologicos-argentina-2026 (terceros interesada, 2026-11-22)
+
+**Turnito** ([nota](sources/turnito.md))
+
+- https://turnito.app (2026-11-22)
+- https://www.iproup.com/startups/63662-argentinos-crean-app-gratuita-para-que-pymes-y-comercios-no-pierdan-clientes (2026-11-22; nota de prensa del 10/01/2026)
+
+### Latinoamericanos (7)
+
+**AgendaPro** ([nota](sources/agendapro.md))
+
+- https://www.agendapro.com/ar (2026-11-22; equipo 2026-11-23)
+- https://agendapro.com/ar/dental/software-odontologico (2026-11-22; equipo 2026-11-23; su descripción clínica fue desmentida)
+- https://www.medesk.net/es/blog/agenda-pro-review/ (solo snippet, 2026-11-22)
+
+**Clinicorp** ([nota](sources/clinicorp.md))
+
+- https://clinicorp.com/ (2026-11-22)
+
+**Dentalink** ([nota](sources/dentalink.md))
+
+- https://www.softwaredentalink.com/cl (2026-11-22; equipo 2026-11-23)
+- https://web-es.softwaredentalink.com/en/planes (2026-11-22; equipo 2026-11-23)
+- https://ayuda.softwaredentalink.com/es/collections/19196578-modulo-exclusivo-para-argentina (2026-11-22)
+- https://intercom.help/softwaredentalink/es/articles/9493298-crea-tus-convenios (resultado de búsqueda, 2026-11-22)
+- https://www.capterra.com/p/196361/Dentalink/ (solo snippet de buscador, 2026-11-22; dato de precio descartado)
+- Consulta con un asesor comercial de Dentalink (equipo, 2026-11-23; precios por plan y alcance de módulos). La URL exacta consultada por el equipo no fue informada.
+
+**Dentidesk** ([nota](sources/dentidesk.md))
+
+- https://www.dentidesk.com/ (2026-11-22)
+
+**Encuadrado** ([nota](sources/encuadrado.md))
+
+- https://www.encuadrado.com/ (2026-11-22)
+
+**Medilink** ([nota](sources/medilink.md))
+
+- https://web-latam.softwaremedilink.com/ (2026-11-22)
+
+**Simples Dental** ([nota](sources/simples-dental.md))
+
+- https://simplesdental.com/ (2026-11-22)
+- https://simplesdental.com/planos-e-precos (2026-11-22)
+- https://apps.apple.com/app/id954861717 (snippet de buscador, 2026-11-22)
+
+### Internacionales (6)
+
+**Curve Dental** ([nota](sources/curve-dental.md))
+
+- https://www.curvedental.com/ (2026-11-22)
+- https://www.curvedental.com/pricing (2026-11-22)
+
+**Dentally (Henry Schein One)** ([nota](sources/dentally.md))
+
+- https://www.dentally.com/en-gb/ (2026-11-22)
+- https://www.dentally.com/en-gb/pricing (2026-11-22)
+- https://www.dentally.com/en-gb/security (2026-11-22)
+
+**Doctoralia Pro (Docplanner)** ([nota](sources/doctoralia-pro.md))
+
+- https://www.doctoraliar.com/odontologo/buenos-aires (2026-11-22)
+- https://pro.doctoralia.com/ar (2026-11-22)
+- https://pro.doctoralia.com/ar/agenda-doctoralia-para-especialistas (2026-11-22)
+- https://www.doctoraliar.com/odontologo (resultado de búsqueda, 2026-11-22)
+- https://pabau.com/es/blog/precios-de-doctoralia-pro/ (tercero competidor, vía búsqueda, 2026-11-22)
+
+**Gesden (Infomed / Henry Schein)** ([nota](sources/gesden.md))
+
+- https://pabau.com/es/blog/alternativas-a-gesden/ (tercero competidor, 2026-11-22)
+- https://tandemhealth.ai/resources/knowledge/most-used-dental-practice-management-software-in-spain (2026-11-22)
+- https://pabau.com/es/blog/precios-de-infomed/ y https://www.softwaredoit.es/infomed/infomed.html (resultados de búsqueda, 2026-11-22)
+
+**NexHealth** ([nota](sources/nexhealth.md))
+
+- https://www.nexhealth.com/ (2026-11-22)
+- https://www.nexhealth.com/pricing (2026-11-22)
+
+**Open Dental** ([nota](sources/open-dental.md))
+
+- https://www.opendental.com/ (2026-11-22)
+- https://www.opendental.com/site/fees.html (2026-11-22)
+- https://www.opendental.com/site/eservices.html (2026-11-22)
+- https://opendental.com/site/apispecification.html (resultado de búsqueda, 2026-11-22)
